@@ -1,0 +1,178 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul class="setting" id="marqueeattr">
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input v-model="marqueeObj.width" @focus="inputColor(marqueeObj.width)" @blur='inputNumGet(marqueeObj.width, "marqueeObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="marqueeObj.height" @focus="inputColor(marqueeObj.height)" @blur='inputNumGet(marqueeObj.height, "marqueeObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="marqueeObj.left" @focus="inputColor(marqueeObj.left)" @blur='inputNumGet(marqueeObj.left, "marqueeObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="marqueeObj.top" @focus="inputColor(marqueeObj.top)" @blur='inputNumGet(marqueeObj.top, "marqueeObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">滚动时间</div>
+			<div class="input">
+				<el-input size="small" v-model="marqueeObj.time" @blur='inputGet(marqueeObj.time, "marqueeObj.time", "time", "number")'></el-input>
+			</div>
+			<em>s</em>
+		</li>
+		<el-collapse v-model="marqueeObj.select" style="margin-bottom: 5px;" accordion @change='collapseGet(marqueeObj.select, "select")'>
+			<el-collapse-item title="字体样式" name="textStyle">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="marqueeObj.family" placeholder="请选择" style="width:100%;" @change='selectGet(marqueeObj.family, "font.family")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker  size="small" v-model="marqueeObj.color" show-alpha @change='colorGet(marqueeObj.color, "color")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="marqueeObj.color" :spellcheck="false" @focus="inputColor(marqueeObj.color)" @blur='inputColorGet(marqueeObj.color, "marqueeObj.color", "color")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="marqueeObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(marqueeObj.fontSize, "marqueeObj.fontSize", "font.size")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="marqueeObj.fontSize1" :spellcheck="false" @focus="inputColor(marqueeObj.fontSize1)" @blur='sliderInpGet(marqueeObj.fontSize1, "marqueeObj.fontSize", "font.size", 12, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="marqueeObj.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(marqueeObj.letterSpacing, "marqueeObj.letterSpacing", "letter.spacing")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="marqueeObj.letterSpacing1" :spellcheck="false" @focus="inputColor(marqueeObj.letterSpacing1)" @blur='sliderInpGet(marqueeObj.letterSpacing1, "marqueeObj.letterSpacing", "letter.spacing", 0, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">边距</div>
+					<div class="input">
+						<el-input size="small" v-model="marqueeObj.padding" :spellcheck="false" @blur='inputGet(marqueeObj.padding, "marqueeObj.padding", "padding", "number")'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">行高</div>
+					<div class="slider">
+						<el-slider v-model="marqueeObj.lineHeight" :min="1" :max="10" :step="1" @change='sliderGet(marqueeObj.lineHeight, "marqueeObj.lineHeight", "line.height")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="marqueeObj.lineHeight1" :spellcheck="false" @focus="inputColor(marqueeObj.lineHeight1)" @blur='sliderInpGet(marqueeObj.lineHeight1, "marqueeObj.lineHeight", "line.heigh", 1, 10, 1)'></el-input>
+					</div>
+					<em>倍</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group  size="small" v-model="marqueeObj.fontSytle" @change='radioGet(marqueeObj.fontSytle, "font.style")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group  size="small" v-model="marqueeObj.fontWeight" @change='radioGet(marqueeObj.fontWeight, "font.weight")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker  size="small" v-model="marqueeObj.backgroundColor" show-alpha @change='colorGet(marqueeObj.backgroundColor, "background.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="marqueeObj.backgroundColor" :spellcheck="false" @focus="inputColor(marqueeObj.backgroundColor)" @blur='inputColorGet(marqueeObj.backgroundColor, "marqueeObj.backgroundColor", "background.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="marqueeObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(marqueeObj.borderWidth, "marqueeObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="marqueeObj.borderWidth1" :spellcheck="false" @focus="inputColor(marqueeObj.borderWidth1)" @blur='sliderInpGet(marqueeObj.borderWidth1, "marqueeObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="marqueeObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(marqueeObj.borderRadius, "marqueeObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="marqueeObj.borderRadius1" :spellcheck="false" @focus="inputColor(marqueeObj.borderRadius1)" @blur='sliderInpGet(marqueeObj.borderRadius1, "marqueeObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker  size="small" v-model="marqueeObj.borderColor" show-alpha @change='colorGet(marqueeObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="marqueeObj.borderColor" :spellcheck="false" @focus="inputColor(marqueeObj.borderColor)" @blur='inputColorGet(marqueeObj.borderColor, "marqueeObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="marqueeObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(marqueeObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="switch">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul class="setting" id="monitoringattr">
+		<li>
+			<div class="attributeName">监控编辑</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click="monitoringChange()">地址编辑</el-button>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="monitoringObj.width" @focus="inputColor(monitoringObj.width)" @blur='inputNumGet(monitoringObj.width, "monitoringObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="monitoringObj.height" @focus="inputColor(monitoringObj.height)" @blur='inputNumGet(monitoringObj.height, "monitoringObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="monitoringObj.left" @focus="inputColor(monitoringObj.left)" @blur='inputNumGet(monitoringObj.left, "monitoringObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="monitoringObj.top" @focus="inputColor(monitoringObj.top)" @blur='inputNumGet(monitoringObj.top, "monitoringObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="monitoringObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(monitoringObj.borderWidth, "monitoringObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="monitoringObj.borderWidth1" :spellcheck="false" @focus="inputColor(monitoringObj.borderWidth1)" @blur='sliderInpGet(monitoringObj.borderWidth1, "monitoringObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="monitoringObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(monitoringObj.borderRadius, "monitoringObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="monitoringObj.borderRadius1" :spellcheck="false" @focus="inputColor(monitoringObj.borderRadius1)" @blur='sliderInpGet(monitoringObj.borderRadius1, "monitoringObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="monitoringObj.borderColor" show-alpha @change='colorGet(monitoringObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="monitoringObj.borderColor" :spellcheck="false" @focus="inputColor(monitoringObj.borderColor)" @blur='inputColorGet(monitoringObj.borderColor, "monitoringObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="monitoringObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(monitoringObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

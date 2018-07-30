@@ -1,0 +1,203 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <ul id="HchartsSeries">
+        <div id="HchartsSeriesBar">
+            <li>
+                <div class="attributeName">系列选择</div>
+                <div class="select">
+                    <el-select size="small" v-model="HseriesIndex" placeholder="请选择" style="width:100%;" @change='selectGet(HseriesIndex, "HseriesIndex", "number", "", "Hseries")'>
+                        <el-option v-for="(item, a) in HseriesObj.HseriesList" :key="item.value" :label="item.name" :value="a"></el-option>
+                    </el-select>
+                </div>
+            </li>
+            <li>
+                <div class="attributeName">颜色</div>
+                <div class="color">
+                    <el-color-picker v-model="HseriesObj.color" size="small" show-alpha @change='colorGet(HseriesObj.color, "HseriesObj.color", "series."+HseriesIndex+".color", "string")'></el-color-picker>
+                </div>
+                <div class="colorInput">
+                    <el-input v-model="HseriesObj.color" size="small" :spellcheck="false" @focus="inputColor(HseriesObj.color)" @blur='inputColorGet(HseriesObj.color,"HseriesObj.color", "series."+HseriesIndex+".color", "string")'></el-input>
+                </div>
+            </li>
+            <li>
+                <div class="attributeName">堆叠名称</div>
+                <div class="input">
+                    <el-input size="small" v-model="HseriesObj.stack" @blur='inputGet(HseriesObj.stack, "series."+HseriesIndex+".stack", "string")'></el-input>
+                </div>
+            </li>
+        </div>
+        <li>
+            <div class="attributeName">允许选中点</div>
+            <div class="switch">
+                <el-switch v-model="HseriesObj.allowPointSelect" @change='switchGet(HseriesObj.allowPointSelect, "series."+HseriesIndex+".allowPointSelect")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签显示</div>
+            <div class="switch">
+                <el-switch v-model="HseriesObj.enabled" @change='switchGet(HseriesObj.enabled, "series."+HseriesIndex+".dataLabels.enabled")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签格式化字符串</div>
+            <div class="input">
+                <el-input size="small" v-model="HseriesObj.format" @blur='inputGet(HseriesObj.format, "series."+HseriesIndex+".dataLabels.format", "string")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签对齐</div>
+            <div class="radioButton">
+                <el-radio-group size="small" v-model="HseriesObj.align" @change='radioGet(HseriesObj.align, "series."+HseriesIndex+".dataLabels.align", "string")'>
+                    <el-radio-button label="left">居左</el-radio-button>
+                    <el-radio-button label="center">居中</el-radio-button>
+                    <el-radio-button label="right">居右</el-radio-button>
+                </el-radio-group>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签水平偏移</div>
+            <div class="input">
+                <el-input size="small" v-model="HseriesObj.x" @blur='inputGet(HseriesObj.x, "series."+HseriesIndex+".dataLabels.x", "number")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签垂直偏移</div>
+            <div class="input">
+                <el-input size="small" v-model="HseriesObj.y" @blur='inputGet(HseriesObj.y, "series."+HseriesIndex+".dataLabels.y", "number")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签字体</div>
+            <div class="select">
+                <el-select size="small" v-model="HseriesObj.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HseriesObj.fontFamily, "series."+HseriesIndex+".dataLabels.style.fontFamily", "string")'>
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签字体颜色</div>
+            <div class="color">
+                <el-color-picker size="small" v-model="HseriesObj.Fcolor" show-alpha @change='colorGet(HseriesObj.Fcolor, "HseriesObj.Fcolor", "series."+HseriesIndex+".dataLabels.style.color", "string")'></el-color-picker>
+            </div>
+            <div class="colorInput">
+                <el-input size="small" v-model="HseriesObj.Fcolor" :spellcheck="false" @focus="inputColor(HseriesObj.Fcolor)" @blur='inputColorGet(HseriesObj.Fcolor,"HseriesObj.Fcolor", "series."+HseriesIndex+".dataLabels.style.color", "string")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签字体大小</div>
+            <div class="slider">
+                <el-slider size="small" v-model="HseriesObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HseriesObj.fontSize, "HseriesObj.fontSize", "series."+HseriesIndex+".dataLabels.style.fontSize", "rem", "number")'></el-slider>
+            </div>
+            <div class="sliderInput">
+                <el-input size="small" v-model="HseriesObj.fontSize1" :spellcheck="false" @focus="inputColor(HseriesObj.fontSize1)" @blur='sliderInpGet(HseriesObj.fontSize, "HseriesObj.fontSize", "series."+HseriesIndex+".dataLabels.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">标签字体风格</div>
+            <div class="radioButton">
+                <el-radio-group size="small" v-model="HseriesObj.fontSytle" @change='radioGet(HseriesObj.fontSytle, "series."+HseriesIndex+".dataLabels.style.fontStyle", "string")'>
+                    <el-radio-button label="normal">普通</el-radio-button>
+                    <el-radio-button label="italic">斜体</el-radio-button>
+                </el-radio-group>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签字体粗细</div>
+            <div class="radioButton">
+                <el-radio-group size="small" v-model="HseriesObj.fontWeight" @change='radioGet(HseriesObj.fontWeight, "series."+HseriesIndex+".dataLabels.style.fontWeight", "string")'>
+                    <el-radio-button label="normal">普通</el-radio-button>
+                    <el-radio-button label="bold">加粗</el-radio-button>
+                </el-radio-group>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签背景颜色</div>
+            <div class="color">
+                <el-color-picker v-model="HseriesObj.backgroundColor" size="small" show-alpha @change='colorGet(HseriesObj.backgroundColor, "HseriesObj.backgroundColor", "series."+HseriesIndex+".dataLabels.backgroundColor", "string")'></el-color-picker>
+            </div>
+            <div class="colorInput">
+                <el-input v-model="HseriesObj.backgroundColor" size="small" :spellcheck="false" @focus="inputColor(HseriesObj.backgroundColor)" @blur='inputColorGet(HseriesObj.backgroundColor,"HseriesObj.backgroundColor", "series."+HseriesIndex+".dataLabels.backgroundColor", "string")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">标签边框粗细</div>
+            <div class="slider">
+                <el-slider v-model="HseriesObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(HseriesObj.borderWidth, "HseriesObj.borderWidth", "series."+HseriesIndex+".dataLabels.borderWidth", "rem", "number")'></el-slider>
+            </div>
+            <div class="sliderInput">
+                <el-input v-model="HseriesObj.borderWidth1" size="small" :spellcheck="false" @focus="inputColor(HseriesObj.borderWidth1)" @blur='sliderInpGet(HseriesObj.borderWidth1, "HseriesObj.borderWidth", "series."+HseriesIndex+".dataLabels.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">标签边框圆角</div>
+            <div class="slider">
+                <el-slider v-model="HseriesObj.borderRadius" :min="0" input-size="small" :max="100" :step="1" @change='sliderGet(HseriesObj.borderRadius, "HseriesObj.borderRadius", "series."+HseriesIndex+".dataLabels.borderRadius", "rem", "number")'></el-slider>
+            </div>
+            <div class="sliderInput">
+                <el-input v-model="HseriesObj.borderRadius1" size="small" :spellcheck="false" @focus="inputColor(HseriesObj.borderRadius1)" @blur='sliderInpGet(HseriesObj.borderRadius1, "HseriesObj.borderRadius", "series."+HseriesIndex+".dataLabels.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">标签边框颜色</div>
+            <div class="color">
+                <el-color-picker v-model="HseriesObj.borderColor" size="small" show-alpha @change='colorGet(HseriesObj.borderColor, "HseriesObj.borderColor", "series."+HseriesIndex+".dataLabels.borderColor", "string")'></el-color-picker>
+            </div>
+            <div class="colorInput">
+                <el-input v-model="HseriesObj.borderColor" size="small" :spellcheck="false" @focus="inputColor(HseriesObj.borderColor)" @blur='inputColorGet(HseriesObj.borderColor,"HseriesObj.borderColor", "series."+HseriesIndex+".dataLabels.borderColor", "string")'></el-input>
+            </div>
+        </li>
+        <div id="HchartsSeriesPie">
+            <li>
+                <div class="attributeName">饼图内半径</div>
+                <div class="slider">
+                    <el-slider v-model="HseriesObj.innerSize" :min="0" :max="100" :step="1" @change='sliderGet(HseriesObj.innerSize, "HseriesObj.innerSize", "series."+HseriesIndex+".innerSize", "%", "string")'></el-slider>
+                </div>
+                <div class="sliderInput">
+                    <el-input size="small" v-model="HseriesObj.innerSize1" :spellcheck="false" @focus="inputColor(HseriesObj.innerSize)" @blur='sliderInpGet(HseriesObj.innerSize1, "HseriesObj.innerSize", "series."+HseriesIndex+".innerSize", 0, 100, 1, "%", "string")'></el-input>
+                </div>
+                <em>%</em>
+            </li>
+            <li>
+                <div class="attributeName">饼图外半径</div>
+                <div class="slider">
+                    <el-slider v-model="HseriesObj.size" :min="0" :max="100" :step="1" @change='sliderGet(HseriesObj.size, "HseriesObj.size", "series."+HseriesIndex+".size", "%", "string")'></el-slider>
+                </div>
+                <div class="sliderInput">
+                    <el-input size="small" v-model="HseriesObj.size1" :spellcheck="false" @focus="inputColor(HseriesObj.size1)" @blur='sliderInpGet(HseriesObj.size1, "HseriesObj.size", "series."+HseriesIndex+".size", 0, 100, 1, "%", "string")'></el-input>
+                </div>
+                <em>%</em>
+            </li>
+            <li>
+                <div class="attributeName">选中偏移量</div>
+                <div class="input">
+                    <el-input v-model="HseriesObj.slicedOffset" size="small" @blur='inputGet(HseriesObj.slicedOffset, "series."+HseriesIndex+".slicedOffset", "number")'></el-input>
+                </div>
+            </li>
+            <li>
+                <div class="attributeName">元素选择</div>
+                <div class="select">
+                    <el-select size="small" v-model="HseriesDataIndex" placeholder="请选择" style="width:100%;" @change='selectGet(HseriesDataIndex, "HseriesDataIndex", "number", "", "Hdata")'>
+                        <el-option v-for="(item, a) in HseriesObj.HseriesDataList" :key="item.value" :label="item.name" :value="a"></el-option>
+                    </el-select>
+                </div>
+            </li>
+            <li>
+                <div class="attributeName">颜色</div>
+                <div class="color">
+                    <el-color-picker v-model="HseriesObj.color" size="small" show-alpha @change='colorGet(HseriesObj.color, "HseriesObj.color", "series.0.data."+HseriesDataIndex+".color", "string")'></el-color-picker>
+                </div>
+                <div class="colorInput">
+                    <el-input v-model="HseriesObj.color" size="small" :spellcheck="false" @focus="inputColor(HseriesObj.color)" @blur='inputColorGet(HseriesObj.color,"HseriesObj.color", "series.0.data."+HseriesDataIndex+".color", "string")'></el-input>
+                </div>
+            </li>
+        </div>
+    </ul>
+</body>
+</html>

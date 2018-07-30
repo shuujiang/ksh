@@ -1,0 +1,183 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <ul id="Hchartslegend">
+        <li>
+            <div class="attributeName">显示</div>
+            <div class="switch">
+                <el-switch v-model="HlegendObj.enabled" @change='switchGet(HlegendObj.enabled, "legend.enabled")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">浮动</div>
+            <div class="switch">
+                <el-switch v-model="HlegendObj.floating" @change='switchGet(HlegendObj.floating, "legend.floating")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">逆序</div>
+            <div class="switch">
+                <el-switch v-model="HlegendObj.reversed" @change='switchGet(HlegendObj.reversed, "legend.reversed")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">左右交换</div>
+            <div class="switch">
+                <el-switch v-model="HlegendObj.rtl" @change='switchGet(HlegendObj.rtl, "legend.rtl")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">水平位置</div>
+            <div class="select">
+                <el-select size="small" v-model="HlegendObj.align" placeholder="请选择" style="width:100%;" @change='selectGet(HlegendObj.align, "legend.align", "string")'>
+                    <el-option label="居左" value="left"></el-option>
+                    <el-option label="居中" value="center"></el-option>
+                    <el-option label="居右" value="right"></el-option>
+                </el-select>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">垂直位置</div>
+            <div class="select">
+                <el-select size="small" v-model="HlegendObj.verticalAlign" placeholder="请选择" clearable style="width:100%;" @change='selectGet(HlegendObj.verticalAlign, "legend.verticalAlign", "string")'>
+                    <el-option label="居上" value="top"></el-option>
+                    <el-option label="居中" value="middle"></el-option>
+                    <el-option label="居下" value="bottom"></el-option>
+                </el-select>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">水平偏移</div>
+            <div class="input">
+                <el-input size="small" v-model="HlegendObj.x" @blur='inputGet(HlegendObj.x, "legend.x", "number")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">垂直偏移</div>
+            <div class="input">
+                <el-input size="small" v-model="HlegendObj.y" @blur='inputGet(HlegendObj.y, "legend.y", "number")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">布局</div>
+            <div class="radioButton">
+                <el-radio-group size="small" v-model="HlegendObj.layout" @change='radioGet(HlegendObj.layout, "legend.layout", "string")'>
+                    <el-radio-button label="horizontal">水平</el-radio-button>
+                    <el-radio-button label="vertical">垂直</el-radio-button>
+                </el-radio-group>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">间距(水平)</div>
+            <div class="input">
+                <el-input size="small" v-model="HlegendObj.itemDistance" @blur='inputGet(HlegendObj.itemDistance, "legend.itemDistance", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">外边距</div>
+            <div class="input">
+                <el-input v-model="HlegendObj.margin" size="small" @blur='inputGet(HlegendObj.margin, "legend.margin", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">内边距</div>
+            <div class="input">
+                <el-input v-model="HlegendObj.padding" size="small" @blur='inputGet(HlegendObj.padding, "legend.padding", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <el-collapse v-model="HlegendObj.legendName" accordion @change='tabClickGet(HlegendObj.legendName, "legend.legendName")'>
+            <el-collapse-item title="文本样式" name="textStlyle">
+                <li>
+                    <div class="attributeName">字体</div>
+                    <div class="select">
+                        <el-select size="small" v-model="HlegendObj.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HlegendObj.fontFamily, "legend.itemStyle.fontFamily", "string")'>
+                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li>
+                    <div class="attributeName">颜色</div>
+                    <div class="color">
+                        <el-color-picker size="small" v-model="HlegendObj.color" show-alpha @change='colorGet(HlegendObj.color, "HlegendObj.color", "legend.itemStyle.color", "string")'></el-color-picker>
+                    </div>
+                    <div class="colorInput">
+                        <el-input size="small" v-model="HlegendObj.color" :spellcheck="false" @focus="inputColor(HlegendObj.color)" @blur='inputColorGet(HlegendObj.color,"HlegendObj.color", "legend.itemStyle.color", "string")'></el-input>
+                    </div>
+                </li>
+                <li>
+                    <div class="attributeName">大小</div>
+                    <div class="slider">
+                        <el-slider size="small" v-model="HlegendObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HlegendObj.fontSize, "HlegendObj.fontSize", "legend.itemStyle.fontSize", "rem", "number")'></el-slider>
+                    </div>
+                    <div class="sliderInput">
+                        <el-input size="small" v-model="HlegendObj.fontSize1" :spellcheck="false" @focus="inputColor(HlegendObj.fontSize1)" @blur='sliderInpGet(HlegendObj.fontSize, "HlegendObj.fontSize", "legend.itemStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+                    </div>
+                    <em>px</em>
+                </li>
+                <li>
+                    <div class="attributeName">风格</div>
+                    <div class="radioButton">
+                        <el-radio-group size="small" v-model="HlegendObj.fontSytle" @change='radioGet(HlegendObj.fontSytle, "legend.itemStyle.fontStyle", "string")'>
+                            <el-radio-button label="normal">普通</el-radio-button>
+                            <el-radio-button label="italic">斜体</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                </li>
+                <li>
+                    <div class="attributeName">粗细</div>
+                    <div class="radioButton">
+                        <el-radio-group size="small" v-model="HlegendObj.fontWeight" @change='radioGet(HlegendObj.fontWeight, "legend.itemStyle.fontWeight", "string")'>
+                            <el-radio-button label="normal">普通</el-radio-button>
+                            <el-radio-button label="bold">加粗</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                </li>
+            </el-collapse-item>
+        </el-collapse> 
+        <li>
+            <div class="attributeName">背景颜色</div>
+            <div class="color">
+                <el-color-picker v-model="HlegendObj.backgroundColor" size="small" show-alpha @change='colorGet(HlegendObj.backgroundColor, "HlegendObj.backgroundColor", "legend.backgroundColor", "string")'></el-color-picker>
+            </div>
+            <div class="colorInput">
+                <el-input v-model="HlegendObj.backgroundColor" size="small" :spellcheck="false" @focus="inputColor(HlegendObj.backgroundColor)" @blur='inputColorGet(HlegendObj.backgroundColor,"HlegendObj.backgroundColor", "legend.backgroundColor", "string")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">边框粗细</div>
+            <div class="slider">
+                <el-slider v-model="HlegendObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(HlegendObj.borderWidth, "HlegendObj.borderWidth", "legend.borderWidth", "rem", "number")'></el-slider>
+            </div>
+            <div class="sliderInput">
+                <el-input v-model="HlegendObj.borderWidth1" size="small" :spellcheck="false" @focus="inputColor(HlegendObj.borderWidth1)" @blur='sliderInpGet(HlegendObj.borderWidth1, "HlegendObj.borderWidth", "legend.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">边框圆角</div>
+            <div class="slider">
+                <el-slider v-model="HlegendObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(HlegendObj.borderRadius, "HlegendObj.borderRadius", "legend.borderRadius", "rem", "number")'></el-slider>
+            </div>
+            <div class="sliderInput">
+                <el-input v-model="HlegendObj.borderRadius1" size="small" :spellcheck="false" @focus="inputColor(HlegendObj.borderRadius1)" @blur='sliderInpGet(HlegendObj.borderRadius1, "HlegendObj.borderRadius", "legend.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">边框颜色</div>
+            <div class="color">
+                <el-color-picker v-model="HlegendObj.borderColor" size="small" show-alpha @change='colorGet(HlegendObj.borderColor, "HlegendObj.borderColor", "legend.borderColor", "string")'></el-color-picker>
+            </div>
+            <div class="colorInput">
+                <el-input v-model="HlegendObj.borderColor" size="small" :spellcheck="false" @focus="inputColor(HlegendObj.borderColor)" @blur='inputColorGet(HlegendObj.borderColor,"HlegendObj.borderColor", "legend.borderColor", "string")'></el-input>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>

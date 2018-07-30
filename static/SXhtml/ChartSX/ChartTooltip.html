@@ -1,0 +1,639 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="tooltip1">
+		<li>
+			<div class="attributeName">提示框显示</div>
+			<div class="switch">
+				<el-switch v-model="tooltipObj.Show" @change='switchGet(tooltipObj.Show, "tooltip.show")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">内容格式</div>
+			<div class="input">
+				<el-input size="small" v-model="tooltipObj.Formatter" type="textarea" :rows="1" @blur='inputGet(tooltipObj.Formatter, "tooltip.formatter", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">触发类型</div>
+			<div class="radioButton">
+				<el-radio-group size="small" v-model="tooltipObj.Trigger" @change='radioGet(tooltipObj.Trigger, "tooltip.trigger", "string")'>
+					<el-radio-button label="item">图形</el-radio-button>
+					<el-radio-button label="axis">直角坐标轴</el-radio-button>
+					<el-radio-button label="none">不触发</el-radio-button>
+				</el-radio-group>
+			</div>
+		</li>
+		<el-collapse v-model="tooltipObj.axisTrigger" accordion @change='tabClickGet(tooltipObj.axisTrigger, "tooltip.axisTrigger")'>
+			<el-collapse-item title="触发类型为坐标轴时有效" name="axis">
+				<li>
+					<div class="attributeName">指示器类型</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="tooltipObj.PointerType" @change='radioGet(tooltipObj.PointerType, "tooltip.axisPointer.type", "string", "tooltipPointerType")'>
+							<el-radio-button label="line">直线</el-radio-button>
+							<el-radio-button label="cross">十字准星</el-radio-button>
+							<el-radio-button label="shadow">阴影</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">自动吸附到点</div>
+					<div class="switch">
+						<el-switch v-model="tooltipObj.PointerSnap" @change='switchGet(tooltipObj.PointerSnap, "tooltip.axisPointer.snap")'></el-switch>
+					</div>
+				</li>
+				<el-tabs  v-model="tooltipObj.pointer" type="card" @tab-click='axisPointerGet(tooltipObj.pointer, "tooltip.pointer")'>
+					<el-tab-pane  name="line" :disabled="tooltipObj.LineStyle" label="线条">
+						<el-tabs v-model="tooltipObj.lineActiveName" type="card"@tab-click='gradientColorGet(tooltipObj.lineActiveName, "lineActiveName", "tooltipObj.lineStyleColor", "tooltipObj.gradationAxisPointerColor", "tooltipObj.gradationAxislineStyleColor", "tooltipObj.gradationAxisPointer", "tooltip.axisPointer.lineStyle.color")'>
+							<el-tab-pane label="普通" name="ordinary">
+								<li>
+									<div class="attributeName">颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.lineStyleColor" show-alpha @change='colorGet(tooltipObj.lineStyleColor, "tooltipObj.lineStyleColor", "tooltip.axisPointer.lineStyle.color", "string","null")'></el-color-picker>
+									
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.lineStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.lineStyleColor)" @blur='inputColorGet(tooltipObj.lineStyleColor,"tooltipObj.lineStyleColor", "tooltip.axisPointer.lineStyle.color", "string")'></el-input>
+									</div>
+								</li>
+							</el-tab-pane>
+							<el-tab-pane label="渐变" name="shade">
+								<li>
+									<div class="attributeName">渐变色1</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.gradationAxisPointerColor" show-alpha @change='colorGet(tooltipObj.gradationAxisPointerColor, "tooltipObj.gradationAxisPointerColor", "tooltip.axisPointer.lineStyle.color", "object", 0)'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.gradationAxisPointerColor" :spellcheck="false" @focus="inputColor(tooltipObj.gradationAxisPointerColor)" @blur='inputColorGet(tooltipObj.gradationAxisPointerColor,"tooltipObj.gradationAxisPointerColor", "tooltip.axisPointer.lineStyle.color", "object", 0)'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">渐变色2</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.gradationAxislineStyleColor" show-alpha @change='colorGet(tooltipObj.gradationAxislineStyleColor, "tooltipObj.gradationAxislineStyleColor", "tooltip.axisPointer.lineStyle.color", "object", 1)'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.gradationAxislineStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.gradationAxislineStyleColor)" @blur='inputColorGet(tooltipObj.gradationAxislineStyleColor,"tooltipObj.gradationAxislineStyleColor", "tooltip.axisPointer.lineStyle.color", "object", 1)'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">渐变类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="tooltipObj.gradationLine" @change='radioGet(tooltipObj.gradationLine, "tooltip.axisPointer.lineStyle.color", "object")'>
+											<el-radio-button label="linear">线性</el-radio-button>
+											<el-radio-button label="radial">径向</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+						<li>
+							<div class="attributeName">类型</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="tooltipObj.lineStyleType" @change='radioGet(tooltipObj.lineStyleType, "tooltip.axisPointer.lineStyle.type", "string")'>
+									<el-radio-button label="solid">实线</el-radio-button>
+									<el-radio-button label="dashed">虚线</el-radio-button>
+									<el-radio-button label="dotted">点状线</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.lineStyleWidth" :min="0" :max="20" :step="0.1" @change='sliderGet(tooltipObj.lineStyleWidth, "tooltipObj.lineStyleWidth", "tooltip.axisPointer.lineStyle.width", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.lineStyleWidth1" :spellcheck="false" @focus="inputColor(tooltipObj.lineStyleWidth1)" @blur='sliderInpGet(tooltipObj.lineStyleWidth1, "tooltipObj.lineStyleWidth", "tooltip.axisPointer.lineStyle.width", 0, 20, 0.1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						
+						<li>
+							<div class="attributeName">阴影模糊大小</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.lineStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.lineStyleShadowBlur, "tooltipObj.lineStyleShadowBlur", "tooltip.axisPointer.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.lineStyleShadowBlur1" :spellcheck="false" @focus="inputColor(tooltipObj.lineStyleShadowBlur1)" @blur='sliderInpGet(tooltipObj.lineStyleShadowBlur1, "tooltipObj.lineStyleShadowBlur", "tooltip.axisPointer.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="tooltipObj.lineStyleShadowColor" show-alpha @change='colorGet(tooltipObj.lineStyleShadowColor, "tooltipObj.lineStyleShadowColor", "tooltip.axisPointer.lineStyle.shadowColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="tooltipObj.lineStyleShadowColor" :spellcheck="false" @focus="inputColor(tooltipObj.lineStyleShadowColor)" @blur='inputColorGet(tooltipObj.lineStyleShadowColor,"tooltipObj.lineStyleShadowColor", "tooltip.axisPointer.lineStyle.shadowColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.lineStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.lineStyleShadowOffsetX, "tooltipObj.lineStyleShadowOffsetX", "tooltip.axisPointer.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.lineStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(tooltipObj.lineStyleShadowOffsetX1)" @blur='sliderInpGet(tooltipObj.lineStyleShadowOffsetX1, "tooltipObj.lineStyleShadowOffsetX", "tooltip.axisPointer.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.lineStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.lineStyleShadowOffsetY, "tooltipObj.lineStyleShadowOffsetY", "tooltip.axisPointer.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.lineStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(tooltipObj.lineStyleShadowOffsetY1)" @blur='sliderInpGet(tooltipObj.lineStyleShadowOffsetY1, "tooltipObj.lineStyleShadowOffsetY", "tooltip.axisPointer.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+					</el-tab-pane>
+					<el-tab-pane  name="cross" :disabled="tooltipObj.CrossStyle" label="十字准星">
+						<el-tabs v-model="tooltipObj.shadowActiveName" type="card" @tab-click='gradientColorGet(shadowActiveName,"shadowActiveName","tooltipObj.crossStyleColor", "tooltipObj.gradationAxisPointerColor", "tooltipObj.gradationcrossPointerColor", "tooltipObj.gradationAxisPointer", "tooltip.axisPointer.crossStyle.color")'>
+							<el-tab-pane label="普通" name="ordinary">
+								<li>
+									<div class="attributeName">颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.crossStyleColor" show-alpha @change='colorGet(tooltipObj.crossStyleColor, "tooltipObj.crossStyleColor", "tooltip.axisPointer.crossStyle.color", "string","null")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.crossStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.crossStyleColor)" @blur='inputColorGet(tooltipObj.crossStyleColor,"tooltipObj.crossStyleColor", "tooltip.axisPointer.crossStyle.color", "string")'></el-input>
+									</div>
+								</li>
+							</el-tab-pane>
+							<el-tab-pane label="渐变" name="shade">
+								<li>
+									<div class="attributeName">渐变色1</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.gradationcrossPointerColor" show-alpha @change='colorGet(tooltipObj.gradationcrossPointerColor, "tooltipObj.gradationcrossPointerColor", "tooltip.axisPointer.crossStyle.color", "object", 0)'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.gradationcrossPointerColor" :spellcheck="false" @focus="inputColor(tooltipObj.gradationcrossPointerColor)" @blur='inputColorGet(tooltipObj.gradationcrossPointerColor,"tooltipObj.gradationcrossPointerColor", "tooltip.axisPointer.crossStyle.color", "object", 0)'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">渐变色2</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.gradationAxiscrossStyleColor" show-alpha @change='colorGet(tooltipObj.gradationAxiscrossStyleColor, "tooltipObj.gradationAxiscrossStyleColor", "tooltip.axisPointer.crossStyle.color", "object", 1)'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.gradationAxiscrossStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.gradationAxiscrossStyleColor)" @blur='inputColorGet(tooltipObj.gradationAxiscrossStyleColor,"tooltipObj.gradationAxiscrossStyleColor", "tooltip.axisPointer.crossStyle.color", "object", 1)'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">渐变类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="tooltipObj.gradationCross" @change='radioGet(tooltipObj.gradationCross, "tooltip.axisPointer.crossStyle.color", "object")'>
+											<el-radio-button label="linear">线性</el-radio-button>
+											<el-radio-button label="radial">径向</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.crossStyleWidth" :min="0" :max="20" :step="0.1" @change='sliderGet(tooltipObj.crossStyleWidth, "tooltipObj.crossStyleWidth", "tooltip.axisPointer.crossStyle.width", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.crossStyleWidth1" :spellcheck="false" @focus="inputColor(tooltipObj.crossStyleWidth1)" @blur='sliderInpGet(tooltipObj.crossStyleWidth1, "tooltipObj.crossStyleWidth", "tooltip.axisPointer.crossStyle.width", 0, 20, 0.1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">类型</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="tooltipObj.crossStyleType" @change='radioGet(tooltipObj.crossStyleType, "tooltip.axisPointer.crossStyle.type", "string")'>
+									<el-radio-button label="solid">实线</el-radio-button>
+									<el-radio-button label="dashed">虚线</el-radio-button>
+									<el-radio-button label="dotted">点状线</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊大小</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.crossStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.crossStyleShadowBlur, "tooltipObj.crossStyleShadowBlur", "tooltip.axisPointer.crossStyle.shadowBlur", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.crossStyleShadowBlur1" :spellcheck="false" @focus="inputColor(tooltipObj.crossStyleShadowBlur1)" @blur='sliderInpGet(tooltipObj.crossStyleShadowBlur1, "tooltipObj.crossStyleShadowBlur", "tooltip.axisPointer.crossStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="tooltipObj.crossStyleShadowColor" show-alpha @change='colorGet(tooltipObj.crossStyleShadowColor, "tooltipObj.crossStyleShadowColor", "tooltip.axisPointer.crossStyle.shadowColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="tooltipObj.crossStyleShadowColor" :spellcheck="false" @focus="inputColor(tooltipObj.crossStyleShadowColor)" @blur='inputColorGet(tooltipObj.crossStyleShadowColor,"tooltipObj.crossStyleShadowColor", "tooltip.axisPointer.crossStyle.shadowColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.crossStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.crossStyleShadowOffsetX, "tooltipObj.crossStyleShadowOffsetX", "tooltip.axisPointer.crossStyle.shadowOffsetX", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.crossStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(tooltipObj.crossStyleShadowOffsetX1)" @blur='sliderInpGet(tooltipObj.crossStyleShadowOffsetX1, "tooltipObj.crossStyleShadowOffsetX", "tooltip.axisPointer.crossStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.crossStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.crossStyleShadowOffsetY, "tooltipObj.crossStyleShadowOffsetY", "tooltip.axisPointer.crossStyle.shadowOffsetY", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.crossStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(tooltipObj.crossStyleShadowOffsetY1)" @blur='sliderInpGet(tooltipObj.crossStyleShadowOffsetY1, "tooltipObj.crossStyleShadowOffsetY", "tooltip.axisPointer.crossStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+					</el-tab-pane>
+					<el-tab-pane  name="shadow" :disabled="tooltipObj.ShadowStyle" label="阴影">
+						<el-tabs v-model="tooltipObj.shadowActiveName" type="card" @tab-click='gradientColorGet(shadowActiveName, "shadowActiveName", "tooltipObj.shadowStyleColor", "tooltipObj.gradationshadowPointerColor", "tooltipObj.gradationAxisshadowStyleColor", "tooltipObj.gradationAxisPointer", "tooltip.axisPointer.shadowStyle.color")'>
+							<el-tab-pane label="普通" name="ordinary">
+								<li>
+									<div class="attributeName">颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.shadowStyleColor" show-alpha @change='colorGet(tooltipObj.shadowStyleColor, "tooltipObj.shadowStyleColor", "tooltip.axisPointer.shadowStyle.color", "string","null")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.shadowStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.shadowStyleColor)" @blur='inputColorGet(tooltipObj.shadowStyleColor,"tooltipObj.shadowStyleColor", "tooltip.axisPointer.shadowStyle.color", "string")'></el-input>
+									</div>
+								</li>
+							</el-tab-pane>
+							<el-tab-pane label="渐变" name="shade">
+								<li>
+									<div class="attributeName">渐变色1</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.gradationshadowPointerColor" show-alpha @change='colorGet(tooltipObj.gradationshadowPointerColor, "tooltipObj.gradationshadowPointerColor", "tooltip.axisPointer.shadowStyle.color", "object", 0)'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.gradationshadowPointerColor" :spellcheck="false" @focus="inputColor(tooltipObj.gradationshadowPointerColor)" @blur='inputColorGet(tooltipObj.gradationshadowPointerColor,"tooltipObj.gradationshadowPointerColor", "tooltip.axisPointer.shadowStyle.color", "object", 0)'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">渐变色2</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="tooltipObj.gradationAxisshadowStyleColor" show-alpha @change='colorGet(tooltipObj.gradationAxisshadowStyleColor, "tooltipObj.gradationAxisshadowStyleColor", "tooltip.axisPointer.shadowStyle.color", "object", 1)'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="tooltipObj.gradationAxisshadowStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.gradationAxisshadowStyleColor)" @blur='inputColorGet(tooltipObj.gradationAxisshadowStyleColor,"tooltipObj.gradationAxisshadowStyleColor", "tooltip.axisPointer.shadowStyle.color", "object", 1)'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">渐变类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="tooltipObj.gradationShadow" @change='radioGet(tooltipObj.gradationShadow, "tooltip.axisPointer.shadowStyle.color", "object")'>
+											<el-radio-button label="linear">线性</el-radio-button>
+											<el-radio-button label="radial">径向</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+						<li>
+							<div class="attributeName">阴影模糊大小</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.shadowStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.shadowStyleShadowBlur, "tooltipObj.shadowStyleShadowBlur", "tooltip.axisPointer.shadowStyle.shadowBlur", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.shadowStyleShadowBlur1" :spellcheck="false" @focus="inputColor(tooltipObj.shadowStyleShadowBlur1)" @blur='sliderInpGet(tooltipObj.shadowStyleShadowBlur1, "tooltipObj.shadowStyleShadowBlur", "tooltip.axisPointer.shadowStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="tooltipObj.shadowStyleShadowColor" show-alpha @change='colorGet(tooltipObj.shadowStyleShadowColor, "tooltipObj.shadowStyleShadowColor", "tooltip.axisPointer.shadowStyle.shadowColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="tooltipObj.shadowStyleShadowColor" :spellcheck="false" @focus="inputColor(tooltipObj.shadowStyleShadowColor)" @blur='inputColorGet(tooltipObj.shadowStyleShadowColor,"tooltipObj.shadowStyleShadowColor", "tooltip.axisPointer.shadowStyle.shadowColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.shadowStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.shadowStyleShadowOffsetX, "tooltipObj.shadowStyleShadowOffsetX", "tooltip.axisPointer.shadowStyle.shadowOffsetX", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.shadowStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(tooltipObj.shadowStyleShadowOffsetX1)" @blur='sliderInpGet(tooltipObj.shadowStyleShadowOffsetX1, "tooltipObj.shadowStyleShadowOffsetX", "tooltip.axisPointer.shadowStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.shadowStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.shadowStyleShadowOffsetY, "tooltipObj.shadowStyleShadowOffsetY", "tooltip.axisPointer.shadowStyle.shadowOffsetY", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.shadowStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(tooltipObj.shadowStyleShadowOffsetY1)" @blur='sliderInpGet(tooltipObj.shadowStyleShadowOffsetY1, "tooltipObj.shadowStyleShadowOffsetY", "tooltip.axisPointer.shadowStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+					</el-tab-pane>
+					<el-tab-pane name="label" label="标签">
+						<li>
+							<div class="attributeName">标签显示</div>
+							<div class="switch">
+								<el-switch v-model="tooltipObj.labelShow" @change='switchGet(tooltipObj.labelShow, "tooltip.axisPointer.label.show")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">距离轴的距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.labelMargin" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.labelMargin, "tooltipObj.labelMargin", "tooltip.axisPointer.label.margin", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.labelMargin1" :spellcheck="false" @focus="inputColor(tooltipObj.labelMargin1)" @blur='sliderInpGet(tooltipObj.labelMargin1, "tooltipObj.labelMargin", "tooltip.axisPointer.label.margin", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">文本字体</div>
+							<div class="select">
+								<el-select size="small" v-model="tooltipObj.labeltextStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(tooltipObj.labeltextStyleFontFamily, "tooltip.axisPointer.label.textStyle.fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">文本颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="tooltipObj.labeltextStyleColor" show-alpha @change='colorGet(tooltipObj.labeltextStyleColor, "tooltipObj.labeltextStyleColor", "tooltip.axisPointer.label.textStyle.color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="tooltipObj.labeltextStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.labeltextStyleColor)" @blur='inputColorGet(tooltipObj.labeltextStyleColor,"tooltipObj.labeltextStyleColor", "tooltip.axisPointer.label.textStyle.color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">字体大小</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.labeltextStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(tooltipObj.labeltextStyleFontSize, "tooltipObj.labeltextStyleFontSize", "tooltip.axisPointer.label.textStyle.fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.labeltextStyleFontSize1" :spellcheck="false" @focus="inputColor(tooltipObj.labeltextStyleFontSize1)" @blur='sliderInpGet(tooltipObj.labeltextStyleFontSize1, "tooltipObj.labeltextStyleFontSize", "tooltip.axisPointer.label.textStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">字体风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="tooltipObj.labeltextStyleFontSytle" @change='radioGet(tooltipObj.labeltextStyleFontSytle, "tooltip.axisPointer.label.textStyle.fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">字体风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="tooltipObj.labeltextStyleFontWeight" @change='radioGet(tooltipObj.labeltextStyleFontWeight, "tooltip.axisPointer.label.textStyle.fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">背景颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="tooltipObj.labelBackgroundColor" show-alpha @change='colorGet(tooltipObj.labelBackgroundColor, "tooltipObj.labelBackgroundColor", "tooltip.axisPointer.label.backgroundColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="tooltipObj.labelBackgroundColor" :spellcheck="false" @focus="inputColor(tooltipObj.labelBackgroundColor)" @blur='inputColorGet(tooltipObj.labelBackgroundColor,"tooltipObj.labelBackgroundColor", "tooltip.axisPointer.label.backgroundColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">边框粗细</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.labelBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(tooltipObj.labelBorderWidth, "tooltipObj.labelBorderWidth", "tooltip.axisPointer.label.borderWidth", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.labelBorderWidth1" :spellcheck="false" @focus="inputColor(tooltipObj.labelBorderWidth1)" @blur='sliderInpGet(tooltipObj.labelBorderWidth1, "tooltipObj.labelBorderWidth", "tooltip.axisPointer.label.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">边框圆角</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.labelBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.labelBorderRadius, "tooltipObj.labelBorderRadius", "tooltip.axisPointer.label.borderRadius", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.labelBorderRadius1" :spellcheck="false" @focus="inputColor(tooltipObj.labelBorderRadius1)" @blur='sliderInpGet(tooltipObj.labelBorderRadius1, "tooltipObj.labelBorderRadius", "tooltip.axisPointer.label.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">边框颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="tooltipObj.labelBorderColor" show-alpha @change='colorGet(tooltipObj.labelBorderColor, "tooltipObj.labelBorderColor", "tooltip.axisPointer.label.borderColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="tooltipObj.labelBorderColor" :spellcheck="false" @focus="inputColor(tooltipObj.labelBorderColor)" @blur='inputColorGet(tooltipObj.labelBorderColor,"tooltipObj.labelBorderColor", "tooltip.axisPointer.label.borderColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊大小</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.labelShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.labelShadowBlur, "tooltipObj.labelShadowBlur", "tooltip.axisPointer.label.shadowBlur", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.labelShadowBlur1" :spellcheck="false" @focus="inputColor(tooltipObj.labelShadowBlur1)" @blur='sliderInpGet(tooltipObj.labelShadowBlur1, "tooltipObj.labelShadowBlur", "tooltip.axisPointer.label.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="tooltipObj.labelShadowColor" show-alpha @change='colorGet(tooltipObj.labelShadowColor, "tooltipObj.labelShadowColor", "tooltip.axisPointer.label.shadowColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="tooltipObj.labelShadowColor" :spellcheck="false" @focus="inputColor(tooltipObj.labelShadowColor)" @blur='inputColorGet(tooltipObj.labelShadowColor,"tooltipObj.labelShadowColor", "tooltip.axisPointer.label.shadowColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.labelShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.labelShadowOffsetX, "tooltipObj.labelShadowOffsetX", "tooltip.axisPointer.label.shadowOffsetX", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.labelShadowOffsetX1" :spellcheck="false" @focus="inputColor(tooltipObj.labelShadowOffsetX1)" @blur='sliderInpGet(tooltipObj.labelShadowOffsetX1, "tooltipObj.labelShadowOffsetX", "tooltip.axisPointer.label.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="tooltipObj.labelShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.labelShadowOffsetY, "tooltipObj.labelShadowOffsetY", "tooltip.axisPointer.label.shadowOffsetY", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="tooltipObj.labelShadowOffsetY1" :spellcheck="false" @focus="inputColor(tooltipObj.labelShadowOffsetY1)" @blur='sliderInpGet(tooltipObj.labelShadowOffsetY1, "tooltipObj.labelShadowOffsetY", "tooltip.axisPointer.label.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+					</el-tab-pane>
+				</el-tabs>
+			</el-collapse-item>
+		</el-collapse>
+	</ul>
+	<ul id="tooltip2">
+		<li>
+			<div class="attributeName">提示框浮层显示</div>
+			<div class="switch">
+				<el-switch v-model="tooltipObj.ShowContent" @change='switchGet(tooltipObj.ShowContent, "tooltip.showContent")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">内容永久显示</div>
+			<div class="switch">
+				<el-switch v-model="tooltipObj.AlwaysShowContent" @change='switchGet(tooltipObj.AlwaysShowContent, "tooltip.alwaysShowContent")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">鼠标进入浮层</div>
+			<div class="switch">
+				<el-switch v-model="tooltipObj.Enterable" @change='switchGet(tooltipObj.Enterable, "tooltip.enterable")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">框限制在图表内</div>
+			<div class="switch">
+				<el-switch v-model="tooltipObj.Confine" @change='switchGet(tooltipObj.Confine, "tooltip.confine")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">提示框触发条件</div>
+			<div class="radioButton">
+				<el-radio-group size="small" v-model="tooltipObj.TriggerOn" @change='radioGet(tooltipObj.TriggerOn, "tooltip.triggerOn", "string")'>
+					<el-radio-button label="mousemove|click">点击移动</el-radio-button>
+					<el-radio-button label="mousemove">移动</el-radio-button>
+					<el-radio-button label="click">点击</el-radio-button>
+					<el-radio-button label="none">否</el-radio-button>
+				</el-radio-group>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">提示框显示延时</div>
+			<div class="slider">
+				<el-slider v-model="tooltipObj.ShowDelay" :min="0" :max="10000" :step="1" @change='sliderGet(tooltipObj.ShowDelay, "tooltipObj.ShowDelay", "tooltip.showDelay", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tooltipObj.ShowDelay1" :spellcheck="false" @focus="inputColor(tooltipObj.ShowDelay1)" @blur='sliderInpGet(tooltipObj.ShowDelay1, "tooltipObj.ShowDelay", "tooltip.showDelay", 0, 1000, 1, "rem", "number")'></el-input>
+			</div>
+			<em>ms</em>
+		</li>
+		<li>
+			<div class="attributeName">提示框隐藏延时</div>
+			<div class="slider">
+				<el-slider v-model="tooltipObj.HideDelay" :min="0" :max="10000" :step="1" @change='sliderGet(tooltipObj.HideDelay, "tooltipObj.HideDelay", "tooltip.hideDelay", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tooltipObj.HideDelay1" :spellcheck="false" @focus="inputColor(tooltipObj.HideDelay1)" @blur='sliderInpGet(tooltipObj.HideDelay1, "tooltipObj.HideDelay", "tooltip.hideDelay", 0, 1000, 1, "rem", "number")'></el-input>
+			</div>
+			<em>ms</em>
+		</li>
+		<li>
+			<div class="attributeName">移动动画时间</div>
+			<div class="slider">
+				<el-slider v-model="tooltipObj.TransitionDuration" :min="0" :max="10" :step="0.1" @change='sliderGet(tooltipObj.TransitionDuration, "tooltipObj.TransitionDuration", "tooltip.transitionDuration", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tooltipObj.TransitionDuration1" :spellcheck="false" @focus="inputColor(tooltipObj.TransitionDuration1)" @blur='sliderInpGet(tooltipObj.TransitionDuration1, "tooltipObj.TransitionDuration", "tooltip.transitionDuration", 0, 10, 0.1, "rem", "number")'></el-input>
+			</div>
+			<em>s</em>
+		</li>
+		<el-collapse v-model="tooltipObj.ActiveNames" style="margin-bottom: 5px;">
+			<el-collapse-item title="文本样式" name="textStyle">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="tooltipObj.textStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(tooltipObj.textStyleFontFamily, "tooltip.textStyle.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="tooltipObj.textStyleColor" show-alpha @change='colorGet(tooltipObj.textStyleColor, "tooltipObj.textStyleColor", "tooltip.textStyle.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="tooltipObj.textStyleColor" :spellcheck="false" @focus="inputColor(tooltipObj.textStyleColor)" @blur='inputColorGet(tooltipObj.textStyleColor,"tooltipObj.textStyleColor", "tooltip.textStyle.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="tooltipObj.textStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(tooltipObj.textStyleFontSize, "tooltipObj.textStyleFontSize", "tooltip.textStyle.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="tooltipObj.textStyleFontSize1" :spellcheck="false" @focus="inputColor(tooltipObj.textStyleFontSize1)" @blur='sliderInpGet(tooltipObj.textStyleFontSize1, "tooltipObj.textStyleFontSize", "tooltip.textStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="tooltipObj.textStyleFontSytle" @change='radioGet(tooltipObj.textStyleFontSytle, "tooltip.textStyle.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="tooltipObj.textStyleFontWeight" @change='radioGet(tooltipObj.textStyleFontWeight, "tooltip.textStyle.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="tooltipObj.BackgroundColor" show-alpha @change='colorGet(tooltipObj.BackgroundColor, "tooltipObj.BackgroundColor", "tooltip.backgroundColor", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="tooltipObj.BackgroundColor" :spellcheck="false" @focus="inputColor(tooltipObj.BackgroundColor)" @blur='inputColorGet(tooltipObj.BackgroundColor,"tooltipObj.BackgroundColor", "tooltip.backgroundColor", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="tooltipObj.BorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(tooltipObj.BorderWidth, "tooltipObj.BorderWidth", "tooltip.borderWidth", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tooltipObj.BorderWidth1" :spellcheck="false" @focus="inputColor(tooltipObj.BorderWidth1)" @blur='sliderInpGet(tooltipObj.BorderWidth1, "tooltipObj.BorderWidth", "tooltip.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="tooltipObj.BorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(tooltipObj.BorderRadius, "tooltipObj.BorderRadius", "tooltip.borderRadius", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tooltipObj.BorderRadius1" :spellcheck="false" @focus="inputColor(tooltipObj.BorderRadius1)" @blur='sliderInpGet(tooltipObj.BorderRadius1, "tooltipObj.BorderRadius", "tooltip.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="tooltipObj.BorderColor" show-alpha @change='colorGet(tooltipObj.BorderColor, "tooltipObj.BorderColor", "tooltip.borderColor", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="tooltipObj.BorderColor" :spellcheck="false" @focus="inputColor(tooltipObj.BorderColor)" @blur='inputColorGet(tooltipObj.BorderColor,"tooltipObj.BorderColor", "tooltip.borderColor", "string")'></el-input>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

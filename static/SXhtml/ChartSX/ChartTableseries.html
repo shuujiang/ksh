@@ -1,0 +1,255 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="seriesTable">
+		<li>
+			<div class="attributeName">系列选择</div>
+			<div class="select">
+				<el-select size="small" v-model="seriesIndex" placeholder="请选择" style="width:100%;" @change='selectGet(seriesIndex, "seriesIndex", "string", "", "series")'>
+					<el-option v-for="(item, a) in seriesObj.seriesList" :key="item.value" :label="item.name" :value="a"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">序号显示</div>
+			<div class="switch">
+				<el-switch v-model="seriesObj.table.show" on-text="yes" off-text="no" @change='switchGet(seriesObj.table.show, "show", "reconstruction")'></el-switch>
+			</div>
+		</li>
+		<div class="ordinaryTable">
+			<li>
+				<div class="attributeName">插入动画时间</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.table.interject" :min="0" :max="5" :step="0.1" @change='sliderGet(seriesObj.table.interject, "seriesObj.table.interject", "interject", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.table.interject1" :spellcheck="false" @focus="inputColor(seriesObj.table.interject1)" @blur='sliderInpGet(seriesObj.table.interject1, "seriesObj.table.interject", "interject", 0, 5, 0.1, "rem", "number")'></el-input>
+				</div>
+				<em>s</em>
+			</li>
+			<li>
+				<div class="attributeName">滚动条数</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.table.runNum" @blur='inputGet(seriesObj.table.runNum, "runNum", "number")'></el-input>
+				</div>
+			</li>
+		</div>
+		<li>
+			<div class="attributeName">展示条数</div>
+			<div class="input">
+				<el-input size="small" v-model="seriesObj.table.showNum" @blur='inputGet(seriesObj.table.showNum, "showNum", "number", null,  null, "reconstruction")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">滚动时间</div>
+			<div class="slider">
+				<el-slider v-model="seriesObj.table.animate" :min="0" :max="10" :step="0.1" @change='sliderGet(seriesObj.table.animate, "seriesObj.table.animate", "animate", "rem", "number", null, "reconstruction")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="seriesObj.table.animate1" :spellcheck="false" @focus="inputColor(seriesObj.table.animate1)" @blur='sliderInpGet(seriesObj.table.animate1, "seriesObj.table.animate", "animate", 0, 10, 0.1, "rem", "number", null, "reconstruction")'></el-input>
+			</div>
+			<em>s</em>
+		</li>
+		<li>
+			<div class="attributeName">格线粗细</div>
+			<div class="slider">
+				<el-slider v-model="seriesObj.table.borderWidth" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.table.borderWidth, "seriesObj.table.borderWidth", "borderWidth", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="seriesObj.table.borderWidth1" :spellcheck="false" @focus="inputColor(seriesObj.table.borderWidth1)" @blur='sliderInpGet(seriesObj.table.borderWidth1, "seriesObj.table.borderWidth", "borderWidth", 0, 100, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">格线样式</div>
+			<div class="select">
+				<el-select size="small" v-model="seriesObj.table.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.table.borderStyle, "borderStyle", "string")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">格线颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="seriesObj.table.borderColor" show-alpha @change='colorGet(seriesObj.table.borderColor, "seriesObj.table.borderColor", "borderColor", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="seriesObj.table.borderColor" :spellcheck="false" @focus="inputColor(seriesObj.table.borderColor)" @blur='inputColorGet(seriesObj.table.borderColor, "seriesObj.table.borderColor", "borderColor", "string")'></el-input>
+			</div>
+		</li>
+		<el-collapse v-model="seriesObj.table.select" style="margin-bottom: 5px;" accordion @change='tabClickGet(seriesObj.table.select, "select")'>
+			<el-collapse-item title="表头样式" name="header">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.table.header.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.table.header.fontFamily, "header.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.table.header.color" show-alpha @change='colorGet(seriesObj.table.header.color, "seriesObj.table.header.color", "header.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="seriesObj.table.header.color" :spellcheck="false" @focus="inputColor(seriesObj.table.header.color)" @blur='inputColorGet(seriesObj.table.header.color, "seriesObj.table.header.color", "header.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.table.header.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(seriesObj.table.header.fontSize, "seriesObj.table.header.fontSize", "header.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="seriesObj.table.header.fontSize1" :spellcheck="false" @focus="inputColor(seriesObj.table.header.fontSize1)" @blur='sliderInpGet(seriesObj.table.header.fontSize1, "seriesObj.table.header.fontSize", "header.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.table.header.fontStyle" @change='radioGet(seriesObj.table.header.fontStyle, "header.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.table.header.fontWeight" @change='radioGet(seriesObj.table.header.fontWeight, "header.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.table.header.backgroundColor" show-alpha @change='colorGet(seriesObj.table.header.backgroundColor, "seriesObj.table.header.backgroundColor", "header.backgroundColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="seriesObj.table.header.backgroundColor" :spellcheck="false" @focus="inputColor(seriesObj.table.header.backgroundColor)" @blur='inputColorGet(seriesObj.table.header.backgroundColor, "seriesObj.table.header.backgroundColor", "header.backgroundColor", "string")'></el-input>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="奇数样式" name="idol">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.table.idol.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.table.idol.fontFamily, "idol.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.table.idol.color" show-alpha @change='colorGet(seriesObj.table.idol.color, "seriesObj.table.idol.color", "idol.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="seriesObj.table.idol.color" :spellcheck="false" @focus="inputColor(seriesObj.table.idol.color)" @blur='inputColorGet(seriesObj.table.idol.color, "seriesObj.table.idol.color", "idol.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.table.idol.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(seriesObj.table.idol.fontSize, "seriesObj.table.idol.fontSize", "idol.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="seriesObj.table.idol.fontSize1" :spellcheck="false" @focus="inputColor(seriesObj.table.idol.fontSize1)" @blur='sliderInpGet(seriesObj.table.idol.fontSize1, "seriesObj.table.idol.fontSize", "idol.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.table.idol.fontStyle" @change='radioGet(seriesObj.table.idol.fontStyle, "idol.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.table.idol.fontWeight" @change='radioGet(seriesObj.table.idol.fontWeight, "idol.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.table.idol.backgroundColor" show-alpha @change='colorGet(seriesObj.table.idol.backgroundColor, "seriesObj.table.idol.backgroundColor", "idol.backgroundColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="seriesObj.table.idol.backgroundColor" :spellcheck="false" @focus="inputColor(seriesObj.table.idol.backgroundColor)" @blur='inputColorGet(seriesObj.table.idol.backgroundColor, "seriesObj.table.idol.backgroundColor", "idol.backgroundColor", "string")'></el-input>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="偶数样式" name="odd">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.table.odd.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.table.odd.fontFamily, "odd.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.table.odd.color" show-alpha @change='colorGet(seriesObj.table.odd.color, "seriesObj.table.odd.color", "odd.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="seriesObj.table.odd.color" :spellcheck="false" @focus="inputColor(seriesObj.table.odd.color)" @blur='inputColorGet(seriesObj.table.odd.color, "seriesObj.table.odd.color", "odd.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.table.odd.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(seriesObj.table.odd.fontSize, "seriesObj.table.odd.fontSize", "odd.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="seriesObj.table.odd.fontSize1" :spellcheck="false" @focus="inputColor(seriesObj.table.odd.fontSize1)" @blur='sliderInpGet(seriesObj.table.odd.fontSize1, "seriesObj.table.odd.fontSize", "odd.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.table.odd.fontStyle" @change='radioGet(seriesObj.table.odd.fontStyle, "odd.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.table.odd.fontWeight" @change='radioGet(seriesObj.table.odd.fontWeight, "odd.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.table.odd.backgroundColor" show-alpha @change='colorGet(seriesObj.table.odd.backgroundColor, "seriesObj.table.odd.backgroundColor", "odd.backgroundColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="seriesObj.table.odd.backgroundColor" :spellcheck="false" @focus="inputColor(seriesObj.table.odd.backgroundColor)" @blur='inputColorGet(seriesObj.table.odd.backgroundColor, "seriesObj.table.odd.backgroundColor", "odd.backgroundColor", "string")'></el-input>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+	</ul>
+</body>
+</html>

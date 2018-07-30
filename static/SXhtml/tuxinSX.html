@@ -1,0 +1,135 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul class="setting" id="graphicattr">
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="svgObj.width" @focus="inputColor(svgObj.width)" @blur='inputNumGet(svgObj.width, "svgObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="svgObj.height" @focus="inputColor(svgObj.height)" @blur='inputNumGet(svgObj.height, "svgObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="svgObj.left" @focus="inputColor(svgObj.left)" @blur='inputNumGet(svgObj.left, "svgObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="svgObj.top" @focus="inputColor(svgObj.top)" @blur='inputNumGet(svgObj.top, "svgObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<el-tabs v-model="svgObj.hrefChange" type="card" @tab-click='tabPositionGet(svgObj.hrefChange, "hrefChange")'>
+			<el-tab-pane name="common" label="内部地址选择">
+				<li>
+					<div class="attributeName">链接地址</div>
+					<div class="select">
+						<el-select size="small" v-model="svgObj.serlctHref" clearable placeholder="请选择地址" style="width:100%;" @change='seelectHref(svgObj.serlctHref, "href")'>
+							<el-option v-for="item in hrefList" :key="item.value" :label="item.name" :value="item.id"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</el-tab-pane>
+			<el-tab-pane name="custom" label="外部地址输入">
+				<li>
+					<div class="attributeName">链接地址</div>
+					<div class="input">
+						<el-input size="small" v-model="svgObj.href" @blur='inputGet(svgObj.href, "svgObj.href", "href", "string")'>
+							<template slot="prepend">Http://</template>
+						</el-input>
+					</div>
+				</li>
+			</el-tab-pane>
+		</el-tabs>
+		<li>
+			<div class="attributeName">链接打开选择</div>
+			<div class="radioButton">
+				<el-radio-group size="small" v-model="svgObj.target" @change='radioGet(svgObj.target, "target")'>
+					<el-radio-button label="blank">新窗口</el-radio-button>
+					<el-radio-button label="self">当前窗口</el-radio-button>
+				</el-radio-group>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">图形颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="svgObj.fill" show-alpha @change='colorGet(svgObj.fill, "fill.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="svgObj.fill" :spellcheck="false" @focus="inputColor(svgObj.fill)" @blur='inputColorGet(svgObj.fill, "svgObj.fill", "fill.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="svgObj.backgroundColor" show-alpha @change='colorGet(svgObj.backgroundColor, "background.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="svgObj.backgroundColor" :spellcheck="false" @focus="inputColor(svgObj.backgroundColor)" @blur='inputColorGet(svgObj.backgroundColor, "svgObj.backgroundColor", "background.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="svgObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(svgObj.borderWidth, "svgObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="svgObj.borderWidth1" :spellcheck="false" @focus="inputColor(svgObj.borderWidth1)" @blur='sliderInpGet(svgObj.borderWidth1, "svgObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="svgObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(svgObj.borderRadius, "svgObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="svgObj.borderRadius1" :spellcheck="false" @focus="inputColor(svgObj.borderRadius1)" @blur='sliderInpGet(svgObj.borderRadius1, "svgObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="svgObj.borderColor" show-alpha @change='colorGet(svgObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="svgObj.borderColor" :spellcheck="false" @focus="inputColor(svgObj.borderColor)" @blur='inputColorGet(svgObj.borderColor, "svgObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="svgObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(svgObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

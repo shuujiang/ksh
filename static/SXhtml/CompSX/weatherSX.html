@@ -1,0 +1,172 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="weatherattr" class="setting">
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="weatherObj.width" @focus="inputColor(weatherObj.width)" @blur='inputNumGet(weatherObj.width, "weatherObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="weatherObj.height" @focus="inputColor(weatherObj.height)" @blur='inputNumGet(weatherObj.height, "weatherObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="weatherObj.left" @focus="inputColor(weatherObj.left)" @blur='inputNumGet(weatherObj.left, "weatherObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="weatherObj.top" @focus="inputColor(weatherObj.top)" @blur='inputNumGet(weatherObj.top, "weatherObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li class="timeFormat">
+			<div class="attributeName">天气样式</div>
+			<div class="select">
+				<el-select size="small" v-model="weatherObj.weatherType" placeholder="请选择" style="width:100%;" @change='selectGet(weatherObj.weatherType, "weatherType", "string")'>
+					<el-option v-for="item in weatherTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li class="timeFormat">
+			<div class="attributeName">自动获取地址</div>
+			<div class="switch">
+					<el-switch v-model="weatherObj.show" on-text="yes" off-text="no" @change='switchGet(weatherObj.show, "show")'></el-switch>
+				</div>
+		</li>
+		<li class="timeFormat">
+			<div class="attributeName">选择省级</div>
+			<div class="select">
+				<el-select size="small" v-model="weatherObj.province" :disabled="weatherObj.show" filterable  placeholder="请选择" style="width:100%;" @change='selectGet(weatherObj.province, "province", "string")'>
+					<el-option v-for="item in weatherProvince" :key="item" :label="item" :value="item"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li class="timeFormat">
+			<div class="attributeName">选择市级</div>
+			<div class="select">
+				<el-select size="small" v-model="weatherObj.city" :disabled="weatherObj.show" filterable  placeholder="请选择" style="width:100%;" @change='selectGet(weatherObj.city, "city", "string")'>
+					<el-option v-for="item in weatherCity" :key="item" :label="item" :value="item"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li class="timeFormat">
+			<div class="attributeName">选择市/区</div>
+			<div class="select">
+				<el-select size="small" v-model="weatherObj.code" :disabled="weatherObj.show" filterable  placeholder="请选择" style="width:100%;" @change='selectGet(weatherObj.code, "code", "string")'>
+					<el-option v-for="item in weatherCode" :key="item.code" :label="item.area" :value="item.code"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<el-collapse v-model="weatherObj.select" style="margin-bottom: 5px;" accordion @change='selectGet(weatherObj.select, "select", "string")'>
+			<el-collapse-item title="字体样式" name="textStyle">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="weatherObj.family" placeholder="请选择" style="width:100%;" @change='selectGet(weatherObj.family, "font.family", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="weatherObj.color" show-alpha @change='colorGet(weatherObj.color, "color", "color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="weatherObj.color" :spellcheck="false" @focus="inputColor(weatherObj.color)" @blur='inputColorGet(weatherObj.color, "color", "color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton1">
+						<el-radio-group size="small" v-model="weatherObj.fontSytle" @change='radioGet(weatherObj.fontSytle, "font.style", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton1">
+						<el-radio-group size="small" v-model="weatherObj.fontWeight" @change='radioGet(weatherObj.fontWeight, "font.weight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="weatherObj.backgroundColor" show-alpha @change='colorGet(weatherObj.backgroundColor, "backgroundColor", "background.color", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="weatherObj.backgroundColor" :spellcheck="false" @focus="inputColor(weatherObj.backgroundColor)" @blur='inputColorGet(weatherObj.backgroundColor, "backgroundColor", "background.color", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="weatherObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(weatherObj.borderWidth, "borderWidth", "border.width", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="weatherObj.borderWidth1" :spellcheck="false" @focus="inputColor(weatherObj.borderWidth1)" @blur='sliderInpGet(weatherObj.borderWidth1, "borderWidth", "border.width", 0, 20, 1, "number")'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="weatherObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(weatherObj.borderRadius, "borderRadius", "border.radius", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="weatherObj.borderRadius1" :spellcheck="false" @focus="inputColor(weatherObj.borderRadius1)" @blur='sliderInpGet(weatherObj.borderRadius1, "borderRadius", "border.radius", 0, 100, 1, "number")'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="weatherObj.borderColor" show-alpha @change='colorGet(weatherObj.borderColor, "borderColor", "border.color", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="weatherObj.borderColor" :spellcheck="false" @focus="inputColor(weatherObj.borderColor)" @blur='inputColorGet(weatherObj.borderColor,"borderColor", "border.color", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="weatherObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(weatherObj.borderStyle, "border.style", "string")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

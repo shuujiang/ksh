@@ -1,0 +1,357 @@
+.keshihua #loading {
+  background-color: rgba(255,255,255,0.5);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+}
+.keshihua #loading #loading-center-absolute {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 100px;
+  width: 200px;
+  margin-top: -50px;
+  margin-left: -100px;
+}
+.keshihua #loading #loading-center-absolute .object {
+  width: 12px;
+  height: 100px;
+  margin-right: 8px;
+  background-color: #409eff;
+  animation: animate 1s infinite;
+  float: left;
+}
+.keshihua #loading #loading-center-absolute .object:last-child {
+  margin-right: 0px;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(10) {
+  animation-delay: 0.9s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(9) {
+  animation-delay: 0.8s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(8) {
+  animation-delay: 0.7s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(7) {
+  animation-delay: 0.6s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(6) {
+  animation-delay: 0.5s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.keshihua #loading #loading-center-absolute .object:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.keshihua #shujuSelect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(204,204,204,0.5);
+  z-index: 2000;
+  display: none;
+}
+.keshihua #shujuSelect .bounced {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 700px;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+  color: #303133;
+}
+.keshihua #shujuSelect .bounced .selTop {
+  width: 100%;
+  height: 45px;
+  line-height: 45px;
+  padding-left: 20px;
+  font-size: 18px;
+}
+.keshihua #shujuSelect .bounced .selTop p {
+  line-height: 45px;
+  float: left;
+}
+.keshihua #shujuSelect .bounced .selTop i {
+  width: 25px;
+  height: 25px;
+  background: url("../image/shaixuan.png");
+  background-size: 25px 25px;
+  margin: 10px 20px;
+  float: right;
+}
+.keshihua #shujuSelect .bounced .selContent {
+  width: 100%;
+  height: 410px;
+  vertical-align: middle;
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left {
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left p {
+  font-size: 14px;
+  line-height: 40px;
+  width: 120px;
+  float: left;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .selectChart {
+  width: 100%;
+  height: 100%;
+  float: left;
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .selectChart .chartList {
+  float: left;
+  width: 540px;
+  height: 40px;
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .selectChart .chartList .select {
+  width: 150px;
+  float: left;
+  margin-right: 10px;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .selectChart .chartList .yuanShow {
+  float: left;
+  height: 30px;
+  overflow: hidden;
+  line-height: 30px;
+  font-size: 14px;
+  margin-right: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .selectChart .chartList .datasource {
+  width: 170px;
+  float: left;
+  height: 30px;
+  overflow: hidden;
+  line-height: 30px;
+  font-size: 14px;
+  margin-right: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-right: 0;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section1 {
+  width: 100%;
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section1 .selectName {
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section1 .selectName div {
+  float: left;
+  width: 310px;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section2 {
+  overflow: hidden;
+  width: 100%;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section2 .selectChart {
+  position: relative;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section2 .selectChart #selectChartBox {
+  width: 540px;
+  float: right;
+  height: 120px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section3 {
+  overflow: hidden;
+  width: 100%;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section3 .selectChart div {
+  width: 310px;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-left .section4 {
+  overflow: hidden;
+  width: 100%;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-right {
+  width: 300px;
+  height: 100%;
+  float: right;
+  overflow: hidden;
+  position: relative;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-right .selectSJ-right {
+  width: 320px;
+  height: 100%;
+  overflow-y: auto;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-right .selectSJ-right .top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 40px;
+  padding: 10px 20px;
+  background-color: #eee;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-right .selectSJ-right .top label {
+  margin-left: 10px;
+  font-weight: bold;
+  margin-top: -5px;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-right .selectSJ-right .content {
+  margin-top: 40px;
+  width: 300px;
+  padding: 10px;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-right .selectSJ-right .pullDown-content li {
+  padding-left: 5px;
+}
+.keshihua #shujuSelect .bounced .selContent .selContent-right .selectSJ-right .pullDown-content li label {
+  margin-left: 10px;
+  height: 22px;
+}
+.keshihua #shujuSelect .bounced .selctionBtn {
+  text-align: center;
+  width: 100%;
+  height: 45px;
+  margin-top: 10px;
+}
+.keshihua #shujuSelect .bounced .upLoad {
+  padding: 0 20px;
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .upLoad .uploader-list {
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .upLoad .uploader-list .item {
+  height: 50px;
+  display: none;
+}
+.keshihua #shujuSelect .bounced .upLoad .uploader-list .item .showJD {
+  margin-top: 40px;
+}
+.keshihua #shujuSelect .bounced .upLoad .container {
+  width: 305px;
+  height: 35px;
+}
+.keshihua #shujuSelect .bounced .videoSelect {
+  width: 100%;
+}
+.keshihua #shujuSelect .bounced .videoSelect .linkAddress {
+  width: 100%;
+  height: 40px;
+}
+.keshihua #shujuSelect .bounced .videoSelect .linkAddress .attributeName {
+  float: left;
+  width: 150px;
+  font-size: 16px;
+  line-height: 40px;
+  padding-left: 20px;
+}
+.keshihua #shujuSelect .bounced .videoSelect .linkAddress .input {
+  line-height: 40px;
+  float: left;
+  width: 450px;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele {
+  height: 350px;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .attributeName {
+  float: left;
+  width: 100%;
+  font-size: 16px;
+  line-height: 40px;
+  padding-left: 20px;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox {
+  width: 660px;
+  height: 310px;
+  border: 2px solid #bfcbd9;
+  margin-left: 20px;
+  padding: 10px 0 20px 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox,
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox1 {
+  cursor: pointer;
+  width: 115px;
+  height: 100px;
+  float: left;
+  padding: 5px;
+  margin-left: 10px;
+  margin-top: 10px;
+  position: relative;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox div,
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox1 div {
+  overflow: hidden;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox div p,
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox1 div p {
+  width: 100%;
+  height: 20px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox div .img,
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox1 div .img {
+  width: 100%;
+  height: 70px;
+  float: left;
+  background-position: 50% 50%;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox i,
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox1 i {
+  float: left;
+  display: none;
+  width: 15px;
+  height: 15px;
+  background: url("../image/shaixuan.png") 50% 50% no-repeat;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox:hover i,
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox1:hover i {
+  display: block;
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox {
+  border: 1px solid rgba(0,0,0,0);
+}
+.keshihua #shujuSelect .bounced .videoSelect .videoHrefSele .contentBox .imgBox1 {
+  border: 1px solid #409eff;
+}
+.keshihua #shujuSelect .monitoringBox {
+  height: 200px;
+}
+.keshihua #shujuSelect.shujuSelect {
+  display: block;
+  animation: shujuSelectShow 1.5s linear 0s 1;
+}

@@ -1,0 +1,107 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul class="setting" id="audioattr">
+		<li>
+			<div class="attributeName">音频编辑</div>
+			<div class="switch">
+				<el-button size="small" type="primary" @click="audioListChange()">播放列表编辑</el-button>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="audioObj.width" @focus="inputColor(audioObj.width)" @blur='inputNumGet(audioObj.width, "audioObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="audioObj.height" @focus="inputColor(audioObj.height)" @blur='inputNumGet(audioObj.height, "audioObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="audioObj.left" @focus="inputColor(audioObj.left)" @blur='inputNumGet(audioObj.left, "audioObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="audioObj.top" @focus="inputColor(audioObj.top)" @blur='inputNumGet(audioObj.top, "audioObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">组件显示</div>
+			<div class="switch">
+				<el-switch v-model="audioObj.show" on-text="yes" off-text="no" @change='switchGet(audioObj.show, "show")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="audioObj.backgroundColor" show-alpha @change='colorGet(audioObj.backgroundColor, "background.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="audioObj.backgroundColor" :spellcheck="false" @focus="inputColor(audioObj.backgroundColor)" @blur='inputColorGet(audioObj.backgroundColor, "audioObj.backgroundColor", "background.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="audioObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(audioObj.borderWidth, "audioObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="audioObj.borderWidth1" :spellcheck="false" @focus="inputColor(audioObj.borderWidth1)" @blur='sliderInpGet(audioObj.borderWidth1, "audioObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="audioObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(audioObj.borderRadius, "audioObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="audioObj.borderRadius1" :spellcheck="false" @focus="inputColor(audioObj.borderRadius1)" @blur='sliderInpGet(audioObj.borderRadius1, "audioObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="audioObj.borderColor" show-alpha @change='colorGet(audioObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="audioObj.borderColor" :spellcheck="false" @focus="inputColor(audioObj.borderColor)" @blur='inputColorGet(audioObj.borderColor, "audioObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="audioObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(audioObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

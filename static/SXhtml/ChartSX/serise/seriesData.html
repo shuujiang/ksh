@@ -1,0 +1,1436 @@
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+	<div id="categories" style="margin-top: 20px;">
+		<div id="seriesCategories" class="seriesCommon">
+			<ul>
+				<li>
+					<div class="attributeName">类目选择</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.seriesCategoriesIndex" filterable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.seriesCategoriesIndex, "series."+seriesIndex+".seriesCategoriesIndex", "string", "", "categories", seriesIndex)'>
+							<el-option v-for="(item, a) in seriesObj.seriesCategoriesList" :key="item.value" :label="item.name" :value="a"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="seriesCategoriesStyle" class="seriesCommon">
+			<ul>
+				<el-tabs style="margin-bottom:5px;" v-model="seriesObj.seriesCategoriesObj.symbolType" colorInput @tab-click='tabsComCusFun(seriesObj.seriesCategoriesObj.symbolType, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+"symbolType", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".symbol", "seriesObj.seriesCategoriesObj.symbol")'>
+					<el-tab-pane name="common" label="标记图形常用">
+						<li>
+							<div class="attributeName">标记图形类型</div>
+							<div class="select">
+								<el-select size="small" v-model="seriesObj.seriesCategoriesObj.symbol" clearable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.seriesCategoriesObj.symbol, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".symbol", "string")'>
+									<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+								</el-select>
+							</div>
+						</li>
+					</el-tab-pane>
+					<el-tab-pane name="custom" label="标记图形自定义">
+						<li>
+							<div class="attributeName">标记图形类型</div>
+							<div class="select">
+								<el-input size="small" v-model="seriesObj.seriesCategoriesObj.symbol" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.seriesCategoriesObj.symbol, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".symbol", "string")'></el-input>
+							</div>
+						</li>
+					</el-tab-pane>
+				</el-tabs>
+				<li>
+					<div class="attributeName">标记图形大小</div>
+					<div class="inputSySz">
+						<el-input size="small" v-model="seriesObj.seriesCategoriesObj.symbolSize" type="textarea" :rows="1" :spellcheck="false" @blur='inputGet(seriesObj.seriesCategoriesObj.symbolSize, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".symbolSize", "string")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">标记图形旋转角度</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.seriesCategoriesObj.symbolRotate" :min="0" :max="360" :step="1" @change='sliderGet(seriesObj.seriesCategoriesObj.symbolRotate, "seriesObj.seriesCategoriesObj.symbolRotate", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".symbolRotate", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="seriesObj.seriesCategoriesObj.symbolRotate1" :spellcheck="false" @focus="inputColor(seriesObj.seriesCategoriesObj.symbolRotate1)"
+						 @blur='sliderInpGet(seriesObj.seriesCategoriesObj.symbolRotate1, "seriesObj.seriesCategoriesObj.symbolRotate", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".symbolRotate", 0, 360, 1, "rem", "number")'></el-input>
+					</div>
+					<em>°</em>
+				</li>
+			</ul>
+		</div>
+		<div id="seriesCategoriesLabel" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesCategoriesObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesCategoriesObj.seriseDtatStyle, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="图形上的文本标签" name="dataLabel">
+						<el-tabs v-model="seriesObj.seriesCategoriesObj.labelSelect" @tab-click='tabClickGet(seriesObj.seriesCategoriesObj.labelSelect, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".labelSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesCategoriesObj.labelList" :label="aitems.name" :name="aitems.labelSelect">
+								<li class="showHidden">
+									<div class="attributeName">标签显示</div>
+									<div class="switch">
+										<el-switch v-model="aitems.show" @change='switchGet(aitems.show, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签位置</div>
+									<div class="select">
+										<el-select size="small" v-model="aitems.position" filterable placeholder="请选择" style="width:100%;" @change='selectGet(aitems.position, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".position", "string")'>
+											<el-option v-for="(item, a) in positionList" :key="item.value" :label="item.name" :value="item.position"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">与图形距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.distance" :min="0" :max="100" :step="1" @change='sliderGet(aitems.distance, "seriesObj.seriesCategoriesObj.labelList."+a+".distance", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".distance", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.distance1" :spellcheck="false" @focus="inputColor(aitems.distance1)" @blur='sliderInpGet(aitems.distance1, "seriesObj.seriesCategoriesObj.labelList."+a+".distance", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".distance", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">标签旋转</div>
+									<div class="slider">
+										<el-slider v-model="aitems.rotate" :min="-90" :max="90" :step="1" @change='sliderGet(aitems.rotate, "seriesObj.seriesCategoriesObj.labelList."+a+".rotate", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".rotate", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.rotate1" :spellcheck="false" @focus="inputColor(aitems.rotate1)" @blur='sliderInpGet(aitems.rotate1, "seriesObj.seriesCategoriesObj.labelList."+a+".rotate", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".rotate", -90, 90, 1, "rem", "number")'></el-input>
+									</div>
+									<em>°</em>
+								</li>
+								<li>
+									<div class="attributeName">文本字体</div>
+									<div class="select">
+										<el-select size="small" v-model="aitems.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(aitems.fontFamily, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".fontFamily", "string")'>
+											<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.color" show-alpha @change='colorGet(aitems.color, "seriesObj.seriesCategoriesObj.labelList."+a+".color", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.color" :spellcheck="false" @focus="inputColor(aitems.color)" @blur='inputColorGet(aitems.color, "seriesObj.seriesCategoriesObj.labelList."+a+".color", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(aitems.fontSize, "seriesObj.seriesCategoriesObj.labelList."+a+".fontSize", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".fontSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.fontSize1" :spellcheck="false" @focus="inputColor(aitems.fontSize1)" @blur='sliderInpGet(aitems.fontSize1, "seriesObj.seriesCategoriesObj.labelList."+a+".fontSize", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".fontSize", 12, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="aitems.fontStyle" @change='radioGet(aitems.fontStyle, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".fontStyle", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="italic">斜体</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体粗细</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="aitems.fontWeight" @change='radioGet(aitems.fontWeight, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".fontWeight", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="bold">加粗</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">文字内边距</div>
+									<div class="slider">
+										<el-slider v-model="aitems.padding" :min="0" :max="100" :step="1" @change='sliderGet(aitems.padding, "seriesObj.seriesCategoriesObj.labelList."+a+".padding", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".padding", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.padding1" :spellcheck="false" @focus="inputColor(aitems.padding1)" @blur='sliderInpGet(aitems.padding1, "seriesObj.seriesCategoriesObj.labelList."+a+".padding", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".padding", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">背景颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.backgroundColor" show-alpha @change='colorGet(aitems.backgroundColor, "seriesObj.seriesCategoriesObj.labelList."+a+".backgroundColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".backgroundColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.backgroundColor" :spellcheck="false" @focus="inputColor(aitems.backgroundColor)" @blur='inputColorGet(aitems.backgroundColor, "seriesObj.seriesCategoriesObj.labelList."+a+".backgroundColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".backgroundColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">边框粗细</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderWidth" :min="0" :max="20" :step="0.1" @change='sliderGet(aitems.borderWidth, "seriesObj.seriesCategoriesObj.labelList."+a+".borderWidth", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderWidth1" :spellcheck="false" @focus="inputColor(aitems.borderWidth1)" @blur='sliderInpGet(aitems.borderWidth1, "seriesObj.seriesCategoriesObj.labelList."+a+".borderWidth", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".borderWidth", 0, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框圆角</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(aitems.borderRadius, "seriesObj.seriesCategoriesObj.labelList."+a+".borderRadius", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".borderRadius", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderRadius1" :spellcheck="false" @focus="inputColor(aitems.borderRadius1)" @blur='sliderInpGet(aitems.borderRadius1, "seriesObj.seriesCategoriesObj.labelList."+a+".borderRadius", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.borderColor" show-alpha @change='colorGet(aitems.borderColor, "seriesObj.seriesCategoriesObj.labelList."+a+".borderColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.borderColor" :spellcheck="false" @focus="inputColor(aitems.borderColor)" @blur='inputColorGet(aitems.borderColor, "seriesObj.seriesCategoriesObj.labelList."+a+".borderColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowBlur, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowBlur", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowBlur1" :spellcheck="false" @focus="inputColor(aitems.shadowBlur1)" @blur='sliderInpGet(aitems.shadowBlur1, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowBlur", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.shadowColor" show-alpha @change='colorGet(aitems.shadowColor, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.shadowColor" :spellcheck="false" @focus="inputColor(aitems.shadowColor)" @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetX, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowOffsetX", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetX1)" @blur='sliderInpGet(aitems.shadowOffsetX1, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowOffsetX", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetY, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowOffsetY", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetY1)" @blur='sliderInpGet(aitems.shadowOffsetY1, "seriesObj.seriesCategoriesObj.labelList."+a+".shadowOffsetY", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".label."+aitems.labelSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+		<div id="seriesCategoriesItemStyle" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesCategoriesObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesCategoriesObj.seriseDtatStyle, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="图形样式" name="dataItemStyle">
+						<el-tabs v-model="seriesObj.seriesCategoriesObj.itemStyleSelect" @tab-click='tabClickGet(seriesObj.seriesCategoriesObj.itemStyleSelect, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyleSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesCategoriesObj.itemStyleList" :label="aitems.name" :name="aitems.itemStyleSelect">
+								<li>
+									<div class="attributeName">描边线类型</div>
+									<div class="radioButton1">
+										<el-radio-group size="small" v-model="aitems.borderType" @change='radioGet(aitems.borderType, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".borderType", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">描边线宽</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderWidth" :min="0" :max="100" :step="1" @change='sliderGet(aitems.borderWidth, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".borderWidth", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderWidth1" :spellcheck="false" @focus="inputColor(aitems.borderWidth1)" @blur='sliderInpGet(aitems.borderWidth1, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".borderWidth", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".borderWidth", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">描边线颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.borderColor" show-alpha @change='colorGet(aitems.borderColor, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".borderColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.borderColor" :spellcheck="false" @focus="inputColor(aitems.borderColor)" @blur='inputColorGet(aitems.borderColor, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".borderColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<p class="attributeName">图形颜色</p>
+								<el-tabs v-model="aitems.itemStyleColor" colorInput @tab-click='gradientColorGet(aitems.itemStyleColor, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".itemStyleColor", "seriesObj.seriesCategoriesObj.itemStyleList."+a+".color", "seriesObj.seriesCategoriesObj.itemStyleList."+a+".gradationColor", "seriesObj.seriesCategoriesObj.itemStyleList."+a+".gradationColor1", "seriesObj.seriesCategoriesObj.itemStyleList."+a+".gradationType", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", seriesIndex)'>
+									<el-tab-pane label="图形颜色(普通)" name="ordinary">
+										<li>
+											<div class="attributeName">颜色</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.color" show-alpha @change='colorGet(aitems.color, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".color", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", "string")'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.color" :spellcheck="false" @focus="inputColor(aitems.color)" @blur='inputColorGet(aitems.color, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".color", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", "string")'></el-input>
+											</div>
+										</li>
+
+									</el-tab-pane>
+									<el-tab-pane label="图形颜色(渐变)" name="shade">
+										<li>
+											<div class="attributeName">渐变色1</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.gradationColor" show-alpha @change='colorGet(aitems.gradationColor, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".gradationColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 0)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.gradationColor" :spellcheck="false" @focus="inputColor(aitems.gradationColor)" @blur='inputColorGet(aitems.gradationColor, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".gradationColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 0)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变色2</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.gradationColor1" show-alpha @change='colorGet(aitems.gradationColor1, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".gradationColor1", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 1)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.gradationColor1" :spellcheck="false" @focus="inputColor(aitems.gradationColor1)" @blur='inputColorGet(aitems.gradationColor1, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".gradationColor1", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 1)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变类型</div>
+											<div class="radioButton">
+												<el-radio-group size="small" v-model="aitems.gradationType" @change='radioGet(aitems.gradationType, "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object")'>
+													<el-radio-button label="linear">线性</el-radio-button>
+													<el-radio-button label="radial">径向</el-radio-button>
+												</el-radio-group>
+											</div>
+										</li>
+
+									</el-tab-pane>
+								</el-tabs>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowBlur, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowBlur", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowBlur1" :spellcheck="false" @focus="inputColor(aitems.shadowBlur1)" @blur='sliderInpGet(aitems.shadowBlur1, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowBlur", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.shadowColor" show-alpha @change='colorGet(aitems.shadowColor, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.shadowColor" :spellcheck="false" @focus="inputColor(aitems.shadowColor)" @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowColor", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetX, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowOffsetX", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetX1)" @blur='sliderInpGet(aitems.shadowOffsetX1, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowOffsetX", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetY, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowOffsetY", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetY1)" @blur='sliderInpGet(aitems.shadowOffsetY1, "seriesObj.seriesCategoriesObj.itemStyleList."+a+".shadowOffsetY", "series."+seriesIndex+".categories."+seriesObj.seriesCategoriesIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+	</div>
+	<div id="data" style="margin-top: 20px;">
+		<div id="seriesData" class="seriesDataCommon">
+			<ul>
+				<li>
+					<div class="attributeName">元素选择</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.seriesDataIndex" filterable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.seriesDataIndex, "series."+seriesIndex+".seriesDataIndex", "number", "", "data", seriesIndex)'>
+							<el-option v-for="(item, a) in seriesObj.seriesDataObj.seriesDataList" :key="item.value" :label="item.name" :value="a"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="seriesDataStyle" class="seriesCommon">
+			<ul>
+				<el-tabs v-model="seriesObj.seriesDataObj.symbolType" type="card" @tab-click='tabsComCusFun(seriesObj.seriesDataObj.symbolType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".symbolType", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".symbol", "string", "seriesObj.seriesDataObj.symbol")'>
+					<el-tab-pane name="common" label="标记图形常用">
+						<li>
+							<div class="attributeName">标记图形类型</div>
+							<div class="select">
+								<el-select size="small" v-model="seriesObj.seriesDataObj.symbol" clearable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.seriesDataObj.symbol, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".symbol", "string")'>
+									<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+								</el-select>
+							</div>
+						</li>
+					</el-tab-pane>
+					<el-tab-pane name="custom" label="标记图形自定义">
+						<li class="textarea">
+							<div class="attributeName">标记图形类型</div>
+							<div class="select">
+								<el-input size="small" v-model="seriesObj.seriesDataObj.symbol" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.seriesDataObj.symbol, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".symbol", "string")'></el-input>
+							</div>
+						</li>
+					</el-tab-pane>
+				</el-tabs>
+				<li class="textarea">
+					<div class="attributeName">标记图形大小</div>
+					<div class="input">
+						<el-input size="small" v-model="seriesObj.seriesDataObj.symbolSize" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.seriesDataObj.symbolSize, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".symbolSize", "string")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">标记图形旋转角度</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.seriesDataObj.symbolRotate" :min="0" :max="360" :step="1" @change='sliderGet(seriesObj.seriesDataObj.symbolRotate, "seriesObj.seriesDataObj.symbolRotate", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".symbolRotate", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="seriesObj.seriesDataObj.symbolRotate1" :spellcheck="false" @focus="inputColor(seriesObj.seriesDataObj.symbolRotate1)"
+						 @blur='sliderInpGet(seriesObj.seriesDataObj.symbolRotate1, "seriesObj.seriesDataObj.symbolRotate", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".symbolRotate", 0, 360, 1, "rem", "number")'></el-input>
+					</div>
+					<em>°</em>
+				</li>
+			</ul>
+		</div>
+		<div id="seriesDataLabel" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesDataObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesDataObj.seriseDtatStyle, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="图形上的文本标签" name="dataLabel">
+						<el-tabs v-model="seriesObj.seriesDataObj.labelSelect" @tab-click='tabClickGet(seriesObj.seriesDataObj.labelSelect, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesDataObj.labelList" :label="aitems.name" :name="aitems.labelSelect">
+								<li class="showHidden">
+									<div class="attributeName">标签显示</div>
+									<div class="switch">
+										<el-switch v-model="aitems.show" @change='switchGet(aitems.show, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签位置</div>
+									<div class="select">
+										<el-select size="small" v-model="aitems.position" filterable placeholder="请选择" style="width:100%;" @change='selectGet(aitems.position, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".position", "string")'>
+											<el-option v-for="(item, a) in positionList" :key="item.value" :label="item.name" :value="item.position"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">与图形距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.distance" :min="0" :max="100" :step="1" @change='sliderGet(aitems.distance, "seriesObj.seriesDataObj.labelList."+a+".distance", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".distance", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.distance1" :spellcheck="false" @focus="inputColor(aitems.distance1)" @blur='sliderInpGet(aitems.distance1, "seriesObj.seriesDataObj.labelList."+a+".distance", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".distance", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">标签旋转</div>
+									<div class="slider">
+										<el-slider v-model="aitems.rotate" :min="-90" :max="90" :step="1" @change='sliderGet(aitems.rotate, "seriesObj.seriesDataObj.labelList."+a+".rotate", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".rotate", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.rotate1" :spellcheck="false" @focus="inputColor(aitems.rotate1)" @blur='sliderInpGet(aitems.rotate1, "seriesObj.seriesDataObj.labelList."+a+".rotate", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".rotate", -90, 90, 1, "rem", "number")'></el-input>
+									</div>
+									<em>°</em>
+								</li>
+								<li>
+									<div class="attributeName">文本字体</div>
+									<div class="select">
+										<el-select size="small" v-model="aitems.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(aitems.fontFamily, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".fontFamily", "string")'>
+											<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.color" show-alpha @change='colorGet(aitems.color, "seriesObj.seriesDataObj.labelList."+a+".color", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.color" :spellcheck="false" @focus="inputColor(aitems.color)" @blur='inputColorGet(aitems.color, "seriesObj.seriesDataObj.labelList."+a+".color", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(aitems.fontSize, "seriesObj.seriesDataObj.labelList."+a+".fontSize", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".fontSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.fontSize1" :spellcheck="false" @focus="inputColor(aitems.fontSize1)" @blur='sliderInpGet(aitems.fontSize1, "seriesObj.seriesDataObj.labelList."+a+".fontSize", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".fontSize", 12, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="aitems.fontStyle" @change='radioGet(aitems.fontStyle, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".fontStyle", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="italic">斜体</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体粗细</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="aitems.fontWeight" @change='radioGet(aitems.fontWeight, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".fontWeight", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="bold">加粗</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">文字内边距</div>
+									<div class="slider">
+										<el-slider v-model="aitems.padding" :min="0" :max="100" :step="1" @change='sliderGet(aitems.padding, "seriesObj.seriesDataObj.labelList."+a+".padding", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".padding", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.padding1" :spellcheck="false" @focus="inputColor(aitems.padding1)" @blur='sliderInpGet(aitems.padding1, "seriesObj.seriesDataObj.labelList."+a+".padding", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".padding", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">背景颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.backgroundColor" show-alpha @change='colorGet(aitems.backgroundColor, "seriesObj.seriesDataObj.labelList."+a+".backgroundColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".backgroundColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.backgroundColor" :spellcheck="false" @focus="inputColor(aitems.backgroundColor)" @blur='inputColorGet(aitems.backgroundColor, "seriesObj.seriesDataObj.labelList."+a+".backgroundColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".backgroundColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">边框粗细</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderWidth" :min="0" :max="20" :step="0.1" @change='sliderGet(aitems.borderWidth, "seriesObj.seriesDataObj.labelList."+a+".borderWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderWidth1" :spellcheck="false" @focus="inputColor(aitems.borderWidth1)" @blur='sliderInpGet(aitems.borderWidth1, "seriesObj.seriesDataObj.labelList."+a+".borderWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".borderWidth", 0, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框圆角</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(aitems.borderRadius, "seriesObj.seriesDataObj.labelList."+a+".borderRadius", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".borderRadius", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderRadius1" :spellcheck="false" @focus="inputColor(aitems.borderRadius1)" @blur='sliderInpGet(aitems.borderRadius1, "seriesObj.seriesDataObj.labelList."+a+".borderRadius", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.borderColor" show-alpha @change='colorGet(aitems.borderColor, "seriesObj.seriesDataObj.labelList."+a+".borderColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.borderColor" :spellcheck="false" @focus="inputColor(aitems.borderColor)" @blur='inputColorGet(aitems.borderColor, "seriesObj.seriesDataObj.labelList."+a+".borderColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowBlur, "seriesObj.seriesDataObj.labelList."+a+".shadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowBlur1" :spellcheck="false" @focus="inputColor(aitems.shadowBlur1)" @blur='sliderInpGet(aitems.shadowBlur1, "seriesObj.seriesDataObj.labelList."+a+".shadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.shadowColor" show-alpha @change='colorGet(aitems.shadowColor, "seriesObj.seriesDataObj.labelList."+a+".shadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.shadowColor" :spellcheck="false" @focus="inputColor(aitems.shadowColor)" @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesDataObj.labelList."+a+".shadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetX, "seriesObj.seriesDataObj.labelList."+a+".shadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetX1)" @blur='sliderInpGet(aitems.shadowOffsetX1, "seriesObj.seriesDataObj.labelList."+a+".shadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetY, "seriesObj.seriesDataObj.labelList."+a+".shadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetY1)" @blur='sliderInpGet(aitems.shadowOffsetY1, "seriesObj.seriesDataObj.labelList."+a+".shadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".label."+aitems.labelSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+		<div id="seriesDataLabelLine" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesDataObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesDataObj.seriseDtatStyle, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="标签引导线" name="dataLabelLine">
+						<el-tabs v-model="seriesObj.seriesDataObj.labelLineSelect" @tab-click='tabClickGet(seriesObj.seriesDataObj.labelLineSelect, "series."+seriesIndex+".labelLineSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesDataObj.labelLineList" :label="aitems.name" :name="aitems.labelLineSelect">
+								<li class="showHidden">
+									<div class="attributeName">引导线显示</div>
+									<div class="switch">
+										<el-switch v-model="aitems.show" @change='switchGet(aitems.show, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".show")'></el-switch>
+									</div>
+								</li>
+								<li class="showHidden">
+									<div class="attributeName">引导线平滑</div>
+									<div class="switch">
+										<el-switch v-model="aitems.smooth" @change='switchGet(aitems.smooth, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".smooth")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">引导线第一段长度</div>
+									<div class="slider">
+										<el-slider v-model="aitems.length" :min="0" :max="100" :step="1" @change='sliderGet(aitems.length, "seriesObj.seriesDataObj.labelLineList."+a+".length", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".length", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.length1" :spellcheck="false" @focus="inputColor(aitems.length1)" @blur='sliderInpGet(aitems.length1, "seriesObj.seriesDataObj.labelLineList."+a+".length", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".length", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">引导线第二段长度</div>
+									<div class="slider">
+										<el-slider v-model="aitems.length2" :min="0" :max="100" :step="1" @change='sliderGet(aitems.length2, "seriesObj.seriesDataObj.labelLineList."+a+".length2", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".length2", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.length21" :spellcheck="false" @focus="inputColor(aitems.length21)" @blur='sliderInpGet(aitems.length21, "seriesObj.seriesDataObj.labelLineList."+a+".length2", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".length2", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+
+								<li>
+									<div class="attributeName">线条类型</div>
+									<div class="radioButton1">
+										<el-radio-group size="small" v-model="aitems.lineStyleType" @change='radioGet(aitems.lineStyleType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">线条宽度</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleWidth" :min="0" :max="30" :step="1" @change='sliderGet(aitems.lineStyleWidth, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleWidth1" :spellcheck="false" @focus="inputColor(aitems.lineStyleWidth1)" @blur='sliderInpGet(aitems.lineStyleWidth1,  "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.width", 0, 30, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<el-tabs v-model="aitems.lineStyleColorselected" colorInput @tab-click='gradientColorGet(aitems.lineStyleColorselected, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+ aitems.labelLineSelect+".lineStyleColorselected", "seriesObj.seriesDataObj.labelLineList."+a+".lineStylecolor", "seriesObj.seriesDataObj.labelLineList."+a+".lineStylegradationColor", "seriesObj.seriesDataObj.labelLineList."+a+".lineStylegradationColor1", "seriesObj.seriesDataObj.labelLineList."+a+".lineStylegradationType", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", seriesIndex)'>
+									<el-tab-pane label="线条颜色(普通)" name="ordinary">
+										<li>
+											<div class="attributeName">颜色</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylecolor" show-alpha @change='colorGet(aitems.lineStylecolor, "seriesObj.seriesDataObj.labelLineList."+a+".lineStylecolor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", "string")'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylecolor" :spellcheck="false" @focus="inputColor(aitems.lineStylecolor)" @blur='inputColorGet(aitems.lineStylecolor, "seriesObj.seriesDataObj.labelLineList."+a+".lineStylecolor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", "string")'></el-input>
+											</div>
+										</li>
+
+									</el-tab-pane>
+									<el-tab-pane label="线条颜色(渐变)" name="shade">
+										<li>
+											<div class="attributeName">渐变色1</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylegradationColor" show-alpha @change='colorGet(aitems.lineStylegradationColor, "seriesObj.seriesDataObj.labelLineList."+a+".lineStylegradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", "object", 0)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylegradationColor" :spellcheck="false" @focus="inputColor(aitems.lineStylegradationColor)"
+												 @blur='inputColorGet(aitems.lineStylegradationColor, "seriesObj.seriesDataObj.labelLineList."+a+".lineStylegradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", "object", 0)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变色2</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylegradationColor1" show-alpha @change='colorGet(aitems.lineStylegradationColor1, "seriesObj.seriesDataObj.labelLineList."+a+".lineStylegradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", "object", 1)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylegradationColor1" :spellcheck="false" @focus="inputColor(aitems.lineStylegradationColor1)"
+												 @blur='inputColorGet(aitems.lineStylegradationColor1, "seriesObj.seriesDataObj.labelLineList."+a+".lineStylegradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", "object", 1)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变类型</div>
+											<div class="radioButton">
+												<el-radio-group size="small" v-model="aitems.lineStylegradationType" @change='radioGet(aitems.lineStylegradationType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.color", "object")'>
+													<el-radio-button label="linear">线性</el-radio-button>
+													<el-radio-button label="radial">径向</el-radio-button>
+												</el-radio-group>
+											</div>
+										</li>
+									</el-tab-pane>
+								</el-tabs>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowBlur, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowBlur1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowBlur1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowBlur1, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.lineStyleshadowColor" show-alpha @change='colorGet(aitems.lineStyleshadowColor, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowColor" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowColor)"
+										 @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowOffsetX, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowOffsetX1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowOffsetX1, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowOffsetY, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowOffsetY1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowOffsetY1, "seriesObj.seriesDataObj.labelLineList."+a+".lineStyleshadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".labelLine."+aitems.labelLineSelect+".data."+seriesObj.seriesDataIndex+".lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+		<div id="seriesDataItemStyle" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesDataObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesDataObj.seriseDtatStyle, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="图形样式" name="dataItemStyle">
+						<el-tabs v-model="seriesObj.seriesDataObj.itemStyleSelect" @tab-click='tabClickGet(seriesObj.seriesDataObj.itemStyleSelect, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyleSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesDataObj.itemStyleList" :label="aitems.name" :name="aitems.itemStyleSelect">
+								<li>
+									<div class="attributeName">描边线类型</div>
+									<div class="radioButton1">
+										<el-radio-group size="small" v-model="aitems.borderType" @change='radioGet(aitems.borderType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".borderType", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">描边线宽</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderWidth" :min="0" :max="100" :step="1" @change='sliderGet(aitems.borderWidth, "seriesObj.seriesDataObj.itemStyleList."+a+".borderWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderWidth1" :spellcheck="false" @focus="inputColor(aitems.borderWidth1)" @blur='sliderInpGet(aitems.borderWidth1, "seriesObj.seriesDataObj.itemStyleList."+a+".borderWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".borderWidth", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">描边线颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.borderColor" show-alpha @change='colorGet(aitems.borderColor, "seriesObj.seriesDataObj.itemStyleList."+a+".borderColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.borderColor" :spellcheck="false" @focus="inputColor(aitems.borderColor)" @blur='inputColorGet(aitems.borderColor, "seriesObj.seriesDataObj.itemStyleList."+a+".borderColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<div id="dataMap">
+									<el-tabs v-model="aitems.itemStyleareaColor" colorInput @tab-click='gradientColorGet(aitems.itemStyleareaColor, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".itemStyleareaColor", "seriesObj.seriesDataObj.itemStyleList."+a+".areaColor", "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor", "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor1", "seriesObj.seriesDataObj.itemStyleList."+a+".gradationType", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", seriesIndex)'>
+										<el-tab-pane label="地图颜色(普通)" name="ordinary">
+											<li>
+												<div class="attributeName">颜色</div>
+												<div class="color">
+													<el-color-picker size="small" v-model="aitems.areaColor" show-alpha @change='colorGet(aitems.areaColor, "seriesObj.seriesDataObj.itemStyleList."+a+".areaColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", "string")'></el-color-picker>
+												</div>
+												<div class="colorInput">
+													<el-input size="small" v-model="aitems.areaColor" :spellcheck="false" @focus="inputColor(aitems.areaColor)" @blur='inputColorGet(aitems.areaColor, "seriesObj.seriesDataObj.itemStyleList."+a+".areaColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", "string")'></el-input>
+												</div>
+											</li>
+
+										</el-tab-pane>
+										<el-tab-pane label="地图颜色(渐变)" name="shade">
+											<li>
+												<div class="attributeName">渐变色1</div>
+												<div class="color">
+													<el-color-picker size="small" v-model="aitems.areaGradationColor" show-alpha @change='colorGet(aitems.areaGradationColor, "seriesObj.seriesDataObj.itemStyleList."+a+".areaGradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", "object", 0)'></el-color-picker>
+												</div>
+												<div class="colorInput">
+													<el-input size="small" v-model="aitems.areaGradationColor" :spellcheck="false" @focus="inputColor(aitems.areaGradationColor)"
+													 @blur='inputColorGet(aitems.areaGradationColor, "seriesObj.seriesDataObj.itemStyleList."+a+".areaGradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", "object", 0)'></el-input>
+												</div>
+											</li>
+											<li>
+												<div class="attributeName">渐变色2</div>
+												<div class="color">
+													<el-color-picker size="small" v-model="aitems.areaGradationColor1" show-alpha @change='colorGet(aitems.areaGradationColor1, "seriesObj.seriesDataObj.itemStyleList."+a+".areaGradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", "object", 1)'></el-color-picker>
+												</div>
+												<div class="colorInput">
+													<el-input size="small" v-model="aitems.areaGradationColor1" :spellcheck="false" @focus="inputColor(aitems.areaGradationColor1)"
+													 @blur='inputColorGet(aitems.areaGradationColor1, "seriesObj.seriesDataObj.itemStyleList."+a+".areaGradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", "object", 1)'></el-input>
+												</div>
+											</li>
+											<li>
+												<div class="attributeName">渐变类型</div>
+												<div class="radioButton">
+													<el-radio-group size="small" v-model="aitems.areaGradationType" @change='radioGet(aitems.areaGradationType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".areaColor", "object")'>
+														<el-radio-button label="linear">线性</el-radio-button>
+														<el-radio-button label="radial">径向</el-radio-button>
+													</el-radio-group>
+												</div>
+											</li>
+										</el-tab-pane>
+									</el-tabs>
+								</div>
+								<el-tabs v-model="aitems.itemStyleColor" colorInput @tab-click='gradientColorGet(aitems.itemStyleColor, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".itemStyleColor", "seriesObj.seriesDataObj.itemStyleList."+a+".color", "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor", "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor1", "seriesObj.seriesDataObj.itemStyleList."+a+".gradationType", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", seriesIndex)'>
+									<el-tab-pane label="图形颜色(普通)" name="ordinary">
+										<li>
+											<div class="attributeName">颜色</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.color" show-alpha @change='colorGet(aitems.color, "seriesObj.seriesDataObj.itemStyleList."+a+".color", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", "string")'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.color" :spellcheck="false" @focus="inputColor(aitems.color)" @blur='inputColorGet(aitems.color, "seriesObj.seriesDataObj.itemStyleList."+a+".color", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", "string")'></el-input>
+											</div>
+										</li>
+									</el-tab-pane>
+									<el-tab-pane label="图形颜色(渐变)" name="shade">
+										<li>
+											<div class="attributeName">渐变色1</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.gradationColor" show-alpha @change='colorGet(aitems.gradationColor, "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 0)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.gradationColor" :spellcheck="false" @focus="inputColor(aitems.gradationColor)" @blur='inputColorGet(aitems.gradationColor, "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 0)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变色2</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.gradationColor1" show-alpha @change='colorGet(aitems.gradationColor1, "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 1)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.gradationColor1" :spellcheck="false" @focus="inputColor(aitems.gradationColor1)" @blur='inputColorGet(aitems.gradationColor1, "seriesObj.seriesDataObj.itemStyleList."+a+".gradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object", 1)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变类型</div>
+											<div class="radioButton">
+												<el-radio-group size="small" v-model="aitems.gradationType" @change='radioGet(aitems.gradationType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".color", "object")'>
+													<el-radio-button label="linear">线性</el-radio-button>
+													<el-radio-button label="radial">径向</el-radio-button>
+												</el-radio-group>
+											</div>
+										</li>
+									</el-tab-pane>
+								</el-tabs>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowBlur, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowBlur1" :spellcheck="false" @focus="inputColor(aitems.shadowBlur1)" @blur='sliderInpGet(aitems.shadowBlur1, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.shadowColor" show-alpha @change='colorGet(aitems.shadowColor, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.shadowColor" :spellcheck="false" @focus="inputColor(aitems.shadowColor)" @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetX, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetX1)" @blur='sliderInpGet(aitems.shadowOffsetX1, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetY, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetY1)" @blur='sliderInpGet(aitems.shadowOffsetY1, "seriesObj.seriesDataObj.itemStyleList."+a+".shadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.itemStyleSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+		<div id="seriesDataItemStyleWordCloud" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesDataObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesDataObj.seriseDtatStyle, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="图形样式" name="dataWordItemStyle">
+						<el-tabs v-model="seriesObj.seriesDataObj.WordItemStyleSelect" @tab-click='tabClickGet(seriesObj.seriesDataObj.WordItemStyleSelect, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".WordItemStyleSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesDataObj.WordItemStyleList" :label="aitems.name" :name="aitems.WordItemStyleSelect">
+								<li>
+									<div class="attributeName">标签颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.color" show-alpha @change='colorGet(aitems.color, "seriesObj.seriesDataObj.WordItemStyleList."+a+".color", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.WordItemStyleSelect+".color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.color" :spellcheck="false" @focus="inputColor(aitems.color)" @blur='inputColorGet(aitems.color, "seriesObj.seriesDataObj.WordItemStyleList."+a+".color", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".itemStyle."+aitems.WordItemStyleSelect+".color", "string")'></el-input>
+									</div>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+		<div id="seriesDataLineStyle" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesDataObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesDataObj.seriseDtatStyle, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="线条样式" name="dataLineStyle">
+						<el-tabs v-model="seriesObj.seriesDataObj.lineStyleSelect" @tab-click='tabClickGet(seriesObj.seriesDataObj.lineStyleSelect, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyleSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesDataObj.lineStyleList" :label="aitems.name" :name="aitems.lineStyleSelect">
+								<li>
+									<div class="attributeName">线条类型</div>
+									<div class="radioButton1">
+										<el-radio-group size="small" v-model="aitems.lineStyleType" @change='radioGet(aitems.lineStyleType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">线条宽度</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleWidth" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleWidth, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleWidth1" :spellcheck="false" @focus="inputColor(aitems.lineStyleWidth1)" @blur='sliderInpGet(aitems.lineStyleWidth1, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleWidth", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".width", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<el-tabs v-model="aitems.lineStyleColorselected" colorInput @tab-click='gradientColorGet(aitems.lineStyleColorselected, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".lineStyleColorselected", "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylecolor", "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylegradationColor", "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylegradationColor1", "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylegradationType", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", seriesIndex)'>
+									<el-tab-pane label="线条颜色(普通)" name="ordinary">
+										<li>
+											<div class="attributeName">颜色</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylecolor" show-alpha @change='colorGet(aitems.lineStylecolor, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylecolor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", "string")'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylecolor" :spellcheck="false" @focus="inputColor(aitems.lineStylecolor)" @blur='inputColorGet(aitems.lineStylecolor, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylecolor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", "string")'></el-input>
+											</div>
+										</li>
+									</el-tab-pane>
+									<el-tab-pane label="线条颜色(渐变)" name="shade">
+										<li>
+											<div class="attributeName">渐变色1</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylegradationColor" show-alpha @change='colorGet(aitems.lineStylegradationColor, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylegradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 0)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylegradationColor" :spellcheck="false" @focus="inputColor(aitems.lineStylegradationColor)"
+												 @blur='inputColorGet(aitems.lineStylegradationColor, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylegradationColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 0)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变色2</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylegradationColor1" show-alpha @change='colorGet(aitems.lineStylegradationColor1, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylegradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 1)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylegradationColor1" :spellcheck="false" @focus="inputColor(aitems.lineStylegradationColor1)"
+												 @blur='inputColorGet(aitems.lineStylegradationColor1, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStylegradationColor1", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 1)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变类型</div>
+											<div class="radioButton">
+												<el-radio-group size="small" v-model="aitems.lineStylegradationType" @change='radioGet(aitems.lineStylegradationType, "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object")'>
+													<el-radio-button label="linear">线性</el-radio-button>
+													<el-radio-button label="radial">径向</el-radio-button>
+												</el-radio-group>
+											</div>
+										</li>
+									</el-tab-pane>
+								</el-tabs>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowBlur, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowBlur1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowBlur1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowBlur1, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowBlur", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.lineStyleshadowColor" show-alpha @change='colorGet(aitems.lineStyleshadowColor, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowColor" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowColor)"
+										 @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowColor", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowOffsetX, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowOffsetX1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowOffsetX1, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowOffsetX", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowOffsetY, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowOffsetY1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowOffsetY1, "seriesObj.seriesDataObj.lineStyleList."+a+".lineStyleshadowOffsetY", "series."+seriesIndex+".data."+seriesObj.seriesDataIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+	</div>
+	<div id="links" style="margin-top: 20px;">
+		<div id="seriesLinks" class="seriesCommon">
+			<ul>
+				<li>
+					<div class="attributeName">线条选择</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.seriesLinksObj.seriesLinksIndex" filterable placeholder="请选择" style="width:100%;"
+						 @change='selectGet(seriesObj.seriesLinksObj.seriesLinksIndex, "series."+seriesIndex+".seriesLinksIndex", "string", "", "links", seriesIndex)'>
+							<el-option v-for="(item, a) in seriesObj.seriesLinksObj.seriesLinksList" :key="item.value" :label="item.name" :value="a"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="seriesLinksStyle" class="seriesCommon">
+			<ul>
+				<el-tabs style="margin-bottom:5px;" v-model="seriesObj.seriesLinksObj.symbolType" colorInput @tab-click='tabsComCusFun(seriesObj.seriesLinksObj.symbolType, "series."+seriesIndex+".links."+seriesObj.seriesLinksIndex+".symbolType", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbol", "string", "seriesObj.seriesLinksObj.symbol", "list")'>
+					<el-tab-pane name="common" label="标记图形常用">
+						<li>
+							<div class="attributeName">起点标记图形类型</div>
+							<div class="select">
+								<el-select size="small" v-model="seriesObj.seriesLinksObj.symbol1" clearable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.seriesLinksObj.symbol1, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbol", "array", "", "linksSymbol", 0)'>
+									<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">终点标记图形类型</div>
+							<div class="select">
+								<el-select size="small" v-model="seriesObj.seriesLinksObj.symbol2" clearable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.seriesLinksObj.symbol2, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbol", "array", "", "linksSymbol", 1)'>
+									<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+								</el-select>
+							</div>
+						</li>
+					</el-tab-pane>
+					<el-tab-pane name="custom" label="标记图形自定义">
+						<li style="margin-bottom:5px">
+							<div class="attributeName">起点标记图形类型</div>
+							<div class="select">
+								<el-input size="small" v-model="seriesObj.seriesDataObj.symbol1" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.seriesDataObj.symbol1, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbol", "array", "", 0, "linksSymbol")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">终点标记图形类型</div>
+							<div class="select">
+								<el-input size="small" v-model="seriesObj.seriesDataObj.symbol2" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.seriesDataObj.symbol2, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbol", "array", "", 1, "linksSymbol")'></el-input>
+							</div>
+						</li>
+					</el-tab-pane>
+				</el-tabs>
+				<li>
+					<div class="attributeName">标记图形大小</div>
+					<div class="inputSySz">
+						<el-input size="small" v-model="seriesObj.seriesLinksObj.symbolSize" type="textarea" :rows="1" :spellcheck="false" @blur='inputGet(seriesObj.seriesLinksObj.symbolSize, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbolSize", "string")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">标记图形旋转角度</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.seriesLinksObj.symbolRotate" :min="0" :max="360" :step="1" @change='sliderGet(seriesObj.seriesLinksObj.symbolRotate, "seriesObj.seriesLinksObj.symbolRotate", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbolRotate", "rem", "number", null, "reconstruction")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="seriesObj.seriesLinksObj.symbolRotate1" :spellcheck="false" @focus="inputColor(seriesObj.seriesLinksObj.symbolRotate1)"
+						 @blur='sliderInpGet(seriesObj.seriesLinksObj.symbolRotate1, "seriesObj.seriesLinksObj.symbolRotate", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".symbolRotate", 0, 360, 1, "rem", "number", null, "reconstruction")'></el-input>
+					</div>
+					<em>°</em>
+				</li>
+			</ul>
+		</div>
+		<div id="seriesLinksLabel" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesLinksObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesLinksObj.seriseDtatStyle, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="图形上的文本标签" name="dataLabel">
+						<el-tabs v-model="seriesObj.seriesLinksObj.labelSelect" @tab-click='tabClickGet(seriesObj.seriesLinksObj.labelSelect, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".labelSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesLinksObj.labelList" :label="aitems.name" :name="aitems.labelSelect">
+								<li class="showHidden">
+									<div class="attributeName">标签显示</div>
+									<div class="switch">
+										<el-switch v-model="aitems.show" @change='switchGet(aitems.show, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签位置</div>
+									<div class="select">
+										<el-select size="small" v-model="aitems.position" filterable placeholder="请选择" style="width:100%;" @change='selectGet(aitems.position, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".position", "string")'>
+											<el-option v-for="(item, a) in positionList" :key="item.value" :label="item.name" :value="item.position"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">与图形距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.distance" :min="0" :max="100" :step="1" @change='sliderGet(aitems.distance, "seriesObj.seriesLinksObj.labelList."+a+".distance", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".distance", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.distance1" :spellcheck="false" @focus="inputColor(aitems.distance1)" @blur='sliderInpGet(aitems.distance1, "seriesObj.seriesLinksObj.labelList."+a+".distance", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".distance", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">标签旋转</div>
+									<div class="slider">
+										<el-slider v-model="aitems.rotate" :min="-90" :max="90" :step="1" @change='sliderGet(aitems.rotate, "seriesObj.seriesLinksObj.labelList."+a+".rotate", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".rotate", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.rotate1" :spellcheck="false" @focus="inputColor(aitems.rotate1)" @blur='sliderInpGet(aitems.rotate1, "seriesObj.seriesLinksObj.labelList."+a+".rotate", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".rotate", -90, 90, 1, "rem", "number")'></el-input>
+									</div>
+									<em>°</em>
+								</li>
+								<li>
+									<div class="attributeName">文本字体</div>
+									<div class="select">
+										<el-select size="small" v-model="aitems.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(aitems.fontFamily, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".fontFamily", "string")'>
+											<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.color" show-alpha @change='colorGet(aitems.color, "seriesObj.seriesLinksObj.labelList."+a+".color", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.color" :spellcheck="false" @focus="inputColor(aitems.color)" @blur='inputColorGet(aitems.color, "seriesObj.seriesLinksObj.labelList."+a+".color", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(aitems.fontSize, "seriesObj.seriesLinksObj.labelList."+a+".fontSize", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".fontSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.fontSize1" :spellcheck="false" @focus="inputColor(aitems.fontSize1)" @blur='sliderInpGet(aitems.fontSize1, "seriesObj.seriesLinksObj.labelList."+a+".fontSize", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".fontSize", 12, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="aitems.fontStyle" @change='radioGet(aitems.fontStyle, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".fontStyle", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="italic">斜体</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体粗细</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="aitems.fontWeight" @change='radioGet(aitems.fontWeight, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".fontWeight", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="bold">加粗</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">文字内边距</div>
+									<div class="slider">
+										<el-slider v-model="aitems.padding" :min="0" :max="100" :step="1" @change='sliderGet(aitems.padding, "seriesObj.seriesLinksObj.labelList."+a+".padding", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".padding", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.padding1" :spellcheck="false" @focus="inputColor(aitems.padding1)" @blur='sliderInpGet(aitems.padding1, "seriesObj.seriesLinksObj.labelList."+a+".padding", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".padding", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">背景颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.backgroundColor" show-alpha @change='colorGet(aitems.backgroundColor, "seriesObj.seriesLinksObj.labelList."+a+".backgroundColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".backgroundColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.backgroundColor" :spellcheck="false" @focus="inputColor(aitems.backgroundColor)" @blur='inputColorGet(aitems.backgroundColor, "seriesObj.seriesLinksObj.labelList."+a+".backgroundColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".backgroundColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">边框粗细</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderWidth" :min="0" :max="20" :step="0.1" @change='sliderGet(aitems.borderWidth, "seriesObj.seriesLinksObj.labelList."+a+".borderWidth", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderWidth1" :spellcheck="false" @focus="inputColor(aitems.borderWidth1)" @blur='sliderInpGet(aitems.borderWidth1, "seriesObj.seriesLinksObj.labelList."+a+".borderWidth", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".borderWidth", 0, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框圆角</div>
+									<div class="slider">
+										<el-slider v-model="aitems.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(aitems.borderRadius, "seriesObj.seriesLinksObj.labelList."+a+".borderRadius", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".borderRadius", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.borderRadius1" :spellcheck="false" @focus="inputColor(aitems.borderRadius1)" @blur='sliderInpGet(aitems.borderRadius1, "seriesObj.seriesLinksObj.labelList."+a+".borderRadius", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.borderColor" show-alpha @change='colorGet(aitems.borderColor, "seriesObj.seriesLinksObj.labelList."+a+".borderColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.borderColor" :spellcheck="false" @focus="inputColor(aitems.borderColor)" @blur='inputColorGet(aitems.borderColor, "seriesObj.seriesLinksObj.labelList."+a+".borderColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowBlur, "seriesObj.seriesLinksObj.labelList."+a+".shadowBlur", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowBlur1" :spellcheck="false" @focus="inputColor(aitems.shadowBlur1)" @blur='sliderInpGet(aitems.shadowBlur1, "seriesObj.seriesLinksObj.labelList."+a+".shadowBlur", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.shadowColor" show-alpha @change='colorGet(aitems.shadowColor, "seriesObj.seriesLinksObj.labelList."+a+".shadowColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.shadowColor" :spellcheck="false" @focus="inputColor(aitems.shadowColor)" @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesLinksObj.labelList."+a+".shadowColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetX, "seriesObj.seriesLinksObj.labelList."+a+".shadowOffsetX", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetX1)" @blur='sliderInpGet(aitems.shadowOffsetX1, "seriesObj.seriesLinksObj.labelList."+a+".shadowOffsetX", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.shadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.shadowOffsetY, "seriesObj.seriesLinksObj.labelList."+a+".shadowOffsetY", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.shadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.shadowOffsetY1)" @blur='sliderInpGet(aitems.shadowOffsetY1, "seriesObj.seriesLinksObj.labelList."+a+".shadowOffsetY", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".label."+aitems.labelSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+		<div id="seriesLinksLineStyle" class="seriesCommon">
+			<ul>
+				<el-collapse v-model="seriesObj.seriesLinksObj.seriseDtatStyle" accordion @change='tabClickGet(seriesObj.seriesLinksObj.seriseDtatStyle, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".seriseDtatStyle")'>
+					<el-collapse-item title="线条样式" name="linksLineStyle">
+						<el-tabs v-model="seriesObj.seriesLinksObj.lineStyleSelect" @tab-click='tabClickGet(seriesObj.seriesLinksObj.lineStyleSelect, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyleSelect")'>
+							<el-tab-pane :key="aitems.name" v-for="(aitems, a) in seriesObj.seriesLinksObj.lineStyleList" :label="aitems.name" :name="aitems.lineStyleSelect">
+								<li>
+									<div class="attributeName">线条类型</div>
+									<div class="radioButton1">
+										<el-radio-group size="small" v-model="aitems.lineStyleType" @change='radioGet(aitems.lineStyleType, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">线条宽度</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleWidth" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleWidth, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleWidth", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleWidth1" :spellcheck="false" @focus="inputColor(aitems.lineStyleWidth1)" @blur='sliderInpGet(aitems.lineStyleWidth1, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleWidth", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".width", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<el-tabs v-model="aitems.lineStyleColorselected" type="card" @tab-click='gradientColorGet(aitems.lineStyleColorselected, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".lineStyleColorselected", "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylecolor", "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylegradationColor", "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylegradationColor1", "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylegradationType", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", seriesIndex)'>
+									<el-tab-pane label="线条颜色(普通)" name="ordinary">
+										<li>
+											<div class="attributeName">颜色</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylecolor" show-alpha @change='colorGet(aitems.lineStylecolor, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylecolor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", "string")'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylecolor" :spellcheck="false" @focus="inputColor(aitems.lineStylecolor)" @blur='inputColorGet(aitems.lineStylecolor, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylecolor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", "string")'></el-input>
+											</div>
+										</li>
+									</el-tab-pane>
+									<el-tab-pane label="线条颜色(渐变)" name="shade">
+										<li>
+											<div class="attributeName">渐变色1</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylegradationColor" show-alpha @change='colorGet(aitems.lineStylegradationColor, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylegradationColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 0)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylegradationColor" :spellcheck="false" @focus="inputColor(aitems.lineStylegradationColor)"
+												 @blur='inputColorGet(aitems.lineStylegradationColor, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylegradationColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 0)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变色2</div>
+											<div class="color">
+												<el-color-picker size="small" v-model="aitems.lineStylegradationColor1" show-alpha @change='colorGet(aitems.lineStylegradationColor1, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylegradationColor1", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 1)'></el-color-picker>
+											</div>
+											<div class="colorInput">
+												<el-input size="small" v-model="aitems.lineStylegradationColor1" :spellcheck="false" @focus="inputColor(aitems.lineStylegradationColor1)"
+												 @blur='inputColorGet(aitems.lineStylegradationColor1, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStylegradationColor1", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object", 1)'></el-input>
+											</div>
+										</li>
+										<li>
+											<div class="attributeName">渐变类型</div>
+											<div class="radioButton">
+												<el-radio-group size="small" v-model="aitems.lineStylegradationType" @change='radioGet(aitems.lineStylegradationType, "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".color", "object")'>
+													<el-radio-button label="linear">线性</el-radio-button>
+													<el-radio-button label="radial">径向</el-radio-button>
+												</el-radio-group>
+											</div>
+										</li>
+									</el-tab-pane>
+								</el-tabs>
+
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowBlur, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowBlur", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowBlur1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowBlur1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowBlur1, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowBlur", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitems.lineStyleshadowColor" show-alpha @change='colorGet(aitems.lineStyleshadowColor, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowColor" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowColor)"
+										 @blur='inputColorGet(aitems.shadowColor, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowColor", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowOffsetX, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowOffsetX", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowOffsetX1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowOffsetX1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowOffsetX1, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowOffsetX", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="aitems.lineStyleshadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitems.lineStyleshadowOffsetY, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowOffsetY", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="aitems.lineStyleshadowOffsetY1" :spellcheck="false" @focus="inputColor(aitems.lineStyleshadowOffsetY1)"
+										 @blur='sliderInpGet(aitems.lineStyleshadowOffsetY1, "seriesObj.seriesLinksObj.lineStyleList."+a+".lineStyleshadowOffsetY", "series."+seriesIndex+".links."+seriesObj.seriesLinksObj.seriesLinksIndex+".lineStyle."+aitems.lineStyleSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-tab-pane>
+						</el-tabs>
+					</el-collapse-item>
+				</el-collapse>
+			</ul>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 引入样式 -->
+	<link rel="stylesheet" type="text/css" href="import/vue/vueElement2.css">
+	<link rel="stylesheet" type="text/css" href="import/css/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="stylue/ksh.css" />
+	<link rel="stylesheet" type="text/css" href="stylue/property.css" />
+	<link rel="stylesheet" type="text/css" href="stylue/filtrate.css" />
+	<link rel="stylesheet" type="text/css" href="stylue/chartData.css" />
+	<link rel="stylesheet" type="text/css" href="stylue/sharing.css" />
+	<link rel="stylesheet" type="text/css" href="stylue/animation.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="import/css/perfect-scrollbar.css"> -->
+	<link rel="stylesheet" type="text/css" href="import/SMusic/css/smusic.css">
+	<link rel="stylesheet" type="text/css" href="import/media/uploadVideo.css">
+	<link rel="stylesheet" type="text/css" href="import/webuploader-0.1.5/webuploader.css">
+	<link rel="stylesheet" type="text/css" href="import/webuploader-0.1.5/demo.css">
+	<!-- 新增 -->
+	<!-- <link rel="stylesheet" type="text/css" href="import/css/video-js.css"> -->
+	<style>
+		::-webkit-scrollbar {
+			width: 14px;
+			height: 14px;
+		}
+		#palette::-webkit-scrollbar {
+			width: 20px;
+			height: 20px;
+		}		
+		::-webkit-scrollbar-track,
+		::-webkit-scrollbar-thumb {
+			border-radius: 999px;
+			border: 5px solid transparent;
+		}
+		::-webkit-scrollbar-track {
+			box-shadow: 1px 1px 5px rgba(0, 0, 0, .2) inset;
+		}
+		::-webkit-scrollbar-thumb {
+			min-height: 20px;
+			background-clip: content-box;
+			box-shadow: 0 0 0 5px rgba(0, 0, 0, .2) inset;
+		}
+		::-webkit-scrollbar-corner {
+			background: transparent;
+		}
+	</style>
+	<title>可视化编辑器</title>
+</head>
+
+<body>
+	<div class="keshihua">
+		<div id="loading">
+			<div id="loading-center-absolute">
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+				<div class="object"></div>
+			</div>
+		</div>
+		<div id="shujuSelect">
+			<div class="selectBox bounced">
+				<div class="selTop">
+					<p>设置数据筛选器</p>
+					<i class="sjClose" @click="bouncedHide()"></i>
+				</div>
+				<div class="selContent">
+					<div class="selContent-left">
+						<div class="section1 selPadding">
+							<div class="selectName">
+								<p>筛选器名称</p>
+								<div>
+									<el-input size="small" v-model="name" :spellcheck="false" placeholder="未命名数据筛选器" @blur='inputName(name, "title.name", "string")'></el-input>
+								</div>
+							</div>
+							<div class="selectChart">
+								<p>设置筛选字段</p>
+								<div class="chartList">
+									<div class="select">
+										<el-select size="small" v-model="chartId" placeholder="请选择图表" style="width:100%;" @change='chartChangeFun(chartId)'>
+											<el-option v-for="item in chartList" :key="item.id" :label="item.chartName" :value="item.id"></el-option>
+										</el-select>
+									</div>
+									<div class="select">
+										<el-select size="small" v-model="wdsId" placeholder="请选择字段" style="width:100%;" @change='wdsChangeFun(wdsId)'>
+											<el-option v-for="item in wdsList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+										</el-select>
+									</div>
+									<span class="yuanShow">源:</span>
+									<span class="datasource">{{datasource}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="selPadding section2">
+							<div class="selectChart">
+								<p>其他匹配图表</p>
+								<div id="selectChartBox">
+									<div class="chartList" v-for="(item, i) in otherChartList">
+										<div class="select">
+											<span class="yuanShow">{{item.chartName}}</span>
+										</div>
+										<div class="select">
+											<el-select size="small" v-model="item.wdsId" clearable placeholder="请选择字段" style="width:100%;" @change='otherWdsChangeFun(item.wdsId, i)'>
+												<el-option v-for="item in item.wds" :key="item.id" :label="item.name" :value="item.id"></el-option>
+											</el-select>
+										</div>
+										<span class="yuanShow">源:</span>
+										<span class="datasource">{{item.datasource}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="selPadding section3 hidden">
+							<div class="selectChart">
+								<p>选择样式</p>
+								<div>
+									<el-radio-group size="small" v-model="fieldType" @change="radioFun(fieldType)">
+										<el-radio-button label="text">文本输入</el-radio-button>
+										<el-radio-button label="select">下拉选择</el-radio-button>
+									</el-radio-group>
+								</div>
+							</div>
+							<div class="selectChart" id="textInput">
+								<p>输入默认值</p>
+								<div>
+									<el-input size="small" v-model="acquiescence" :spellcheck="false" placeholder="请输入筛选值" @blur='acquiescenceFun(acquiescence)'></el-input>
+								</div>
+							</div>
+							<div class="selectChart" id="selectInput">
+								<p>选择默认值</p>
+								<div>
+									<el-select size="small" v-model="acquiescence" placeholder="请选择筛选值" clearable style="width:100%;" @change='acquiescenceFun(acquiescence)'>
+										<el-option v-for="(item, i) in qdtList" :key="i" :label="item" :value="item"></el-option>
+									</el-select>
+								</div>
+							</div>
+						</div>
+						<div class="selPadding section4 hidden">
+							<div class="selectChart">
+								<p>时间选择</p>
+								<div>
+									<div>
+										<el-radio-group size="small" v-model="dateType" @change="dateTypeFun(dateType)">
+											<el-radio-button label="single">单一时间</el-radio-button>
+											<el-radio-button label="range">范围时间</el-radio-button>
+										</el-radio-group>
+									</div>.
+								</div>
+							</div>
+							<div class="selectChart" id="timePicker">
+								<p>选泽时间</p>
+								<div id="timeeingle">
+									<el-time-picker size="small" v-model="date" placeholder="选择时间" @change="dateFun(date)"></el-time-picker>
+								</div>
+								<div id="timerange">
+									<el-time-picker size="small" v-model="daterange" placeholder="选择时间范围" @change="dateRangeFun(daterange)"></el-time-picker>
+								</div>
+							</div>
+							<div class="selectChart" id="date">
+								<p>选泽日期</p>
+								<div id="datesingle">
+									<el-date-picker size="small" v-model="date" type="date" placeholder="选择日期" @change="dateFun(date)"></el-date-picker>
+								</div>
+								<div id="daterange">
+									<el-date-picker size="small" v-model="daterange" type="daterange" placeholder="选择日期范围" @change="dateRangeFun(daterange)"></el-date-picker>
+								</div>
+							</div>
+							<div class="selectChart" id="datetime">
+								<p>选泽日期时间</p>
+								<div id="datetimesingle">
+									<el-date-picker size="small" v-model="date" type="datetime" placeholder="选择日期时间" @change="dateFun(date)"></el-date-picker>
+								</div>
+								<div id="datetimerange">
+									<el-date-picker size="small" v-model="daterange" type="datetimerange" placeholder="选择日期时间范围" @change="dateRangeFun(daterange)"></el-date-picker>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="selctionBtn">
+					<el-button type="primary" @click="bottomClick()">确定</el-button>
+				</div>
+			</div>
+			<div class="imageBox bounced">
+				<div class="selTop">
+					<p>图片</p>
+					<i class="sjClose" @click="bouncedHide()"></i>
+				</div>
+				<div class="upLoad" id="image">
+					<div class="container">
+						<div id="pickerImg" class="webuploader-container" style="float: left; margin-right: 10px">选择文件</div>
+						<div class="StopBtn webuploader-pick" style="float: left; margin-right: 10px" status="suspend">暂停上传</div>
+					</div>
+					<div class="uploader-list"></div>
+				</div>
+				<div class="videoSelect">
+					<div class="videoHrefSele">
+						<div class="attributeName">图片选择</div>
+						<div class="contentBox">
+							<div v-for="item in imgList" :class="{imgBox: true, 'imgBox1': item.isActive}">
+								<div @click='imgFun(item)'>
+									<img class="img"  :src="item.src" alt="">
+									<p>{{item.name}}</p>
+								</div>
+								<i @click='delFun("video", item)'></i>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="selctionBtn">
+					<el-button type="primary" @click="imgClickFun()">确定</el-button>
+				</div>
+			</div>
+			<div class="videoBox bounced">
+				<div class="selTop">
+					<p>视频</p>
+					<i class="sjClose" @click="bouncedHide()"></i>
+				</div>
+				<div class="upLoad" id="video">
+					<div class="container">
+						<div id="pickerVd" class="webuploader-container" style="float: left; margin-right: 10px">选择文件</div>
+						<div class="StopBtn webuploader-pick" style="float: left; margin-right: 10px" status="suspend">暂停上传</div>
+					</div>
+					<!--存放文件的容器-->
+					<div class="uploader-list"></div>
+				</div>
+				<div class="videoSelect">
+					<div>
+						<div @click="videoFun1()" class="linkAddress">
+							<div class="attributeName">外部视频链接</div>
+							<div class="input">
+								<el-input size="small" v-model="videoSrc" @blur='videoHrefFun(href, "href", "string")'>
+									<template slot="prepend">Http://</template>
+								</el-input>
+							</div>
+						</div>
+					</div>
+					<div class="videoHrefSele">
+						<div class="attributeName">本地视频选择</div>
+						<div class="contentBox">
+							<div v-for="item in videoList" :class="{imgBox: true, 'imgBox1': item.isActive}">
+								<div @click='videoFun(item)'>
+									<!-- <img :src="item.imgSrc" alt=""> -->
+									<em class="img" :style="{'background-image': 'url(' + item.imgSrc + ')'}"></em>
+									<p>{{item.name}}</p>
+								</div>
+								<i @click='delFun("video", item)'></i>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="selctionBtn">
+					<el-button type="primary" @click="videoClickFun()">确定</el-button>
+				</div>
+			</div>
+			<div class="audioBox bounced">
+				<div class="selTop">
+					<p>音频</p>
+					<i class="sjClose" @click="bouncedHide()"></i>
+				</div>
+				<div class="upLoad" id="audio">
+					<div class="container">
+						<div id="pickerAd" class="webuploader-container" style="float: left; margin-right: 10px">选择文件</div>
+						<div class="StopBtn webuploader-pick" style="float: left; margin-right: 10px" status="suspend">暂停上传</div>
+					</div>
+					<div class="uploader-list"></div>
+				</div>
+				<div class="videoSelect">
+					<div class="videoHrefSele">
+						<div class="attributeName">音频选择</div>
+						<div class="contentBox">
+							<div v-for="item in audioList" :class="{imgBox: true, 'imgBox1': item.isActive}">
+								<div @click='audioFun(item)'>
+									<em class="img" :style="{'background-image': 'url(' + item.imgSrc + ')'}"></em>
+									<p>{{item.title}}</p>
+								</div>
+								<i @click='delFun("audio")'></i>								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="selctionBtn">
+					<el-button type="primary" @click="audioClickFun()">确定</el-button>
+				</div>
+			</div>
+			<div class="monitoringBox bounced">
+				<div class="selTop">
+					<p>监控选择</p>
+					<i class="sjClose" @click="bouncedHide()"></i>
+				</div>
+				<div class="videoSelect">
+					<div>
+						<div class="linkAddress">
+							<div class="attributeName">RTMP地址</div>
+							<div class="input">
+								<el-input size="small" v-model="rtmpSrc" @blur='videoSrcFun(rtmpSrc, "rtmpSrc")'>
+									<template slot="prepend">rtmp://</template>
+								</el-input>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="linkAddress">
+							<div class="attributeName">HLS地址</div>
+							<div class="input">
+								<el-input size="small" v-model="hlsSrc" @blur='videoSrcFun(hlsSrc, "hlsSrc")'>
+									<template slot="prepend">http://</template>
+								</el-input>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="selctionBtn">
+					<el-button type="primary" @click="monitoringclickFun()">确定</el-button>
+				</div>
+			</div>
+		</div>
+		<div class="ksh" ng-app="hlksh" ng-controller="kshEdit">
+			<div class="yulan hidden">
+				<div class="details1">
+					<div class="guangbi" ng-click="closePreviewFun()"></div>
+					<div class="ylconent">
+						<div class="ylconent1">
+							<div class="ylconent2"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="ksh2 hidden">
+					<div class="initial">
+						<div class="initial-zuo"><span>可视化图表编辑</span></div>
+						<div class="initial-you">
+							<div ng-click="holdEditorFun()">保存编辑</div>
+							<div ng-click="cancelEditorFun()">取消</div>
+						</div>
+					</div>
+					<div class="chartData">
+						<div class="chartData-zuo">
+							<div class="chartData-zuo-1">
+								<div class="dataTable">
+									<div class="shujuyuan">
+										<span class=" font-weight">源:</span>
+										<select class="yuan"></select>
+									</div>
+									<div class="shujuyuan">
+										<span class=" font-weight">表:</span>
+										<select class="biao">
+										</select>
+									</div>
+								</div>
+								<div class="dimension">
+									<div class="dimension_x">
+										<span class="font-weight">维度(X轴)</span>
+										<div class="x-variable"></div>
+										<div class="kongbai"></div>
+									</div>
+									<div class="dimension_y">
+										<span class="font-weight">度量(Y轴)</span>
+										<div class="y-variable"></div>
+										<div class="kongbai"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="chartData-you">
+							<div class="chartData-you-1">
+								<div class="settings">
+									<div class="configuration">
+										<span class="titleName font-weight">图表类型</span>
+										<div class="subtype">
+											<div ng-repeat="item in chartOptionArr">
+												<i style="background: url({{item.url}})"></i>
+											</div>
+										</div>
+									</div>
+									<div class="configuration">
+										<span class="titleName font-weight">功能配置</span>
+										<div class="function">
+											<span>显示条目数</span>
+											<div class="branches">
+												<input class="i-checks" id= "amount" type="checkbox">
+												<label for="amount">是否显示条目数设置</label>
+												<div class="branches1">
+													<select class="order">
+														<option value="before">前</option>
+														<option value="after">后</option>
+													</select>
+													<input class="num" type="text" name=""/ >
+														<span value="article">条</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="chartData-zhong">
+							<div class="x-dimension dimension">
+								<span>维度(X轴)</span>
+								<div class="X_variable"></div>
+							</div>
+							<div class="y-dimension dimension">
+								<span>度量(Y轴)</span>
+								<div class="Y_variable"></div>
+							</div>
+							<div class="chartData_graph">
+								<div class="_graph-left">
+								</div>
+								<div class="_graph-right">
+									<div class="_graph"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+			<div class="ksh1">
+				<div class="initial">
+					<div class="initial-zuo font-weight">
+						<span>可视化编辑器</span>
+					</div>
+					<ul class="initial-zhong">
+						<!-- <li class="tubiao nav">
+								<i class="tubiaoIcon"></i>
+								<span>图表</span>
+								<div class="hoverBox">
+									<ul class="leftNav">
+										<li ng-repeat="item in chartTypeList"  ng-click="clickChartType(item)" ng-class="{leftNavClick: item.isActive}">
+											<span class="icon title">{{item.name}}</span>
+										</li>
+									</ul>
+									<div class="rightCon">
+										<div class="rightConBox">
+											<div class="chartIconBox" ng-repeat="item in chartOptionList" ng-click="clickChart(item)">
+												<i class="chartIcon" style="background: url({{item.url}})"></i>
+												<span>{{item.name}}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li> -->
+						<!-- <li class="tuxin nav">
+								<i class="tuxinIcon"></i>
+								<span>图形</span>
+								<div class="hoverBox">
+									<ul class="leftNav">
+										<li ng-repeat="item in graphics" ng-click="clickSvgType(item)" ng-class="{leftNavClick: item.isActive}">
+											<span class="title">{{item.text}}</span>
+										</li>
+									</ul>
+									<div class="rightCon"> 
+										<div class="rightConBox" id="svgShowBox"></div>
+									</div>
+								</div>
+							</li>
+							<li class="component nav">
+								<i class="componentIcon"></i>
+								<span>组件</span>
+								<div class="hoverBox">
+									<div class="rightCon">
+										<div class="rightConBox">
+											<div class="chartIconBox" ng-repeat="item in componentsList" ng-click="clickComponents(item)">
+												<i class="chartIcon" style="background: url({{item.url}})"></i>
+												<span>{{item.name}}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li> -->
+						<li class="tubiao nav">
+							<i class="tubiaoIcon"></i>
+							<span>图表</span>
+							<div class="hoverBox">
+								<div ng-repeat="item in chartOptionList" ng-click="clickChart(item)">
+									<i style="background: url({{item.url}})"></i>
+									<span>{{item.name}}</span>
+								</div>
+							</div>
+						</li>
+						<li class="tuxin nav">
+							<i class="tuxinIcon"></i>
+							<span>图形</span>
+							<div class="hoverBox">
+								<div class="shape1"></div>
+							</div>
+						</li>
+						<li class="qita nav">
+							<i class="componentIcon"></i>
+							<span>组件</span>
+							<div class="hoverBox">
+								<div ng-repeat="item in componentsList" ng-click="clickComponents(item)">
+									<i style="background: url({{item.url}})"></i>
+									<span>{{item.name}}</span>
+								</div>
+							</div>
+						</li>
+						<li class="shaixuan nav">
+							<i class="shaixuanIcon"></i>
+							<span>筛选</span>
+							<div class="hoverBox">
+								<div ng-click="clickScreening()">数据筛选器</div>
+							</div>
+						</li>
+					</ul>
+					<div class="initial-you">
+						<div ng-click="holdFun()">保存</div>
+						<div ng-click="previewFun()">预览</div>
+						<div class="cancel">关闭</div>
+					</div>
+				</div>
+				<div class="details">
+					<div class="details-zhong" ng-click="pitchUpFun($event)" ng-dblclick="pitchUpdbFun($event)">
+						<div class="btnscreen" ng-click="fullScreenFun()"></div>
+						<div class="hidden btnscreen btnscreen1" ng-click="exitFullScreenFun()"></div>
+						<div id="palette">
+							<div id="HBgrid"></div>
+							<div id="content" class="screen">
+								<ol class="rightFunction">
+									<!-- <li class="compile" title="编辑"></li> -->
+									<li class="copy" title="复制"></li>
+									<li class="up" title="层级提升"></li>
+									<li class="down" title="层级降低"></li>
+									<li class="shut" title="删除"></li>
+								</ol>
+							</div>
+						</div>
+					</div>
+					<div class="details-you">
+						<div class="huabushuxing shuxing">
+							<ul class="nav double">
+								<li class="setUpClick" ng-click="SXGNFun($event, true)">画布属性</li>
+								<li ng-click="SXGNFun($event, false)">画布元素</li>
+							</ul>
+							<div class="attribute" ng-include="'./SXhtml/huabuSX.html'"></div>
+							<div class="editor">
+								<ul class="directory"></ul>
+							</div>
+						</div>
+						<div class="tuxinshuxing shuxing">
+							<ul class="nav">
+								<li class="setUpClick">图形属性</li>
+							</ul>
+							<div class="attribute" ng-include="'./SXhtml/tuxinSX.html'"></div>
+						</div>
+						<div class="zujianshuxing shuxing">
+							<ul class="nav CompOrdinary">
+								<li class="setUpClick">组件属性</li>
+							</ul>
+							<ul class="nav double CompEditor">
+								<li ng-click='SXGNFun($event, true, "Comp")'>组件属性</li>
+								<li class="setUpClick" ng-click='SXGNFun($event, fasle, "Comp")'>组件编辑</li>
+							</ul>
+							<div class="attribute  hidden">
+								<div class="attributeBox tabs" ng-include="'./SXhtml/CompSX/tabsSX.html'"></div>
+								<div class="attributeBox text" ng-include="'./SXhtml/CompSX/textSX.html'"></div>
+								<div class="attributeBox marquee" ng-include="'./SXhtml/CompSX/marqueeSX.html'"></div>
+								<div class="attributeBox countUp" ng-include="'./SXhtml/CompSX/countUpSX.html'"></div>
+								<div class="attributeBox statistic" ng-include="'./SXhtml/CompSX/statisticSX.html'"></div>
+								<div class="attributeBox time" ng-include="'./SXhtml/CompSX/timeSX.html'"></div>
+								<div class="attributeBox weather" ng-include="'./SXhtml/CompSX/weatherSX.html'"></div>
+								<div class="attributeBox image" ng-include="'./SXhtml/CompSX/imageSX.html'"></div>
+								<div class="attributeBox video" ng-include="'./SXhtml/CompSX/videoSX.html'"></div>
+								<div class="attributeBox audio" ng-include="'./SXhtml/CompSX/audioSX.html'"></div>
+								<div class="attributeBox monitoring" ng-include="'./SXhtml/CompSX/monitoringSX.html'"></div>
+							</div>
+							<div class="editor">
+								<div class="editorBox" id="compEditor">
+									<div class="dataEditor">
+										<div class="dataEditorBox">
+											<div class="dataChange">
+												<div class="dataChangeBox">
+													<div class="dataName">数据源:</div>
+													<div class="dataList">
+														<el-select size="small" v-model="dbsrcId" filterable placeholder="请选择" style="width:100%;" @change='yuanGet(dbsrcId)'>
+															<el-option v-for="item in yuanArray" :key="item.value" :label="item.name" :value="item.id"></el-option>
+														</el-select>
+													</div>
+												</div>
+												<div class="dataChangeBox">
+													<div class="dataName">数据表:</div>
+													<div class="dataList">
+														<el-select size="small" v-model="tableId" filterable placeholder="请选择" style="width:100%;" @change='biaoGet(tableId)'>
+															<el-option v-for="item in biaoArray" :key="item.value" :label="item.name" :value="item.id"></el-option>
+														</el-select>
+													</div>
+												</div>
+											</div>
+											<div class="dimension">
+												<div class="dimensionBox">
+													<span>全部维度(X轴)</span>
+													<div class="variateBox">
+														<div>
+															<div class="variate" :aid="item.id" type="1" v-for="item in dimsList" @mousedown="dimChangeFun">{{item.name}}</div>
+														</div>
+													</div>
+												</div>
+												<div class="dimensionBox">
+													<span>全部度量(Y轴)</span>
+													<div class="variateBox">
+														<div>
+															<div class="variate" type="2" :aid="item.id" v-for="item in measList" @mousedown="dimChangeFun">{{item.name}}</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="dataEditorBox">
+											<div class="dimensionSed dimension">
+												<div class="dimensionSedBox">
+													<span>选中维度(X轴)</span>
+													<div class="variatSedeBox" dataType="1">
+														<div class="variate" :aid="item.id" type="1" v-for="item in seldimsList">{{item.name}}
+															<i @click="dimRemove(item.id, 1)"></i>
+														</div>
+														<div class="newDims"></div>
+													</div>
+												</div>
+												<div class="dimensionSedBox">
+													<span>选中度量(Y轴)</span>
+													<div class="variatSedeBox" dataType="2">
+														<div class="variate" type="2" :aid="item.id" v-for="item in selmeasList">{{item.name}}
+															<i @click="dimRemove(item.id, 2)"></i>
+														</div>
+														<div class="newDims" type="2"></div>	
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="shaixuanshuxing shuxing">
+							<ul class="nav">
+								<li class="setUpClick">组件属性</li>
+							</ul>
+							<div class="attribute" ng-include="'./SXhtml/shaixuanSX.html'"></div>
+						</div>
+						<div class="tubiaoshuxing shuxing">
+							<ul class="nav double">
+								<li ng-click='SXGNFun($event, true, "chart")'>图表属性</li>
+								<li class="setUpClick" ng-click='SXGNFun($event, fasle, "chart")'>图表编辑</li>
+							</ul>
+							<div class="attribute hidden">
+								<ul id="chartattr" class="setting">
+									<div class="TabsName Tabsfrist">
+										<span class="TabsNameText frist">通用</span>
+										<div class="TabsBox TabsBoxrist" id="general" ng-include="'./SXhtml/ChartSX/ChartGeneral.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsChart" id="titleTab">
+										<span class="TabsNameText frist">标题</span>
+										<div class="TabsBox" id="title" ng-include="'./SXhtml/ChartSX/ChartTitle.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsTbTe">
+										<span class="TabsNameText frist">图表区</span>
+										<div class="TabsBox" id="Tgrid" ng-include="'./SXhtml/ChartSX/ChartGrid.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist" id="textTab">
+										<span class="TabsNameText frist">系列</span>
+										<div class="TabsBox" id="textSeries" ng-include="'./SXhtml/ChartSX/ChartTextseries.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist" id="tableTab">
+										<span class="TabsNameText frist">系列</span>
+										<div class="TabsBox" id="tableSeries" ng-include="'./SXhtml/ChartSX/ChartTableseries.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsChart">
+										<span class="TabsNameText frist">系列</span>
+										<div class="TabsBox" id="series" ng-include="'./SXhtml/ChartSX/ChartSeries.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsChart" id="radarTab">
+										<span class="TabsNameText frist">雷达坐标系</span>
+										<div class="TabsBox" id="radar" ng-include="'./SXhtml/ChartSX/ChartRadar.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsChart" id="axisTab">
+										<span class="TabsNameText frist">直角坐标系</span>
+										<div class="TabsBox TabsBoxfrist" id="rectangular" ng-include="'./SXhtml/ChartSX/ChartRectangular.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsChart" id="geoTab">
+										<span class="TabsNameText frist">地理坐标系</span>
+										<div class="TabsBox" id="geo" ng-include="'./SXhtml/ChartSX/ChartGeo.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsChart" id="Tabslegend">
+										<span class="TabsNameText frist">图例</span>
+										<div class="TabsBox TabsBoxfrist" id="legendVisualMap" ng-include="'./SXhtml/ChartSX/ChartlegendVisualMap.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsChart">
+										<span class="TabsNameText frist">提示</span>
+										<div class="TabsBox" id="tooltip" ng-include="'./SXhtml/ChartSX/ChartTooltip.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsHightChart">
+										<span class="TabsNameText frist">标题</span>
+										<div class="TabsBox" id="Htitle" ng-include="'./SXhtml/ChartSX/heightChartTitle.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsHightChart">
+										<span class="TabsNameText frist">系列</span>
+										<div class="TabsBox" id="Hseries" ng-include="'./SXhtml/ChartSX/heightChartSeries.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsHightChart" id="HaxisTab">
+										<span class="TabsNameText frist">直角坐标系</span>
+										<div class="TabsBox TabsBoxfrist" id="Hrectangular" ng-include="'./SXhtml/ChartSX/heightChartRectangular.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsHightChart">
+										<span class="TabsNameText frist">图例</span>
+										<div class="TabsBox" id="Hlegend" ng-include="'./SXhtml/ChartSX/heightChartlegend.html'"></div>
+									</div>
+									<div class="TabsName Tabsfrist TabsHightChart">
+										<span class="TabsNameText frist">提示</span>
+										<div class="TabsBox" id="Htooltip" ng-include="'./SXhtml/ChartSX/heightChartTooltip.html'"></div>
+									</div>
+								</ul>
+							</div>
+							<div class="editor">
+								<div class="editorBox" id="chartEditor">
+									<div class="dataEditor">
+										<div class="dataEditorBox">
+											<div class="dataChange">
+												<div class="dataChangeBox">
+													<div class="dataName">数据源:</div>
+													<div class="dataList">
+														<el-select size="small" v-model="dbsrcId" filterable placeholder="请选择" style="width:100%;" @change='yuanGet(dbsrcId)'>
+															<el-option v-for="item in yuanArray" :key="item.value" :label="item.name" :value="item.id"></el-option>
+														</el-select>
+													</div>
+												</div>
+												<div class="dataChangeBox">
+													<div class="dataName">数据表:</div>
+													<div class="dataList">
+														<el-select size="small" v-model="tableId" filterable placeholder="请选择" style="width:100%;" @change='biaoGet(tableId)'>
+															<el-option v-for="item in biaoArray" :key="item.value" :label="item.name" :value="item.id"></el-option>
+														</el-select>
+													</div>
+												</div>
+											</div>
+											<div class="dimension">
+												<div class="dimensionBox">
+													<span>全部维度(X轴)</span>
+													<div class="variateBox">
+														<div>
+															<div class="variate" :aid="item.id" type="1" v-for="item in dimsList" @mousedown="dimChangeFun">{{item.name}}</div>
+														</div>
+													</div>
+												</div>
+												<div class="dimensionBox">
+													<span>全部度量(Y轴)</span>
+													<div class="variateBox">
+														<div>
+															<div class="variate" type="2" :aid="item.id" v-for="item in measList" @mousedown="dimChangeFun">{{item.name}}</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="dataEditorBox">
+											<div class="dimensionSed dimension">
+												<div class="dimensionSedBox">
+													<span>选中维度(X轴)</span>
+													<div class="variatSedeBox" dataType="1">
+														<div class="variate" :aid="item.id" type="1" v-for="item in seldimsList">{{item.name}}
+															<i @click="dimRemove(item.id, 1)"></i>
+														</div>
+														<div class="newDims"></div>
+													</div>
+												</div>
+												<div class="dimensionSedBox">
+													<span>选中度量(Y轴)</span>
+													<div class="variatSedeBox" dataType="2">
+														<div class="variate" type="2" :aid="item.id" v-for="item in selmeasList">{{item.name}}
+															<i @click="dimRemove(item.id, 2)"></i>
+														</div>
+														<div class="newDims" type="2"></div>	
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="chartChoose">
+										<div class="chartChooseBox">
+											<div :class="{chartBox: true, 'chartBox1': item.isActive, 'chartBox2': item.isSelected}" :title="item.name+item.wdprompt" :style="{'background-image': 'url(' + item.url + ')'}" v-for="item in chartOptionList" @click='chartSwitch(item)'></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="audioControls">
+					<div class="grid-music-container f-usn">
+						<div class="m-music-play-wrap">
+							<div class="u-cover"></div>
+							<div class="m-now-info">
+								<h1 class="u-music-title">
+									<strong>标题</strong>
+									<small>歌手</small>
+								</h1>
+								<div class="m-now-controls">
+									<div class="u-control u-process">
+										<span class="buffer-process"></span>
+										<span class="current-process"></span>
+									</div>
+									<div class="u-control u-time">00:00/00:00</div>
+									<div class="u-control u-volume">
+										<div class="volume-process" data-volume="0.50">
+											<span class="volume-current"></span>
+											<span class="volume-bar"></span>
+											<span class="volume-event"></span>
+										</div>
+										<a class="volume-control"></a>
+									</div>
+								</div>
+								<div class="m-play-controls">
+									<a class="u-play-btn prev" title="上一曲"></a>
+									<a class="u-play-btn ctrl-play play" title="暂停"></a>
+									<a class="u-play-btn next" title="下一曲"></a>
+									<a class="u-play-btn mode mode-list current" title="列表循环"></a>
+									<a class="u-play-btn mode mode-random" title="随机播放"></a>
+									<a class="u-play-btn mode mode-single" title="单曲循环"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div </div>
+			</div>
+		</div>
+		<script type="text/javascript" charset="utf-8" src="import/vue/vue2.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/vue/vueElement2.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/angular.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/jquery-ui.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/echarts2.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/echarts.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/echarts-gl.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/jwplayer.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/ezuikit.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/SMusic/js/smusic.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/mock.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/html2canvas.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/canvg/rgbcolor.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/canvg/canvg.js"></script>
+		<script type="text/javascript" charset="utf-8" src="extra/layer-v2.3/layer/layer.js"></script>
+		<!-- <script type="text/javascript" charset="utf-8" src="import/js/jquery.mousewheel.js"></script> -->
+		<!-- <script type="text/javascript" charset="utf-8" src="import/js/perfect-scrollbar.js"></script> -->
+		<script type="text/javascript" charset="utf-8" src="import/js/jquery.nicescroll.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/moment.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/countUp/countUp.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/webuploader-0.1.5/webuploader.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/webuploader-0.1.5/webuploader.nolog.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/media/uploadBigFile.js"></script>
+		<script type="text/javascript" charset="utf-8" src="http://api.map.baidu.com/getscript?v=2.0&ak=59KkG4gGSwIzukAsZmfBsp6Y13j6D9LM&services=&t=20171031174121"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/jquery.dataStatistics.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/heatmap.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/highcharts.js"></script>
+		<script type="text/javascript" charset="utf-8" src="import/js/highcharts-3d.js"></script>
+		<!-- <script type="text/javascript" charset="utf-8" src="import/js/shortcut.js"></script>	 -->
+		<!-- <script type="text/javascript" charset="utf-8" src="import/js/video.js"></script>	
+		<script type="text/javascript" charset="utf-8" src="import/js/videojs-ie8.min.js"></script>	 -->
+
+		<!-- 新增 -->
+
+		<script type="text/javascript" charset="utf-8" src="import/js/require.js"></script>
+
+		<!-- 功能js -->
+		<script type="text/javascript" charset="utf-8" src="js/init.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/createElement.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/Tudata.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/refresh.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/hlframe.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/map.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/web.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/vueCshAttr.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/vueCshFun.js"></script>		
+		<script type="text/javascript" charset="utf-8" src="js/ksh.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/vueEchartVariables.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/vueHchartVariables.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/setAttribute.js"></script>
+</body>
+
+</html>

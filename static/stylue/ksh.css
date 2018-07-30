@@ -1,0 +1,487 @@
+ul,
+ol,
+li {
+  list-style: none;
+}
+em,
+i {
+  font-style: normal;
+}
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+label {
+  font-weight: 100;
+}
+.font-weight {
+  font-weight: bold;
+}
+.anchorBL {
+  display: none;
+}
+.hidden {
+  display: none;
+}
+.selPadding {
+  padding: 10px 20px;
+}
+.clone {
+  font-size: 12px;
+  width: 100px;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  position: absolute;
+  color: #fff;
+  background-color: #409eff;
+  overflow: hidden;
+  cursor: move;
+}
+.SXboxp {
+  overflow: hidden;
+}
+.SXboxdiv .el-input {
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+}
+.SXboxdiv .el-input .el-input__inner {
+  color: inherit;
+  background-color: rgba(0,0,0,0);
+  font-family: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+}
+#myPlayer {
+  width: 100%;
+  height: 100%;
+}
+.keshihua {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.keshihua .yulan {
+  background-color: #e5e9f2;
+  width: 100%;
+}
+.keshihua .yulan .details1 {
+  overflow: hidden;
+}
+.keshihua .yulan .details1 .ylconent {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.keshihua .yulan .details1 .ylconent .ylconent1 {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+.keshihua .yulan .details1 .ylconent .ylconent1 .ylconent2 {
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+.keshihua .yulan .details1 .ylconent .ylconent1 .ylconent2 .yl {
+  position: absolute;
+  overflow: hidden;
+}
+.keshihua .yulan .details1 .guangbi {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  z-index: 100000;
+  width: 40px;
+  height: 40px;
+  background: url("../image/ylgb.png") no-repeat 50% 50%/25px 25px;
+  background-color: rgba(0,0,0,0.6);
+  cursor: pointer;
+}
+.keshihua .ksh {
+  overflow: hidden;
+}
+.keshihua .ksh .initial {
+  width: 100%;
+  height: 59px;
+  background-color: #2d68a2;
+}
+.keshihua .ksh .initial .initial-zuo {
+  text-align: center;
+  background-color: #ccc;
+  width: 160px;
+  height: 59px;
+  float: left;
+}
+.keshihua .ksh .initial .initial-zuo span {
+  line-height: 60px;
+  font-size: 20px;
+  color: #2d68a2;
+}
+.keshihua .ksh .initial .initial-zhong .nav {
+  position: relative;
+  width: 50px;
+  height: 59px;
+  padding: 13px;
+  float: left;
+}
+.keshihua .ksh .initial .initial-zhong .nav i {
+  width: 24px;
+  height: 20px;
+  display: block;
+}
+.keshihua .ksh .initial .initial-zhong .nav .tubiaoIcon {
+  background: url("../image/nav/tubiao.png") no-repeat 1px 0;
+}
+.keshihua .ksh .initial .initial-zhong .nav .tuxinIcon {
+  background: url("../image/nav/tuxin.png") no-repeat 1px 0;
+}
+.keshihua .ksh .initial .initial-zhong .nav .componentIcon {
+  background: url("../image/nav/component.png") no-repeat 2px 0;
+}
+.keshihua .ksh .initial .initial-zhong .nav .shaixuanIcon {
+  background: url("../image/nav/shaixuan.png") no-repeat 1px 0;
+}
+.keshihua .ksh .initial .initial-zhong .nav span {
+  font-size: 12px;
+  color: #fff;
+  cursor: default;
+}
+.keshihua .ksh .initial .initial-zhong .nav .hoverBox {
+  display: none;
+  position: absolute;
+  top: 59px;
+  left: 0;
+  z-index: 1001;
+  border-width: 0 1px 1px 1px;
+  border-style: solid;
+  border-color: #ddd;
+  background-color: #fff;
+  overflow: hidden;
+}
+.keshihua .ksh .initial .initial-zhong .tubiao .hoverBox,
+.keshihua .ksh .initial .initial-zhong .qita .hoverBox {
+  width: 644px;
+  max-height: 368px;
+  padding: 25px;
+}
+.keshihua .ksh .initial .initial-zhong .tubiao .hoverBox div,
+.keshihua .ksh .initial .initial-zhong .qita .hoverBox div {
+  float: left;
+  background-color: #fff;
+  width: 70px;
+  height: 73px;
+  border: 1px solid #eaeaea;
+  text-align: center;
+  margin: 2px;
+}
+.keshihua .ksh .initial .initial-zhong .tubiao .hoverBox div i,
+.keshihua .ksh .initial .initial-zhong .qita .hoverBox div i {
+  margin-top: 9px;
+  margin-left: 15px;
+  margin-bottom: 5px;
+  width: 40px;
+  height: 40px;
+}
+.keshihua .ksh .initial .initial-zhong .tubiao .hoverBox div span,
+.keshihua .ksh .initial .initial-zhong .qita .hoverBox div span {
+  color: #434343;
+  font-size: 12px;
+}
+.keshihua .ksh .initial .initial-zhong .tubiao .hoverBox div:hover,
+.keshihua .ksh .initial .initial-zhong .qita .hoverBox div:hover {
+  background-color: #f3f3f3;
+}
+.keshihua .ksh .initial .initial-zhong .tubiao .hoverBox .AddTubiao,
+.keshihua .ksh .initial .initial-zhong .qita .hoverBox .AddTubiao {
+  width: 70px;
+  height: 73px;
+  padding: 20px 10px;
+}
+.keshihua .ksh .initial .initial-zhong .tubiao:hover div,
+.keshihua .ksh .initial .initial-zhong .qita:hover div {
+  display: block;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox {
+  width: 620px;
+  height: 368px;
+  overflow: hidden;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 {
+  width: 664px;
+  height: 100%;
+  overflow: auto;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 p {
+  font-size: 12px;
+  line-height: 18px;
+  height: 28px;
+  padding: 5px 20px;
+  background-color: #f5f5f5;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box {
+  padding: 10px;
+  overflow: hidden;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box i {
+  width: 37px;
+  height: 37px;
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box i:hover {
+  background-color: #f3f3f3;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box i:hover svg rect,
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box i:hover svg g,
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box i:hover svg polygon,
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box i:hover svg path,
+.keshihua .ksh .initial .initial-zhong .tuxin .hoverBox .shape1 .shape-box i:hover svg ellipse {
+  fill: #2d68a2;
+}
+.keshihua .ksh .initial .initial-zhong .tuxin:hover div {
+  display: block;
+}
+.keshihua .ksh .initial .initial-zhong .shaixuan .hoverBox {
+  cursor: pointer;
+}
+.keshihua .ksh .initial .initial-zhong .shaixuan .hoverBox div {
+  width: 100px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 12px;
+  background-color: #fff;
+}
+.keshihua .ksh .initial .initial-zhong .shaixuan .hoverBox div:hover {
+  background-color: #f3f3f3;
+}
+.keshihua .ksh .initial .initial-you {
+  float: right;
+  margin-top: 15px;
+  margin-right: 138px;
+}
+.keshihua .ksh .initial .initial-you div {
+  float: left;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  background-color: #ddd;
+  border-radius: 5px 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.keshihua .ksh .details {
+  width: 100%;
+  position: relative;
+}
+.keshihua .ksh .details .details-zhong {
+  position: relative;
+  background-color: #e5e9f2;
+  width: 100%;
+  overflow: hidden;
+  padding: 40px 10px;
+  margin-right: 420px;
+}
+.keshihua .ksh .details .details-zhong .btnscreen {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 2px;
+  cursor: pointer;
+  background: url("../image/doubleArrow.png") 50% 50%/80% no-repeat;
+}
+.keshihua .ksh .details .details-zhong .btnscreen1 {
+  transform: rotate(180deg);
+}
+.keshihua .ksh .details .details-zhong #palette {
+  position: relative;
+  margin: auto;
+  overflow: auto;
+  padding-left: 20px;
+}
+.keshihua .ksh .details .details-zhong #palette input,
+.keshihua .ksh .details .details-zhong #palette select {
+  border: 0;
+}
+.keshihua .ksh .details .details-zhong #palette #HBgrid {
+  position: absolute;
+}
+.keshihua .ksh .details .details-zhong #palette #HBgrid .heng {
+  width: 100%;
+  height: 0.02rem;
+  transform: translateY(-50%);
+  position: absolute;
+}
+.keshihua .ksh .details .details-zhong #palette #HBgrid .zong {
+  width: 0.02rem;
+  height: 100%;
+  transform: translateX(-50%);
+  position: absolute;
+}
+.keshihua .ksh .details .details-zhong #palette #content .box {
+  position: absolute;
+}
+.keshihua .ksh .details .details-zhong #palette .screen {
+  position: relative;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .borderBk {
+  background-color: rgba(32,141,203,0.3);
+}
+.keshihua .ksh .details .details-zhong #palette .screen .border {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 33333;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .borHover1 {
+  box-shadow: 0 0 8px #2d68a2;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .zoom {
+  position: absolute;
+  display: block;
+  z-index: 44444;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .oneWayTB {
+  width: 80%;
+  height: 10%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .oneWayLR {
+  width: 10%;
+  height: 80%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .twoWay {
+  width: 10%;
+  height: 10%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .nResize {
+  left: 10%;
+  top: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .neResize {
+  top: 0;
+  right: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .sResize {
+  left: 10%;
+  bottom: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .seResize {
+  bottom: 0;
+  right: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .eResize {
+  top: 10%;
+  right: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .swResize {
+  bottom: 0;
+  left: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .wResize {
+  top: 10%;
+  left: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen .nwResize {
+  top: 0;
+  left: 0;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol {
+  height: 0.2rem;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  display: none;
+  z-index: 999;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol li {
+  float: left;
+  width: 0.2rem;
+  height: 0.2rem;
+  margin-left: 0.02rem;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .shut {
+  background: url("../image/bianji/shut1.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .shut:hover {
+  background: url("../image/bianji/shut2.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .up {
+  background: url("../image/bianji/up1.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .up:hover {
+  background: url("../image/bianji/up2.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .down {
+  background: url("../image/bianji/down1.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .down:hover {
+  background: url("../image/bianji/down2.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .compile {
+  background: url("../image/bianji/compile1.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .compile:hover {
+  background: url("../image/bianji/compile2.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .copy {
+  background: url("../image/bianji/copy1.png") 0 0/100% 100%;
+}
+.keshihua .ksh .details .details-zhong #palette .screen ol .copy:hover {
+  background: url("../image/bianji/copy2.png") 0 0/100% 100%;
+}
+.tabsTitle {
+  width: 100%;
+  height: 10%;
+  font-size: 0.18rem;
+}
+.tabsTitle li {
+  float: left;
+  height: 100%;
+  border: 0.01rem solid rgba(0,0,0,0);
+  border-bottom-color: #409eff;
+}
+.tabsTitle li p {
+  padding: 0 10px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tabsBody {
+  width: 100%;
+  height: 90%;
+  position: relative;
+  border: 0.01rem solid rgba(0,0,0,0);
+  border-top-color: rgba(0,0,0,0);
+}
+.tabsBody .tabBox {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  opacity: 0;
+}
+#audioControls {
+  display: none;
+}

@@ -1,0 +1,189 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="HchartsTitle">
+		<li>
+			<div class="attributeName">主标题名称</div>
+			<div class="input">
+				<el-input size="small" v-model="HtitleObj.title.Text"  @blur='inputGet(HtitleObj.title.Text, "title.text", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">主标题边距</div>
+			<div class="input">
+				<el-input size="small" v-model="HtitleObj.title.margin" @blur='inputGet(HtitleObj.title.margin, "title.margin", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">水平位置</div>
+			<div class="select">
+				<el-select size="small" v-model="HtitleObj.title.align" placeholder="请选择" style="width:100%;" @change='selectGet(HtitleObj.title.align, "title.align", "string")'>
+					<el-option label="居左" value="left"></el-option>
+					<el-option label="居中" value="center"></el-option>
+					<el-option label="居右" value="right"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">垂直位置</div>
+			<div class="select">
+				<el-select size="small" v-model="HtitleObj.title.verticalAlign" placeholder="请选择" clearable style="width:100%;" @change='selectGet(HtitleObj.title.verticalAlign, "title.verticalAlign", "string")'>
+					<el-option label="居上" value="top"></el-option>
+					<el-option label="居中" value="middle"></el-option>
+					<el-option label="居下" value="bottom"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">副标题名称</div>
+			<div class="input">
+				<el-input size="small" v-model="HtitleObj.subtitle.Text" @blur='inputGet(HtitleObj.subtitle.Text, "subtitle.text", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">水平位置</div>
+			<div class="select">
+				<el-select size="small" v-model="HtitleObj.subtitle.align" placeholder="请选择" style="width:100%;" @change='selectGet(HtitleObj.subtitle.align, "subtitle.align", "string")'>
+					<el-option label="居左" value="left"></el-option>
+					<el-option label="居中" value="center"></el-option>
+					<el-option label="居右" value="right"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">垂直位置</div>
+			<div class="select">
+				<el-select size="small" v-model="HtitleObj.subtitle.verticalAlign" placeholder="请选择" clearable style="width:100%;" @change='selectGet(HtitleObj.subtitle.verticalAlign, "subtitle.verticalAlign", "string")'>
+					<el-option label="居上" value="top"></el-option>
+					<el-option label="居中" value="middle"></el-option>
+					<el-option label="居下" value="bottom"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<el-collapse v-model="titleObj.titleName" accordion @change='tabClickGet(titleObj.titleName, "title.titleName")'>
+			<el-collapse-item title="主标题样式" name="title">
+				<li>
+					<div class="attributeName">水平偏移</div>
+					<div class="input">
+						<el-input size="small" v-model="HtitleObj.title.x" @blur='inputGet(HtitleObj.title.x, "title.x", "number")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">垂直偏移</div>
+					<div class="input">
+						<el-input size="small" v-model="HtitleObj.title.y" @blur='inputGet(HtitleObj.title.y, "title.y", "number")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体</div>
+					<div class="select">
+						<el-select size="small" v-model="HtitleObj.title.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HtitleObj.title.fontFamily, "title.style.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="HtitleObj.title.color" show-alpha @change='colorGet(HtitleObj.title.color, "HtitleObj.title.color", "title.style.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="HtitleObj.title.color" :spellcheck="false" @focus="inputColor(HtitleObj.title.color)" @blur='inputColorGet(HtitleObj.title.color,"HtitleObj.title.color", "title.style.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">大小</div>
+					<div class="slider">
+						<el-slider size="small" v-model="HtitleObj.title.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HtitleObj.title.fontSize, "HtitleObj.title.fontSize", "title.style.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="HtitleObj.title.fontSize1" :spellcheck="false" @focus="inputColor(HtitleObj.title.fontSize1)" @blur='sliderInpGet(HtitleObj.title.fontSize, "HtitleObj.title.fontSize", "title.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="HtitleObj.title.fontSytle" @change='radioGet(HtitleObj.title.fontSytle, "title.style.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="HtitleObj.title.fontWeight" @change='radioGet(HtitleObj.title.fontWeight, "title.style.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="副标题样式" name="subtitle">
+				<li>
+					<div class="attributeName">水平偏移</div>
+					<div class="input">
+						<el-input size="small" v-model="HtitleObj.subtitle.x" @blur='inputGet(HtitleObj.subtitle.x, "subtitle.x", "number")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">垂直偏移</div>
+					<div class="input">
+						<el-input size="small" v-model="HtitleObj.subtitle.y" @blur='inputGet(HtitleObj.subtitle.y, "subtitle.y", "number")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体</div>
+					<div class="select">
+						<el-select size="small" v-model="HtitleObj.subtitle.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HtitleObj.subtitle.fontFamily, "subtitle.style.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="HtitleObj.subtitle.color" show-alpha @change='colorGet(HtitleObj.subtitle.color, "HtitleObj.subtitle.color", "subtitle.style.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="HtitleObj.subtitle.color" :spellcheck="false" @focus="inputColor(HtitleObj.subtitle.color)" @blur='inputColorGet(HtitleObj.subtitle.color,"HtitleObj.subtitle.color", "subtitle.style.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">大小</div>
+					<div class="slider">
+						<el-slider size="small" v-model="HtitleObj.subtitle.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HtitleObj.subtitle.fontSize, "HtitleObj.subtitle.fontSize", "subtitle.style.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="HtitleObj.subtitle.fontSize1" :spellcheck="false" @focus="inputColor(HtitleObj.subtitle.fontSize1)" @blur='sliderInpGet(HtitleObj.subtitle.fontSize, "HtitleObj.subtitle.fontSize", "subtitle.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="HtitleObj.subtitle.fontSytle" @change='radioGet(HtitleObj.subtitle.fontSytle, "subtitle.style.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="HtitleObj.subtitle.fontWeight" @change='radioGet(HtitleObj.subtitle.fontWeight, "subtitle.style.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+	</ul>
+</body>
+</html>

@@ -1,0 +1,739 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div>
+		<div class="Tabssecond TabsName">
+			<span class="TabsNameText legend">图例</span>
+			<div id="legend" class="TabsBox TabsBox1">
+				<ul>
+					<li>
+						<div class="attributeName">组件显示</div>
+						<div class="switch">
+							<el-switch v-model="legendObj.Show" on-text="yes" off-text="no" @change='switchGet(legendObj.Show, "legend.show")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">组件类型</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="legendObj.Type" @change='radioGet(legendObj.Type, "legend.type", "string", "reconstruction")'>
+								<el-radio-button label="plain">普通</el-radio-button>
+								<el-radio-button label="scroll">滚动</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<el-collapse v-model="legendObj.Typescroll" style="margin-bottom: 5px;" accordion @change='tabClickGet(legendObj.Typescroll, "legend.Typescroll")'>
+						<el-collapse-item title="图例类型为滚动时有效" name="scroll">
+							<li>
+								<div class="attributeName">按钮页信息间隔</div>
+								<div class="slider">
+									<el-slider v-model="legendObj.PageButtonItemGap" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.PageButtonItemGap, "legendObj.PageButtonItemGap", "legend.pageButtonItemGap", "rem", "number")'></el-slider>
+								</div>
+								<div class="sliderInput">
+									<el-input size="small" v-model="legendObj.PageButtonItemGap1" :spellcheck="false" @focus="inputColor(legendObj.PageButtonItemGap1)" @blur='sliderInpGet(legendObj.PageButtonItemGap1, "legendObj.PageButtonItemGap", "legend.pageButtonItemGap", 0, 100, 1, "rem", "number")'></el-input>
+								</div>
+								<em>px</em>
+							</li>
+							<li>
+								<div class="attributeName">控制块和图例间隔</div>
+								<div class="slider">
+									<el-slider v-model="legendObj.PageButtonGap" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.PageButtonGap, "legendObj.PageButtonGap", "legend.pageButtonGap", "rem", "number")'></el-slider>
+								</div>
+								<div class="sliderInput">
+									<el-input size="small" v-model="legendObj.PageButtonGap1" :spellcheck="false" @focus="inputColor(legendObj.PageButtonGap1)" @blur='sliderInpGet(legendObj.PageButtonGap1, "legendObj.PageButtonGap", "legend.pageButtonGap", 0, 100, 1, "rem", "number")'></el-input>
+								</div>
+								<em>px</em>
+							</li>
+							<li>
+								<div class="attributeName">控制块位置</div>
+								<div class="radioButton">
+									<el-radio-group size="small" v-model="legendObj.PageButtonPosition" @change='radioGet(legendObj.PageButtonPosition, "legend.pageButtonPosition", "string")'>
+										<el-radio-button label="start">左/上</el-radio-button>
+										<el-radio-button label="end">右/下</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">翻页按钮颜色</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="legendObj.PageIconColor" show-alpha @change='colorGet(legendObj.PageIconColor, "legendObj.PageIconColor", "legend.pageIconColor", "string")'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="legendObj.PageIconColor" :spellcheck="false" @focus="inputColor(legendObj.PageIconColor)" @blur='inputColorGet(legendObj.PageIconColor,"legendObj.PageIconColor", "legend.pageIconColor", "string")'></el-input>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">翻页按钮未激活颜色</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="legendObj.PageIconInactiveColor" show-alpha @change='colorGet(legendObj.PageIconInactiveColor, "legendObj.PageIconInactiveColor", "legend.pageIconInactiveColor", "string")'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="legendObj.PageIconInactiveColor" :spellcheck="false" @focus="inputColor(legendObj.PageIconInactiveColor)" @blur='inputColorGet(legendObj.PageIconInactiveColor,"legendObj.PageIconInactiveColor", "legend.pageIconInactiveColor", "string")'></el-input>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">翻页按钮大小</div>
+								<div class="slider">
+									<el-slider v-model="legendObj.PageIconSize" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.PageIconSize, "legendObj.PageIconSize", "legend.pageIconSize", "rem", "number")'></el-slider>
+								</div>
+								<div class="sliderInput">
+									<el-input size="small" v-model="legendObj.PageIconSize1" :spellcheck="false" @focus="inputColor(legendObj.PageIconSize1)" @blur='sliderInpGet(legendObj.PageIconSize1, "legendObj.PageIconSize", "legend.pageIconSize", 0, 100, 1, "rem", "number")'></el-input>
+								</div>
+								<em>px</em>
+							</li>
+							<li>
+								<div class="attributeName">文本字体</div>
+								<div class="select">
+									<el-select size="small" v-model="legendObj.pageTextStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(legendObj.pageTextStyleFontFamily, "legend.pageTextStyle.fontFamily", "string")'>
+										<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+									</el-select>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">文本颜色</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="legendObj.pageTextStyleColor" show-alpha @change='colorGet(legendObj.pageTextStyleColor, "legendObj.pageTextStyleColor", "legend.pageTextStyle.color", "string")'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="legendObj.pageTextStyleColor" :spellcheck="false" @focus="inputColor(legendObj.pageTextStyleColor)" @blur='inputColorGet(legendObj.pageTextStyleColor,"legendObj.pageTextStyleColor", "legend.textStyle.color", "string")'></el-input>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">字体大小</div>
+								<div class="slider">
+									<el-slider v-model="legendObj.pageTextStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(legendObj.pageTextStyleFontSize, "legendObj.pageTextStyleFontSize", "legend.pageTextStyle.fontSize", "rem", "number")'></el-slider>
+								</div>
+								<div class="sliderInput">
+									<el-input size="small" v-model="legendObj.pageTextStyleFontSize1" :spellcheck="false" @focus="inputColor(legendObj.pageTextStyleFontSize1)" @blur='sliderInpGet(legendObj.pageTextStyleFontSize1, "legendObj.pageTextStyleFontSize", "legend.pageTextStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+								</div>
+								<em>px</em>
+							</li>
+							<li>
+								<div class="attributeName">字体风格</div>
+								<div class="radioButton">
+									<el-radio-group size="small" v-model="legendObj.pageTextStyleFontSytle" @change='radioGet(legendObj.pageTextStyleFontSytle, "legend.pageTextStyle.fontStyle", "string")'>
+										<el-radio-button label="normal">普通</el-radio-button>
+										<el-radio-button label="italic">斜体</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">字体粗细</div>
+								<div class="radioButton">
+									<el-radio-group size="small" v-model="legendObj.pageTextStyleFontWeight" @change='radioGet(legendObj.pageTextStyleFontWeight, "legend.pageTextStyle.fontWeight", "string")'>
+										<el-radio-button label="normal">普通</el-radio-button>
+										<el-radio-button label="bold">加粗</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+						</el-collapse-item>
+					</el-collapse>
+					<li>
+						<div class="attributeName">组件放置</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="legendObj.Orient" @change='radioGet(legendObj.Orient, "legend.orient", "string")'>
+								<el-radio-button label="horizontal">水平放置</el-radio-button>
+								<el-radio-button label="vertical">垂直放置</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">组件对齐</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="legendObj.Align" @change='radioGet(legendObj.Align, "legend.align", "string")'>
+								<el-radio-button label="auto">自动(默认)</el-radio-button>
+								<el-radio-button label="left">居左</el-radio-button>
+								<el-radio-button label="switch">居右</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">组件内边距</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.Padding" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.Padding, "legendObj.Padding", "legend.padding", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.Padding1" :spellcheck="false" @focus="inputColor(legendObj.Padding1)" @blur='sliderInpGet(legendObj.Padding1, "legendObj.Padding", "legend.padding", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">间距</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.ItemGap" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.ItemGap, "legendObj.ItemGap", "legend.itemGap", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.ItemGap1" :spellcheck="false" @focus="inputColor(legendObj.ItemGap1)" @blur='sliderInpGet(legendObj.ItemGap1, "legendObj.ItemGap", "legend.itemGap", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">组件图形宽度</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.ItemWidth" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.ItemWidth, "legendObj.ItemWidth", "legend.itemWidth", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.ItemWidth1" :spellcheck="false" @focus="inputColor(legendObj.ItemWidth1)" @blur='sliderInpGet(legendObj.ItemWidth1, "legendObj.ItemWidth", "legend.itemWidth", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">组件图形高度</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.ItemHeight" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.ItemHeight, "legendObj.ItemHeight", "legend.itemHeight", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.ItemHeight1" :spellcheck="false" @focus="inputColor(legendObj.ItemHeight1)" @blur='sliderInpGet(legendObj.ItemHeight1, "legendObj.ItemHeight", "legend.itemHeight", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">组件选择模式</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="legendObj.SelectedMode" @change='radioGet(legendObj.SelectedMode, "legend.selectedMode", "string")'>
+								<el-radio-button label="multiple">多选</el-radio-button>
+								<el-radio-button label="single">单选</el-radio-button>
+								<el-radio-button label="false">关闭</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">组件关闭颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="legendObj.InactiveColor" show-alpha @change='colorGet(legendObj.InactiveColor, "legendObj.InactiveColor", "legend.inactiveColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="legendObj.InactiveColor" :spellcheck="false" @focus="inputColor(legendObj.InactiveColor)" @blur='inputColorGet(legendObj.InactiveColor,"legendObj.InactiveColor", "legend.inactiveColor", "string")'></el-input>
+						</div>
+					</li>
+					<el-collapse v-model="legendObj.ActiveNames" style="margin-bottom: 5px;" accordion @change='tabClickGet(legendObj.ActiveNames, "legend.ActiveNames")'>
+						<el-collapse-item title="文本样式" name="textStyle">
+							<li>
+								<div class="attributeName">文本字体</div>
+								<div class="select">
+									<el-select size="small" v-model="legendObj.TextStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(legendObj.TextStyleFontFamily, "legend.textStyle.fontFamily", "string")'>
+										<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+									</el-select>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">文本颜色</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="legendObj.TextStyleColor" show-alpha @change='colorGet(legendObj.TextStyleColor, "legendObj.TextStyleColor", "legend.textStyle.color", "string")'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="legendObj.TextStyleColor" :spellcheck="false" @focus="inputColor(legendObj.TextStyleColor)" @blur='inputColorGet(legendObj.TextStyleColor,"legendObj.TextStyleColor", "legend.textStyle.color", "string")'></el-input>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">字体大小</div>
+								<div class="slider">
+									<el-slider v-model="legendObj.TextStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(legendObj.TextStyleFontSize, "legendObj.TextStyleFontSize", "legend.textStyle.fontSize", "rem", "number")'></el-slider>
+								</div>
+								<div class="sliderInput">
+									<el-input size="small" v-model="legendObj.TextStyleFontSize1" :spellcheck="false" @focus="inputColor(legendObj.TextStyleFontSize1)" @blur='sliderInpGet(legendObj.TextStyleFontSize1, "legendObj.TextStyleFontSize", "legend.textStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+								</div>
+								<em>px</em>
+							</li>
+							<li>
+								<div class="attributeName">字体风格</div>
+								<div class="radioButton">
+									<el-radio-group size="small" v-model="legendObj.TextStyleFontSytle" @change='radioGet(legendObj.TextStyleFontSytle, "legend.textStyle.fontStyle", "string")'>
+										<el-radio-button label="normal">普通</el-radio-button>
+										<el-radio-button label="italic">斜体</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">字体风格</div>
+								<div class="radioButton">
+									<el-radio-group size="small" v-model="legendObj.TextStyleFontWeight" @change='radioGet(legendObj.TextStyleFontWeight, "legend.textStyle.fontWeight", "string")'>
+										<el-radio-button label="normal">普通</el-radio-button>
+										<el-radio-button label="bold">加粗</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+						</el-collapse-item>
+						<el-collapse-item title="组件位置" name="position">
+							<el-tabs v-model="legendObj.Place" type="card" @tab-click='tabPositionGet(legendObj.Place, "legendObj.Place", "legendObj.Left","legendObj.Top", "legend.left", "legend.top", 0, 0, "center", "top")'>
+								<el-tab-pane name="common" label="组件位置常用">
+									<li>
+										<div class="attributeName">水平位置</div>
+										<div class="radioButton">
+											<el-radio-group size="small" v-model="legendObj.Left2" @change='radioGet(legendObj.Left2, "legend.left", "string")'>
+												<el-radio-button label="left">居左</el-radio-button>
+												<el-radio-button label="center">居中</el-radio-button>
+												<el-radio-button label="switch">居右</el-radio-button>
+											</el-radio-group>
+										</div>
+									</li>
+									<li>
+										<div class="attributeName">垂直位置</div>
+										<div class="radioButton">
+											<el-radio-group size="small" v-model="legendObj.Top2" @change='radioGet(legendObj.Top2, "legend.top", "string")'>
+												<el-radio-button label="top">居上</el-radio-button>
+												<el-radio-button label="middle">居中</el-radio-button>
+												<el-radio-button label="bottom">居下</el-radio-button>
+											</el-radio-group>
+										</div>
+									</li>
+								</el-tab-pane>
+								<el-tab-pane name="custom" label="组件位置自定义">
+									<li>
+										<div class="attributeName">水平位置</div>
+										<div class="slider">
+											<el-slider v-model="legendObj.Left" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.Left, "legendObj.Left", "legend.left" , "%", "number")'></el-slider>
+										</div>
+										<div class="sliderInput">
+											<el-input size="small" v-model="legendObj.Left1" :spellcheck="false" @focus="inputColor(legendObj.Left1)" @blur='sliderInpGet(legendObj.Left1, "legendObj.Left", "legend.left", 0, 100, 1, "%", "number")'></el-input>
+										</div>
+										<em>%</em>
+									</li>
+									<li>
+										<div class="attributeName">垂直位置</div>
+										<div class="slider">
+											<el-slider v-model="legendObj.Top" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.Top, "legendObj.Top", "legend.top", "%", "number")'></el-slider>
+										</div>
+										<div class="sliderInput">
+											<el-input size="small" v-model="legendObj.Top1" :spellcheck="false" @focus="inputColor(legendObj.Top1)" @blur='sliderInpGet(legendObj.Top1, "legendObj.Top", "legend.top", 0, 100, 1, "%", "number")'></el-input>
+										</div>
+										<em>%</em>
+									</li>
+								</el-tab-pane>
+							</el-tabs>
+						</el-collapse-item>
+					</el-collapse>
+					<li>
+						<div class="attributeName">背景颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="legendObj.BackgroundColor" show-alpha @change='colorGet(legendObj.BackgroundColor, "legendObj.BackgroundColor", "legend.backgroundColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="legendObj.BackgroundColor" :spellcheck="false" @focus="inputColor(legendObj.BackgroundColor)" @blur='inputColorGet(legendObj.BackgroundColor,"legendObj.BackgroundColor", "legend.backgroundColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">边框粗细</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.BorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(legendObj.BorderWidth, "legendObj.BorderWidth", "legend.borderWidth", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.BorderWidth1" :spellcheck="false" @focus="inputColor(legendObj.BorderWidth1)" @blur='sliderInpGet(legendObj.BorderWidth1, "legendObj.BorderWidth", "legend.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框圆角</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.BorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.BorderRadius, "legendObj.BorderRadius", "legend.borderRadius", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.BorderRadius1" :spellcheck="false" @focus="inputColor(legendObj.BorderRadius1)" @blur='sliderInpGet(legendObj.BorderRadius1, "legendObj.BorderRadius", "legend.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="legendObj.BorderColor" show-alpha @change='colorGet(legendObj.BorderColor, "legendObj.BorderColor", "legend.borderColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="legendObj.BorderColor" :spellcheck="false" @focus="inputColor(legendObj.BorderColor)" @blur='inputColorGet(legendObj.BorderColor,"legendObj.BorderColor", "legend.borderColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.ShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.ShadowBlur, "legendObj.ShadowBlur", "legend.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.ShadowBlur1" :spellcheck="false" @focus="inputColor(legendObj.ShadowBlur1)" @blur='sliderInpGet(legendObj.ShadowBlur1, "legendObj.ShadowBlur", "legend.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="legendObj.ShadowColor" show-alpha @change='colorGet(legendObj.ShadowColor, "legendObj.ShadowColor", "legend.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="legendObj.ShadowColor" :spellcheck="false" @focus="inputColor(legendObj.ShadowColor)" @blur='inputColorGet(legendObj.ShadowColor,"legendObj.ShadowColor", "legend.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.ShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.ShadowOffsetX, "legendObj.ShadowOffsetX", "legend.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.ShadowOffsetX1" :spellcheck="false" @focus="inputColor(legendObj.ShadowOffsetX1)" @blur='sliderInpGet(legendObj.ShadowOffsetX1, "legendObj.ShadowOffsetX", "legend.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="legendObj.ShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(legendObj.ShadowOffsetY, "legendObj.ShadowOffsetY", "legend.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="legendObj.ShadowOffsetY1" :spellcheck="false" @focus="inputColor(legendObj.ShadowOffsetY1)" @blur='sliderInpGet(legendObj.ShadowOffsetY1, "legendObj.ShadowOffsetY", "legend.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="TabsName Tabssecond">
+			<span class="TabsNameText legend">视觉映射</span>
+			<div id="visualMap" class="TabsBox TabsBox1">
+				<ul id="visualMap1">
+					<li>
+						<div class="attributeName">组件显示</div>
+						<div class="switch">
+							<el-switch v-model="visualMapObj.Show" on-text="yes" off-text="no" @change='switchGet(visualMapObj.Show, "visualMap.show")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">鼠标悬浮组件对应图形元素高亮</div>
+						<div class="switch">
+							<el-switch v-model="visualMapObj.HoverLink" on-text="yes" off-text="no" @change='switchGet(visualMapObj.HoverLink, "visualMap.hoverLink")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">是否反转组件</div>
+						<div class="switch">
+							<el-switch v-model="visualMapObj.Inverse" on-text="yes" off-text="no" @change='switchGet(visualMapObj.Inverse, "visualMap.inverse")'></el-switch>
+						</div>
+					</li>
+					<div id="continuous">
+						<li>
+							<div class="attributeName">拖拽手柄</div>
+							<div class="switch">
+								<el-switch v-model="visualMapObj.Calculable" on-text="yes" off-text="no" @change='switchGet(visualMapObj.Calculable, "visualMap.calculable")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">拖拽是否实时更新</div>
+							<div class="switch">
+								<el-switch v-model="visualMapObj.Realtime" on-text="yes" off-text="no" @change='switchGet(visualMapObj.Realtime, "visualMap.realtime")'></el-switch>
+							</div>
+						</li>
+					</div>
+					<div id="piecewise">
+						<li>
+							<div class="attributeName">选择模式</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="visualMapObj.selectedMode" @change='radioGet(visualMapObj.selectedMode, "visualMap.selectedMode", "string")'>
+									<el-radio-button label="multiple">多选</el-radio-button>
+									<el-radio-button label="single">单选</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+					</div>
+					<li>
+						<div class="attributeName">数据展示精度</div>
+						<div class="slider">
+							<el-slider v-model="visualMapObj.Precision" :min="0" :max="5" :step="1" @change='sliderGet(visualMapObj.Precision, "visualMapObj.Precision", "visualMap.precision", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="visualMapObj.Precision1" :spellcheck="false" @focus="inputColor(visualMapObj.Precision1)" @blur='sliderInpGet(visualMapObj.Precision1, "visualMapObj.Precision", "visualMap.precision", 0, 5, 1, "rem", "number")'></el-input>
+						</div>
+						<em>位</em>
+					</li>
+					<li>
+						<div class="attributeName">组件图形宽度</div>
+						<div class="slider">
+							<el-slider v-model="visualMapObj.ItemWidth" :min="0" :max="100" :step="1" @change='sliderGet(visualMapObj.ItemWidth, "visualMapObj.ItemWidth", "visualMap.itemWidth", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="visualMapObj.ItemWidth1" :spellcheck="false" @focus="inputColor(visualMapObj.ItemWidth1)" @blur='sliderInpGet(visualMapObj.ItemWidth1, "visualMapObj.ItemWidth", "visualMap.itemWidth", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">组件图形高度</div>
+						<div class="slider">
+							<el-slider v-model="visualMapObj.ItemHeight" :min="0" :max="visualMapObj.ItemHeightMax" :step="1" @change='sliderGet(visualMapObj.ItemHeight, "visualMapObj.ItemHeight", "visualMap.itemHeight", "rem", "number", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="visualMapObj.ItemHeight1" :spellcheck="false" @focus="inputColor(visualMapObj.ItemHeight1)" @blur='sliderInpGet(visualMapObj.ItemHeight1, "visualMapObj.ItemHeight", "visualMap.itemHeight", 0, visualMapItemHeightMax, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">组件内边距</div>
+						<div class="slider">
+							<el-slider v-model="visualMapObj.Padding" :min="0" :max="100" :step="1" @change='sliderGet(visualMapObj.Padding, "visualMapObj.Padding", "visualMap.padding", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="visualMapObj.Padding1" :spellcheck="false" @focus="inputColor(visualMapObj.Padding1)" @blur='sliderInpGet(visualMapObj.Padding1, "visualMapObj.Padding", "visualMap.padding", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">组件放置</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="visualMapObj.Orient" @change='radioGet(visualMapObj.Orient, "visualMap.orient", "string", "visualMapObj.Orient")'>
+								<el-radio-button label="horizontal">水平放置</el-radio-button>
+								<el-radio-button label="vertical">垂直放置</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">组件标志位置</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="visualMapObj.Align" @change='radioGet(visualMapObj.Align, "visualMap.align", "string")'>
+								<el-radio-button label="auto">自动(默认)</el-radio-button>
+								<el-radio-button :label="align1">居左/上</el-radio-button>
+								<el-radio-button :label="align2">居右/下</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">组件范围最小值</div>
+						<div class="input">
+							<el-input size="small" v-model="visualMapObj.Min" @blur='inputGet(visualMapObj.Min, "visualMap.min", "number")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">组件范围最大值</div>
+						<div class="input">
+							<el-input size="small" v-model="visualMapObj.Max" @blur='inputGet(visualMapObj.Max, "visualMap.max", "number")'></el-input>
+						</div>
+					</li>
+					
+				</ul>
+				<ul id="visualMap2">
+					<el-collapse v-model="visualMapObj.ActiveNames" accordion style="margin-bottom: 10px;" @change='tabClickGet(visualMapObj.ActiveNames, "visualMap.ActiveNames")'>
+						<el-collapse-item title="文本样式" name="textStyle">
+							<li>
+								<div class="attributeName">文本字体</div>
+								<div class="select">
+									<el-select size="small" v-model="visualMapObj.TextStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(visualMapObj.TextStyleFontFamily, "visualMap.textStyle.fontFamily", "string")'>
+										<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+									</el-select>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">文本颜色</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="visualMapObj.TextStyleColor" show-alpha @change='colorGet(visualMapObj.TextStyleColor, "visualMapObj.TextStyleColor", "visualMap.textStyle.color", "string")'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="visualMapObj.TextStyleColor" :spellcheck="false" @focus="inputColor(visualMapObj.TextStyleColor)" @blur='inputColorGet(visualMapObj.TextStyleColor,"visualMapObj.TextStyleColor", "visualMap.textStyle.color", "string")'></el-input>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">字体大小</div>
+								<div class="slider">
+									<el-slider v-model="visualMapObj.TextStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(visualMapObj.TextStyleFontSize, "visualMapObj.TextStyleFontSize", "visualMap.textStyle.fontSize", "rem", "number")'></el-slider>
+								</div>
+								<div class="sliderInput">
+									<el-input size="small" v-model="visualMapObj.TextStyleFontSize1" :spellcheck="false" @focus="inputColor(visualMapObj.TextStyleFontSize1)" @blur='sliderInpGet(visualMapObj.TextStyleFontSize1, "visualMapObj.TextStyleFontSize", "visualMap.textStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+								</div>
+								<em>px</em>
+							</li>
+							<li>
+								<div class="attributeName">字体风格</div>
+								<div class="radioButton">
+									<el-radio-group size="small" v-model="visualMapObj.TextStyleFontSytle" @change='radioGet(visualMapObj.TextStyleFontSytle, "visualMap.textStyle.fontStyle", "string")'>
+										<el-radio-button label="normal">普通</el-radio-button>
+										<el-radio-button label="italic">斜体</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">字体风格</div>
+								<div class="radioButton">
+									<el-radio-group size="small" v-model="visualMapObj.TextStyleFontWeight" @change='radioGet(visualMapObj.TextStyleFontWeight, "visualMap.textStyle.fontWeight", "string")'>
+										<el-radio-button label="normal">普通</el-radio-button>
+										<el-radio-button label="bold">加粗</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+						</el-collapse-item>
+						<el-collapse-item title="组件位置" name="position">
+							<el-tabs v-model="visualMapObj.Place" type="card" @tab-click='tabPositionGet(visualMapObj.Place, "visualMapObj.Place", "visualMapObj.Left","visualMapObj.Top", "visualMap.left", "visualMap.top", 0, 0, "center", "top")'>
+								<el-tab-pane name="common" label="组件位置常用">
+									<li>
+										<div class="attributeName">水平位置</div>
+										<div class="radioButton">
+											<el-radio-group size="small" v-model="visualMapObj.Left2" @change='radioGet(visualMapObj.Left2, "visualMap.left", "string")'>
+												<el-radio-button label="left">居左</el-radio-button>
+												<el-radio-button label="center">居中</el-radio-button>
+												<el-radio-button label="switch">居右</el-radio-button>
+											</el-radio-group>
+										</div>
+									</li>
+									<li>
+										<div class="attributeName">垂直位置</div>
+										<div class="radioButton">
+											<el-radio-group size="small" v-model="visualMapObj.Top2" @change='radioGet(visualMapObj.Top2, "visualMap.top", "string")'>
+												<el-radio-button label="top">居上</el-radio-button>
+												<el-radio-button label="middle">居中</el-radio-button>
+												<el-radio-button label="bottom">居下</el-radio-button>
+											</el-radio-group>
+										</div>
+									</li>
+								</el-tab-pane>
+								<el-tab-pane name="custom" label="组件位置自定义">
+									<li>
+										<div class="attributeName">水平位置</div>
+										<div class="slider">
+											<el-slider v-model="visualMapObj.Left" :min="0" :max="100" :step="1" @change='sliderGet(visualMapObj.Left, "visualMapObj.Left", "visualMap.left" , "%", "number")'></el-slider>
+										</div>
+										<div class="sliderInput">
+											<el-input size="small" v-model="visualMapObj.Left1" :spellcheck="false" @focus="inputColor(visualMapObj.Left1)" @blur='sliderInpGet(visualMapObj.Left1, "visualMapObj.Left", "visualMap.left", 0, 100, 1, "%", "number")'></el-input>
+										</div>
+										<em>%</em>
+									</li>
+									<li>
+										<div class="attributeName">垂直位置</div>
+										<div class="slider">
+											<el-slider v-model="visualMapObj.Top" :min="0" :max="100" :step="1" @change='sliderGet(visualMapObj.Top, "visualMapObj.Top", "visualMap.top", "%", "number")'></el-slider>
+										</div>
+										<div class="sliderInput">
+											<el-input size="small" v-model="visualMapObj.Top1" :spellcheck="false" @focus="inputColor(visualMapObj.Top1)" @blur='sliderInpGet(visualMapObj.Top1, "visualMapObj.Top", "visualMap.top", 0, 100, 1, "%", "number")'></el-input>
+										</div>
+										<em>%</em>
+									</li>
+								</el-tab-pane>
+							</el-tabs>
+						</el-collapse-item>
+						<div id="Range">
+							<el-collapse-item title="映射范围(优先级高于系列)" name="Range">
+								<li>
+									<div class="attributeName">范围选择</div>
+									<div class="select">
+										<el-select size="small" v-model="visualMapObj.visualMapRange" placeholder="请选择" style="width:100%;" @change='selectGet(visualMapObj.visualMapRange, "visualMap.visualMapRange", "string", "", "range")'>
+											<el-option v-for="(item, a) in visualMapObj.rangeList" :key="item.value" :label="item.name" :value="item.visualMapRange"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<div class="piecewiseSymbol">
+									<li>
+										<div class="attributeName">范围标记类型</div>
+										<div class="select">
+											<el-select size="small" v-model="visualMapObj.visualMapSymbol" placeholder="请选择" style="width:100%;" @change='selectGet(visualMapObj.visualMapSymbol, "visualMap."+visualMapObj.visualMapRange+".symbol", "string", "", "")'>
+												<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+											</el-select>
+										</div>
+									</li>
+									<li>
+										<div class="attributeName">范围标记大小</div>
+										<div class="slider">
+											<el-slider v-model="visualMapObj.visualMapSymbolSize" :min="0" :max="100" :step="1" @change='sliderGet(visualMapObj.visualMapSymbolSize, "visualMapObj.visualMapSymbolSize,", "visualMap."+visualMapObj.visualMapRange+".symbolSize", "rem", "number")'></el-slider>
+										</div>
+										<div class="sliderInput">
+											<el-input size="small" v-model="visualMapObj.visualMapSymbolSize1" :spellcheck="false" @focus="inputColor(visualMapObj.visualMapSymbolSize1)" @blur='sliderInpGet(visualMapObj.visualMapSymbolSize1, "visualMapObj.visualMapSymbolSize,", "visualMap."+visualMapObj.visualMapRange+".symbolSize", 0, 100, 1, "rem", "number")'></el-input>
+										</div>
+										<em>px</em>
+									</li>
+								</div>
+								<li>
+									<div class="attributeName">范围标记颜色</div>
+									<div class="addColor" @click='colorAdd("visualMapObj.RangeColorList", "visualMapObj.SymbolColorList", "visualMap."+visualMapObj.visualMapRange+".color", "array")'>
+										<el-button type="primary">添加</el-button>
+									</div>
+								</li>
+								<div v-for="(item, i) in visualMapObj.RangeColorList">
+									<li>
+										<div class="attributeName"></div>
+										<div class="color">
+											<el-color-picker size="small" v-model="item.color" show-alpha @change='colorGet(item.color, "visualMapObj.SymbolColorList", "visualMap."+visualMapObj.visualMapRange+".color", "array", i)'></el-color-picker>
+										</div>
+										<div class="colorInput" id="color">
+											<el-input size="small" v-model="item.color" :spellcheck="false" @focus="inputColor(item.color)" @blur='inputColorGet(item.color, "visualMapObj.SymbolColorList", "visualMap."+visualMapObj.visualMapRange+".color", "array", i)'></el-input>
+										</div>
+									</li>
+								</div>
+							</el-collapse-item>
+						</div>
+						<div id="pieces" style="margin-top: 1px;">
+							<el-collapse-item title="映射范围分段(优先级高于映射范围)" name="pieces">
+								<li>
+									<div class="attributeName">分段选择</div>
+									<div class="select">
+										<el-select size="small" v-model="visualMapObj.piecesIndex" placeholder="请选择" style="width:100%;" @change='selectGet(visualMapObj.piecesIndex, "visualMap.piecesIndex", "number", "", "pieces")'>
+											<el-option v-for="(item, a) in visualMapObj.piecesList" :key="item.value" :label="item.name" :value="a"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">分段最小值</div>
+									<div class="input">
+										<el-input size="small" v-model="visualMapObj.visualMapPiecesMin" @blur='inputGet(visualMapObj.visualMapPiecesMin, "visualMap.pieces."+visualMapObj.piecesIndex+".min", "number")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">分段最大值</div>
+									<div class="input">
+										<el-input size="small" v-model="visualMapObj.visualMapPiecesMax" @blur='inputGet(visualMapObj.visualMapPiecesMax, "visualMap.pieces."+visualMapObj.piecesIndex+".max", "number")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">分段标记类型</div>
+									<div class="select">
+										<el-select size="small" v-model="visualMapObj.visualMapPiecesSymbol" placeholder="请选择" style="width:100%;" @change='selectGet(visualMapObj.visualMapPiecesSymbol, "visualMap.pieces."+visualMapObj.piecesIndex+".symbol", "string", "", "")'>
+											<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">分段标记大小</div>
+									<div class="slider">
+										<el-slider v-model="visualMapObj.visualMapPiecesSymbolSize" :min="0" :max="100" :step="1" @change='sliderGet(visualMapObj.visualMapPiecesSymbolSize, "visualMapObj.visualMapPiecesSymbolSize", "visualMap.pieces."+visualMapObj.piecesIndex+".symbolSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="visualMapObj.visualMapPiecesSymbolSize1" :spellcheck="false" @focus="inputColor(visualMapObj.visualMapPiecesSymbolSize1)" @blur='sliderInpGet(visualMapObj.visualMapPiecesSymbolSize1, "visualMapObj.visualMapPiecesSymbolSize", "visualMap.pieces."+visualMapObj.piecesIndex+".symbolSize", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">分段标记颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="visualMapObj.visualMapPiecesSymbolColor" show-alpha @change='colorGet(visualMapObj.visualMapPiecesSymbolColor, "visualMapObj.visualMapPiecesSymbolColor", "visualMap.pieces."+visualMapObj.piecesIndex+".color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="visualMapObj.visualMapPiecesSymbolColor" :spellcheck="false" @focus="inputColor(visualMapObj.visualMapPiecesSymbolColor)" @blur='inputColorGet(visualMapObj.visualMapPiecesSymbolColor,"visualMapObj.visualMapPiecesSymbolColor", "visualMap.pieces."+visualMapObj.piecesIndex+".color", "string")'></el-input>
+									</div>
+								</li>
+							</el-collapse-item>
+						</div>
+					</el-collapse>
+					<li>
+						<div class="attributeName">背景颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="visualMapObj.BackgroundColor" show-alpha @change='colorGet(visualMapObj.BackgroundColor, "visualMapObj.BackgroundColor", "visualMap.backgroundColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="visualMapObj.BackgroundColor" :spellcheck="false" @focus="inputColor(visualMapObj.BackgroundColor)" @blur='inputColorGet(visualMapObj.BackgroundColor,"visualMapObj.BackgroundColor", "visualMap.backgroundColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">边框粗细</div>
+						<div class="slider">
+							<el-slider v-model="visualMapObj.BorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(visualMapObj.BorderWidth, "visualMapObj.BorderWidth", "visualMap.borderWidth")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="visualMapObj.BorderWidth1" :spellcheck="false" @focus="inputColor(visualMapObj.BorderWidth1)" @blur='sliderInpGet(visualMapObj.BorderWidth1, "visualMapObj.BorderWidth", "visualMap.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="visualMapObj.BorderColor" show-alpha @change='colorGet(visualMapObj.BorderColor, "visualMapObj.BorderColor", "visualMap.borderColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="visualMapObj.BorderColor" :spellcheck="false" @focus="inputColor(visualMapObj.BorderColor)" @blur='inputColorGet(visualMapObj.BorderColor,"visualMapObj.BorderColor", "visualMap.borderColor", "string")'></el-input>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

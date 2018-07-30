@@ -1,0 +1,172 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="timeattr" class="setting">
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="timeObj.width" @focus="inputColor(timeObj.width)" @blur='inputNumGet(timeObj.width, "timeObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="timeObj.height" @focus="inputColor(timeObj.height)" @blur='inputNumGet(timeObj.height, "timeObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="timeObj.left" @focus="inputColor(timeObj.left)" @blur='inputNumGet(timeObj.left, "timeObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="timeObj.top" @focus="inputColor(timeObj.top)" @blur='inputNumGet(timeObj.top, "timeObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<el-collapse v-model="timeObj.select" style="margin-bottom: 5px;" accordion @change='collapseGet(timeObj.select, "select")'>
+			<el-collapse-item title="字体样式" name="textStyle">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="timeObj.family" placeholder="请选择" style="width:100%;" @change='selectGet(timeObj.family, "font.family")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="timeObj.color" show-alpha @change='colorGet(timeObj.color, "color")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="timeObj.color" :spellcheck="false" @focus="inputColor(timeObj.color)" @blur='inputColorGet(timeObj.color, "timeObj.color", "color")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="timeObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(timeObj.fontSize, "timeObj.fontSize", "font.size")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="timeObj.fontSize1" :spellcheck="false" @focus="inputColor(timeObj.fontSize1)" @blur='sliderInpGet(timeObj.fontSize1, "timeObj.fontSize", "font.size", 12, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="timeObj.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(timeObj.letterSpacing, "timeObj.letterSpacing", "letter.spacing")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="timeObj.letterSpacing1" :spellcheck="false" @focus="inputColor(timeObj.letterSpacing1)" @blur='sliderInpGet(timeObj.letterSpacing1, "timeObj.letterSpacing", "letter.spacing", 0, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="timeObj.fontSytle" @change='radioGet(timeObj.fontSytle, "font.style")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="timeObj.fontWeight" @change='radioGet(timeObj.fontWeight, "font.weight")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文字对齐方式</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="timeObj.textAlign" @change='radioGet(timeObj.textAlign, "text.align")'>
+							<el-radio-button label="left">居左</el-radio-button>
+							<el-radio-button label="center">居中</el-radio-button>
+							<el-radio-button label="right">居右</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+		<li class="timeFormat">
+			<div class="attributeName">时间格式</div>
+			<div class="select">
+				<el-select size="small" v-model="timeObj.styleVal" placeholder="请选择" style="width:100%;" @change='selectGet(timeObj.styleVal, "styleVal")'>
+					<el-option v-for="item in timeType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="timeObj.backgroundColor" show-alpha @change='colorGet(timeObj.backgroundColor, "background.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="timeObj.backgroundColor" :spellcheck="false" @focus="inputColor(timeObj.backgroundColor)" @blur='inputColorGet(timeObj.backgroundColor, "timeObj.backgroundColor", "background.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="timeObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(timeObj.borderWidth, "timeObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="timeObj.borderWidth1" :spellcheck="false" @focus="inputColor(timeObj.borderWidth1)" @blur='sliderInpGet(timeObj.borderWidth1, "timeObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="timeObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(timeObj.borderRadius, "timeObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="timeObj.borderRadius1" :spellcheck="false" @focus="inputColor(timeObj.borderRadius1)" @blur='sliderInpGet(timeObj.borderRadius1, "timeObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="timeObj.borderColor" show-alpha @change='colorGet(timeObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="timeObj.borderColor" :spellcheck="false" @focus="inputColor(timeObj.borderColor)" @blur='inputColorGet(timeObj.borderColor, "timeObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="timeObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(timeObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

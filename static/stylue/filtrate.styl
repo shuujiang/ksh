@@ -1,0 +1,297 @@
+
+
+
+.keshihua
+	#loading
+		background-color rgba(255, 255, 255, 0.5)
+		height 100%
+		width 100%
+		position absolute
+		top 0
+		left 0
+		z-index 2000
+		#loading-center-absolute
+			position absolute
+			left 50%
+			top 50%
+			height 100px
+			width 200px
+			margin-top -50px
+			margin-left -100px
+			.object
+				width 12px
+				height 100px
+				margin-right 8px
+				background-color #409EFF
+				animation animate 1s infinite
+				float left
+				&:last-child
+					margin-right 0px
+				&:nth-child(10)
+					animation-delay 0.9s
+				&:nth-child(9)
+					animation-delay 0.8s
+				&:nth-child(8)
+					animation-delay 0.7s
+				&:nth-child(7)
+					animation-delay 0.6s
+				&:nth-child(6)
+					animation-delay 0.5s
+				&:nth-child(5)
+					animation-delay 0.4s
+				&:nth-child(4)
+					animation-delay 0.3s
+				&:nth-child(3)
+					animation-delay 0.2s
+				&:nth-child(2)
+					animation-delay 0.1s
+	
+	#shujuSelect
+		position absolute
+		top 0
+		left 0
+		width 100%
+		height 100%
+		background-color rgba(204, 204, 204, 0.5)
+		z-index 2000
+		display none
+		.bounced
+			position absolute
+			top 45%
+			left 50%
+			width 700px
+			transform translate(-50%, -50%)
+			background-color rgb(255,255,255)
+			border-radius 5px
+			overflow hidden
+			color #303133
+			.selTop
+				width 100%
+				height 45px
+				line-height 45px
+				padding-left 20px
+				font-size 18px
+				p
+					line-height 45px
+					float left
+				i
+					width 25px
+					height 25px
+					background url(../image/shaixuan.png)
+					background-size 25px 25px
+					margin 10px 20px
+					float right
+			.selContent
+				width 100%
+				height 410px
+				vertical-align middle
+				overflow hidden
+				.selContent-left
+					width 100%
+					height 100%
+					float left
+					p
+						font-size 14px
+						line-height 40px
+						width 120px
+						float left
+					.selectChart
+						width 100%
+						height 100%
+						float left
+						overflow hidden
+						.chartList
+							float left
+							width 540px
+							height 40px
+							overflow hidden
+							.select
+								width 150px
+								float left
+								margin-right 10px
+							.yuanShow
+								float left
+								height 30px
+								overflow hidden
+								line-height 30px
+								font-size 14px
+								margin-right 10px
+								white-space nowrap
+								text-overflow ellipsis
+							.datasource
+								width 170px
+								float left
+								height 30px
+								overflow hidden
+								line-height 30px
+								font-size 14px
+								margin-right 10px
+								white-space nowrap
+								text-overflow ellipsis
+								margin-right 0
+					.section1
+						width 100%
+						overflow hidden
+						.selectName
+							width 100%
+							height 40px
+							overflow hidden
+							div
+								float left
+								width 310px
+					.section2
+						overflow hidden
+						width 100%
+						.selectChart
+							position relative
+							#selectChartBox
+								width 540px
+								// width 560px
+								float right
+								// margin-right -20px
+								height 120px
+								overflow hidden
+								overflow-y auto
+					.section3
+						overflow hidden
+						width 100%
+						.selectChart
+							div
+								width 310px
+								height 40px
+								line-height 40px
+								float left
+					.section4
+						overflow hidden
+						width 100%
+				.selContent-right
+					width 300px
+					height 100%
+					float right
+					overflow hidden
+					position relative
+					.selectSJ-right
+						width 320px
+						height 100%
+						overflow-y auto
+						.top
+							position absolute
+							top 0
+							left 0
+							width 300px
+							height 40px
+							padding 10px 20px
+							background-color #eee
+							label
+								margin-left 10px
+								font-weight bold
+								margin-top -5px
+						.content
+							margin-top 40px
+							width 300px
+							padding 10px
+						.pullDown-content
+							li
+								padding-left 5px
+								label
+									margin-left 10px
+									height 22px
+			.selctionBtn
+				text-align center
+				width 100%
+				height 45px
+				margin-top 10px
+			.upLoad
+				padding 0 20px				
+				overflow hidden
+				.uploader-list
+					overflow hidden		
+					.item
+						height 50px
+						display none 
+						.showJD
+							margin-top 40px
+				.container
+					width 305px
+					height 35px
+			.videoSelect
+				width 100%
+				.linkAddress
+					width 100%
+					height 40px
+					.attributeName
+						float left
+						width 150px
+						font-size 16px
+						line-height 40px
+						padding-left 20px
+					.input
+						line-height 40px
+						float left
+						width 450px
+				.videoHrefSele
+					height 350px
+					.attributeName
+						float left
+						width 100%
+						font-size 16px
+						line-height 40px
+						padding-left 20px
+					.contentBox
+						width 660px
+						height 310px
+						border 2px solid #bfcbd9
+						margin-left 20px
+						padding 10px 0 20px 10px
+						overflow-y auto 
+						overflow-x hidden
+						position relative
+						.imgBox,.imgBox1
+							cursor pointer
+							width 115px
+							height 100px
+							float left
+							padding 5px
+							margin-left 10px
+							margin-top 10px
+							position relative
+							div	
+								overflow hidden
+								p
+									width 100%
+									height 20px
+									text-align center
+									font-size 14px
+									line-height 20px
+									overflow hidden
+									text-overflow ellipsis
+									float left
+								.img
+									width 100%
+									height 70px
+									float left
+									background-position 50% 50%
+									background-size auto 100%
+									background-repeat no-repeat
+							i 
+								float left
+								display none 
+								width 15px
+								height 15px
+								background url(../image/shaixuan.png) 50% 50%  no-repeat
+								position absolute
+								top 0
+								right 0
+							&:hover
+								i 
+									display block
+						.imgBox
+							border 1px solid rgba(0,0,0,0)
+						.imgBox1
+							border 1px solid #409EFF
+				
+		.monitoringBox
+			height 200px
+	#shujuSelect.shujuSelect
+		display block 
+		animation shujuSelectShow 1.5s linear 0s 1

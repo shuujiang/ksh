@@ -1,0 +1,366 @@
+* {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-family: Microsoft YaiHei;
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+a:hover,
+a:visited,
+a:link,
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+input,
+select {
+  border: 1px solid #aaa;
+  background-color: transparent;
+}
+font-family inherit,
+font-size inherit,
+line-height inherit,
+.left {
+  left: 0;
+}
+.center {
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.right {
+  right: 0;
+}
+.top {
+  top: 0;
+}
+.middle {
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.bottom {
+  bottom: 0;
+}
+.otherBox {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+  font-size: inherit;
+  text-align: center;
+  overflow: hidden;
+}
+.otherBox span {
+  white-space: nowrap;
+}
+.otherBox .STprefix,
+.otherBox .STsuffix {
+  float: left;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.otherBox .dataStatistics {
+  float: left;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+}
+.otherBox .dataStatistics .digit_set {
+  color: #fff;
+  float: left;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+}
+.otherBox .dataStatistics .digit_set .digit {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: none;
+}
+.otherBox .dataStatistics .digit_set .digit div {
+  position: absolute;
+  left: 0;
+  height: 50%;
+  width: 100%;
+  overflow: hidden;
+  border-width: 0;
+  border-style: solid;
+  z-index: 0;
+}
+.otherBox .dataStatistics .digit_set .digit div .digit_wrap {
+  display: block;
+}
+.otherBox .dataStatistics .digit_set .digit div:before {
+  content: "";
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.otherBox .dataStatistics .digit_set .digit .digit_top,
+.otherBox .dataStatistics .digit_set .digit .shadow_top {
+  border-bottom: 1px;
+  top: 0;
+}
+.otherBox .dataStatistics .digit_set .digit .digit_bottom,
+.otherBox .dataStatistics .digit_set .digit .shadow_bottom {
+  border-top-width: 1px;
+  bottom: 0;
+}
+.otherBox .dataStatistics .digit_set .digit .digit_bottom .digit_wrap,
+.otherBox .dataStatistics .digit_set .digit .shadow_bottom .digit_wrap {
+  margin-top: -73%;
+}
+.otherBox .dataStatistics .digit_set .digit .shadow_top,
+.otherBox .dataStatistics .digit_set .digit .shadow_bottom {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+.otherBox .dataStatistics .digit_set .previous {
+  display: block;
+}
+.otherBox .dataStatistics .digit_set .previous .digit_top,
+.otherBox .dataStatistics .digit_set .previous .shadow_top {
+  opacity: 1;
+  z-index: 2;
+  transform-origin: 50% 100%;
+  animation: flipTop 0.3s ease-in both;
+}
+.otherBox .dataStatistics .digit_set .previous .digit_bottom,
+.otherBox .dataStatistics .digit_set .previous .shadow_bottom {
+  z-index: 1;
+  opacity: 1;
+}
+.otherBox .dataStatistics .digit_set .active {
+  display: block;
+}
+.otherBox .dataStatistics .digit_set .active .digit_top {
+  z-index: 1;
+}
+.otherBox .dataStatistics .digit_set .active .digit_bottom {
+  z-index: 2;
+  transform-origin: 50% 0%;
+  animation: flipBottom 0.3s 0.3s ease-out both;
+}
+textarea {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  outline: 0;
+  word-wrap: break-word;
+  overflow: auto;
+  border: none;
+  resize: none;
+}
+.element {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+.element .weatherBox {
+  width: 100%;
+  height: 100%;
+}
+.element .weatherBox .cityDate {
+  font-size: 0.2em;
+  height: 2em;
+  overflow: hidden;
+}
+.element .weatherBox .cityDate .wendu {
+  float: left;
+  width: 3em;
+  font-size: 1em;
+  text-align: center;
+  line-height: 2em;
+}
+.element .weatherBox .cityDate .city {
+  float: left;
+  width: 3.75em;
+  font-size: 0.8em;
+  text-align: center;
+  line-height: 2.5em;
+}
+.element .weatherBox .cityDate i {
+  width: 2em;
+  height: 2em;
+  float: left;
+  background-repeat: no-repeat;
+  background-size: 80%;
+  background-position: 50% 50%;
+}
+.element .weatherBox .cityDate span {
+  float: left;
+  font-size: 0.8em;
+  text-align: center;
+  line-height: 2.5em;
+}
+.element .weatherBox .cityDate p {
+  width: 7em;
+  height: 2em;
+  float: left;
+  overflow: hidden;
+}
+.element .weatherBox .cityDate p span {
+  float: left;
+  width: 100%;
+  height: 50%;
+  text-align: center;
+  font-size: 0.8em;
+  line-height: 1.25em;
+}
+.element .weatherBox .cityDate0 {
+  width: 15em;
+}
+.element .weatherBox .cityDate1 {
+  width: 12em;
+}
+.element .weatherBox .cityDate2 {
+  width: 9em;
+}
+.element .weatherBox .cityDate3 {
+  width: 6em;
+}
+.element .title {
+  overflow: hidden;
+  position: absolute;
+  border-style: solid;
+  z-index: 2;
+}
+.element .title a {
+  display: inline-block;
+  white-space: nowrap;
+}
+.element .grid {
+  border-style: solid;
+  position: absolute;
+}
+.element .grid .series {
+  font-size: inherit;
+}
+.element .grid .series p {
+  float: left;
+  overflow: hidden;
+  width: auto;
+  font-size: inherit;
+}
+.element .grid .series p span {
+  float: left;
+}
+.element .grid .head .header div {
+  position: relative;
+}
+.element .grid .head .header div span {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.element .grid .head .header div i {
+  position: absolute;
+  float: right;
+  right: 0;
+  width: 15px;
+  height: 50%;
+  background: url("../image/arrow.png") 50% 50%/15px 20px;
+}
+.element .grid .head .header div .ascending {
+  top: 20%;
+}
+.element .grid .head .header div .descending {
+  top: 40%;
+  transform: rotate(180deg);
+}
+.element .grid .head .header div .sortingClick {
+  background: url("../image/arrowClick.png") 50% 50%/15px 20px;
+}
+.element .grid .tbBodyBox {
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+.element .grid .tbBodyBox .sfbnbody {
+  position: absolute;
+  z-index: 9999;
+}
+.element .grid .tbBodyBox .sfbnbody .sfbn {
+  float: left;
+  border-radius: 50%;
+  background: rgba(200,200,200,0.3);
+  cursor: pointer;
+}
+.element .grid .tbBodyBox .sfbnbody .sfbnClick {
+  background: rgba(64,158,255,0.6);
+}
+.element .grid .tbBodyBox .tbBody {
+  position: relative;
+  overflow: hidden;
+}
+.element .grid .tbBodyBox .tbBody .paging {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: -100%;
+  left: 0;
+}
+.element .grid .tbBodyBox .tbBody .shufflingShow {
+  top: 0;
+  animation: show 1s linear 0s 1;
+}
+.element .grid .tbBodyBox .tbBody .shufflingHide {
+  top: -100%;
+  animation: hide 1s linear 0s 1;
+}
+.element .grid .header,
+.element .grid .idol,
+.element .grid .odd {
+  width: 100%;
+  overflow: hidden;
+}
+.element .grid .header div,
+.element .grid .idol div,
+.element .grid .odd div {
+  text-align: center;
+  height: 100%;
+  overflow: hidden;
+  float: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.element .grid .header .tableHref,
+.element .grid .idol .tableHref,
+.element .grid .odd .tableHref {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.element .marqueeDiv {
+  position: absolute;
+  left: 100%;
+  white-space: nowrap;
+  display: inline-block;
+  transform: translateX(0);
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+}
+.element .nodata {
+  white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: transLate(-50%, -50%);
+  font-size: 0.5rem;
+  color: #666;
+}

@@ -1,0 +1,313 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="general1">
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="generalObj.width" @focus="inputColor(generalObj.width)" @blur='inputNumGet(generalObj.width, "generalObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="generalObj.height" @focus="inputColor(generalObj.height)" @blur='inputNumGet(generalObj.height, "generalObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="generalObj.left" @focus="inputColor(generalObj.left)" @blur='inputNumGet(generalObj.left, "generalObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="generalObj.top" @focus="inputColor(generalObj.top)" @blur='inputNumGet(generalObj.top, "generalObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">定时刷新</div>
+			<div class="slider">
+				<el-slider v-model="generalObj.refreshTime" :min="0" :max="100" :step="0.1" @change='sliderGet(generalObj.refreshTime, "generalObj.refreshTime", "refreshTime", "rem", "number", null, "refreshTime")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="generalObj.refreshTime1" :spellcheck="false" @focus="inputColor(generalObj.refreshTime1)" @blur='sliderInpGet(generalObj.refreshTime1, "generalObj.refreshTime", "refreshTime", 0, 100, 0.1, "rem", "number", null, "refreshTime")'></el-input>
+			</div>
+			<em>分</em>
+		</li>
+		<div id="tbteBKC">
+			<li>
+				<div class="attributeName">背景颜色</div>
+				<div class="color">
+					<el-color-picker size="small" v-model="generalObj.backgroundColor" show-alpha @change='colorGet(generalObj.backgroundColor, "generalObj.backgroundColor", "backgroundColor", "string")'></el-color-picker>
+				</div>
+				<div class="colorInput">
+					<el-input size="small" v-model="generalObj.backgroundColor" :spellcheck="false" @focus="inputColor(generalObj.backgroundColor)" @blur='inputColorGet(generalObj.backgroundColor, "generalObj.backgroundColor", "backgroundColor", "string")'></el-input>
+				</div>
+			</li>
+		</div>
+		<div id="gisAtrr">
+			<li>
+				<div class="attributeName">视角中心点(坐标)</div>
+				<div class="input">
+					<el-input size="small"  v-model="generalObj.center" @blur='inputGet(generalObj.center, "center", "array", "", null, "map")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">当前视角缩放比</div>
+				<div class="input">
+					<el-input size="small"  v-model="generalObj.zoom" @blur='inputGet(generalObj.zoom, "zoom", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">地图类型</div>
+				<div class="select">
+					<el-select size="small" v-model="generalObj.mapTypes" placeholder="请选择" style="width:100%;" @change='selectGet(generalObj.mapTypes, "mapTypes", "string", "mapTypes")'>
+						<el-option v-for="item in mapTypesList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+					</el-select>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">普通街道视图主题</div>
+				<div class="select">
+					<el-select size="small" v-model="generalObj.mapStyle" placeholder="请选择" style="width:100%;" @change='selectGet(generalObj.mapStyle, "mapStyle", "string", "mapStyle")'>
+						<el-option v-for="item in mapStyleList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+					</el-select>
+				</div>
+			</li>
+		</div>
+		<div id="heatMapAtrr">
+			<li>
+				<div class="attributeName">视角中心点(坐标)</div>
+				<div class="input">
+					<el-input size="small" v-model="generalObj.center" @blur='inputGet(generalObj.center, "bmap.center", "array", "", null, "map")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">当前视角缩放比</div>
+				<div class="input">
+					<el-input size="small" v-model="generalObj.zoom" @blur='inputGet(generalObj.zoom, "bmap.zoom", "number")'></el-input>
+				</div>
+			</li>
+		</div>
+		<div id="echartBKC">
+			<li>
+				<div class="attributeName">是否开启动画</div>
+				<div class="switch">
+					<el-switch size="small" v-model="animationObj.animation" @change='switchGet(animationObj.animation, "animation", "reconstruction")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">动画时长</div>
+				<div class="slider">
+					<el-slider size="small" v-model="animationObj.animationDuration" :min="0" :max="10" :step="0.1" @change='sliderGet(animationObj.animationDuration, "animationObj.animationDuration", "animationDuration", "ms", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="animationObj.animationDuration1" :spellcheck="false" @focus="inputColor(animationObj.animationDuration1)" @blur='sliderInpGet(animationObj.animationDuration1, "animationObj.animationDuration", "animationDuration", 1, 10, 0.1, "ms", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em>s</em>
+			</li>
+			<li>
+				<div class="attributeName">动画阀值</div>
+				<div class="slider">
+					<el-slider v-model="animationObj.animationThreshold" :min="1" :max="10000" :step="1" @change='sliderGet(animationObj.animationThreshold, "animationObj.animationThreshold", "animationThreshold", "rem", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="animationObj.animationThreshold1" :spellcheck="false" @focus="inputColor(animationObj.animationThreshold1)" @blur='sliderInpGet(animationObj.animationThreshold1, "animationObj.animationThreshold", "animationThreshold", 1, 10000, 1, "rem", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em></em>
+			</li>
+			<li>
+				<div class="attributeName">动画效果</div>
+				<div class="select">
+					<el-select size="small" v-model="animationObj.animationEasing" placeholder="请选择" style="width:100%;" @change='selectGet(animationObj.animationEasing, "animationEasing", "string", "reconstruction")'>
+						<el-option v-for="item in animationObj.animationEasingList" :key="item.value" :label="item.value" :value="item.value"></el-option>
+					</el-select>
+				</div>
+			</li>
+			<el-collapse v-model="generalObj.gname" style="margin-bottom: 10px;" accordion @change='tabClickGet(generalObj.gname, "gname")'>
+				<el-collapse-item title="背景色" name="BKcolor">
+					<el-tabs v-model="generalObj.activeName" type="card" @tab-click='gradientColorGet(generalObj.activeName, "activeName", "generalObj.backgroundColor", "generalObj.gradationBack", "generalObj.gradationbackground", "generalObj.gradation", "backgroundColor")'>
+						<el-tab-pane label="普通颜色" name="ordinary">
+							<li>
+								<div class="attributeName">背景颜色</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="generalObj.backgroundColor" show-alpha @change='colorGet(generalObj.backgroundColor, "generalObj.backgroundColor", "backgroundColor", "string","null")'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="generalObj.backgroundColor" :spellcheck="false" @focus="inputColor(generalObj.backgroundColor)" @blur='inputColorGet(generalObj.backgroundColor,"generalObj.backgroundColor", "backgroundColor", "string")'></el-input>
+								</div>
+							</li>
+						</el-tab-pane>
+						<el-tab-pane label="渐变色" name="shade">
+							<li>
+								<div class="attributeName">背景颜色色1</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="generalObj.gradationBack" show-alpha @change='colorGet(generalObj.gradationBack, "generalObj.gradationBack", "backgroundColor", "object", 0)'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="generalObj.gradationBack" :spellcheck="false" @focus="inputColor(generalObj.gradationBack)" @blur='inputColorGet(generalObj.gradationBack,"generalObj.gradationBack", "backgroundColor", "object", 0)'></el-input>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">背景颜色色2</div>
+								<div class="color">
+									<el-color-picker size="small" v-model="generalObj.gradationbackground" show-alpha @change='colorGet(generalObj.gradationbackground, "generalObj.gradationbackground", "backgroundColor", "object", 1)'></el-color-picker>
+								</div>
+								<div class="colorInput">
+									<el-input size="small" v-model="generalObj.gradationbackground" :spellcheck="false" @focus="inputColor(generalObj.gradationbackground)" @blur='inputColorGet(generalObj.gradationbackground, "generalObj.gradationbackground", "backgroundColor", "object", 1)'></el-input>
+								</div>
+							</li>
+							<li>
+								<div class="attributeName">类型</div>
+								<div class="radioButton1">
+									<el-radio-group size="small" v-model="generalObj.gradation" @change='radioGet(generalObj.gradation, "backgroundColor", "object")'>
+										<el-radio-button label="linear">线性</el-radio-button>
+										<el-radio-button label="radial">径向</el-radio-button>
+									</el-radio-group>
+								</div>
+							</li>
+						</el-tab-pane>
+					</el-tabs>
+					
+				</el-collapse-item>
+				<el-collapse-item title="超链接" name="href">
+					<el-tabs v-model="generalObj.hrefChange" type="card" @tab-click='tabPositionGet1(generalObj.hrefChange, "hrefChange", "string")'>
+						<el-tab-pane name="common" label="内部地址选择">
+							<li>
+								<div class="attributeName">链接地址</div>
+								<div class="input">
+									<el-select size="small" v-model="generalObj.serlctHref" clearable placeholder="请选择地址" style="width:100%;" @change='selectGet(generalObj.serlctHref, "href", "string", "href")'>
+										<el-option v-for="item in generalObj.hrefList" :key="item.value" :label="item.name" :value="item.id"></el-option>
+									</el-select>
+								</div>
+							</li>
+						</el-tab-pane>
+						<el-tab-pane name="custom" label="外部地址输入">
+							<li>
+								<div class="attributeName">链接地址</div>
+								<div class="input">
+									<el-input size="small" v-model="generalObj.href" @blur='inputGet(generalObj.href, "href", "string", "http")'>
+										<template slot="prepend">Http://</template>
+									</el-input>
+								</div>
+							</li>
+						</el-tab-pane>
+					</el-tabs>
+					<li>
+						<div class="attributeName">链接打开选择</div>
+						<div class="radioButton1">
+							<el-radio-group v-model="generalObj.target" @change='radioGet(generalObj.target, "target", "string")'>
+								<el-radio-button label="blank">新窗口</el-radio-button>
+								<el-radio-button label="self">当前窗口</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+				</el-collapse-item>
+			</el-collapse>	
+		</div>
+		<div id="Hchart">
+			<div id="3dbar">
+				<li>
+					<div class="attributeName">堆叠类型</div>
+					<div class="select">
+						<el-select size="small" v-model="Hchart.stacking" clearable placeholder="请选择" style="width:100%;" @change='selectGet(Hchart.stacking, "plotOptions.column.stacking", "string")'>
+							<el-option label="普通堆叠" value="normal"></el-option>
+							<el-option label="百分比堆叠" value="percent"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</div>
+			<li>
+				<div class="attributeName">边距</div>
+				<div class="input">
+					<el-input size="small"  v-model="Hchart.margin" @blur='inputGet(Hchart.margin, "chart.margin", "array", "", null, "map")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">全深比</div>
+				<div class="input">
+					<el-input v-model="Hchart.depth" size="small" @blur='inputGet(Hchart.depth, "chart.options3d.depth", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">内旋转角度</div>
+				<div class="slider">
+					<el-slider v-model="Hchart.alpha" :min="-90" :max="90" :step="0.1" @change='sliderGet(Hchart.alpha, "Hchart.alpha", "chart.options3d.alpha", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input v-model="Hchart.alpha1"  size="small" :spellcheck="false" @focus="inputColor(Hchart.alpha1)" @blur='sliderInpGet(Hchart.alpha1, "Hchart.alpha", "chart.options3d.alpha", -90, 90, 0.1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<li>
+				<div class="attributeName">外旋转角度</div>
+				<div class="slider">
+					<el-slider v-model="Hchart.beta" :min="-90" :max="90" :step="0.1" @change='sliderGet(Hchart.beta, "Hchart.beta", "chart.options3d.beta", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input v-model="Hchart.beta1"  size="small" :spellcheck="false" @focus="inputColor(Hchart.beta1)" @blur='sliderInpGet(Hchart.beta1, "Hchart.beta", "chart.options3d.beta", -90, 90, 0.1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<li>
+				<div class="attributeName">背景颜色</div>
+				<div class="color">
+					<el-color-picker v-model="Hchart.backgroundColor" size="small" show-alpha @change='colorGet(Hchart.backgroundColor, "Hchart.backgroundColor", "chart.backgroundColor", "string")'></el-color-picker>
+				</div>
+				<div class="colorInput">
+					<el-input v-model="Hchart.backgroundColor" size="small" :spellcheck="false" @focus="inputColor(Hchart.backgroundColor)" @blur='inputColorGet(Hchart.backgroundColor,"Hchart.backgroundColor", "chart.backgroundColor", "string")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">边框粗细</div>
+				<div class="slider">
+					<el-slider v-model="Hchart.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(Hchart.borderWidth, "Hchart.borderWidth", "chart.borderWidth", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input v-model="Hchart.borderWidth1"  size="small" :spellcheck="false" @focus="inputColor(Hchart.borderWidth1)" @blur='sliderInpGet(Hchart.borderWidth1, "Hchart.borderWidth", "chart.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+			<li>
+				<div class="attributeName">边框圆角</div>
+				<div class="slider">
+					<el-slider v-model="Hchart.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(Hchart.borderRadius, "Hchart.borderRadius", "chart.borderRadius", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input v-model="Hchart.borderRadius1" size="small" :spellcheck="false" @focus="inputColor(Hchart.borderRadius1)" @blur='sliderInpGet(Hchart.borderRadius1, "Hchart.borderRadius", "chart.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+			<li>
+				<div class="attributeName">边框颜色</div>
+				<div class="color">
+					<el-color-picker v-model="Hchart.borderColor" size="small" show-alpha @change='colorGet(Hchart.borderColor, "Hchart.borderColor", "chart.borderColor", "string")'></el-color-picker>
+				</div>
+				<div class="colorInput">
+					<el-input v-model="Hchart.borderColor" size="small" :spellcheck="false" @focus="inputColor(Hchart.borderColor)" @blur='inputColorGet(Hchart.borderColor,"Hchart.borderColor", "chart.borderColor", "string")'></el-input>
+				</div>
+			</li>
+		</div>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="generalObj.boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(generalObj.boxId)'>
+					<el-option v-for="item in generalObj.allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="infrastructure" class="setting">
+		<p>画布基础设定</p>
+		<li class="HBname">
+			<div class="attributeName">名称</div>
+			<div class="select">
+				<el-input size="small" v-model="huabuName" placeholder="请输入内容" @change='inputGet(huabuName,"name")'></el-input>
+			</div>
+			<input type="hidden" id="serviceId" name="qdService.name" value=""/>
+			<input type="hidden" id="baidu" name="" value=""/>
+			<input type="hidden" class="type" name="" value=""/>
+		</li>
+		<li class="theme">
+			<div class="attributeName">图表主题</div>
+			<div class="select">
+				<el-select size="small" v-model="subject" clearable placeholder="请选择" style="width:100%;" @change='selectGet(subject)'>
+					<el-option v-for="item in data" :key="item.id" :label="item.themeName" :value="item.id"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li class="backgroundColor">
+			<div class="attributeName">画布背景色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="backgroundColor" show-alpha @change='get(backgroundColor, "backgroundColor")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="backgroundColor1" :spellcheck="false" @blur='inputColorGet(backgroundColor1,"backgroundColor")'></el-input>
+			</div>
+		</li>
+		<div class="backgroundImage">
+			<div class="attributeName">画布背景图</div>
+			<div class="attributeName">
+				<el-checkbox v-model="checked" @change='BJget(checked)'>启用</el-checkbox>
+			</div>
+			<div class="beijing hidden">
+				<div class="tupian"></div>
+				<div class="btn" id="BGimage">设置</div>
+			</div>
+		</div>
+		<li class="refreshTime">
+			<div class="attributeName">定时刷新时间</div>
+			<div class="slider">
+				<el-slider v-model="refreshTime" :min="0" :max="100" :step="0.1" @change='sliderGet(refreshTime, "refreshTime")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="refreshTime1" :spellcheck="false" @blur='sliderInpGet(refreshTime1,"refreshTime", 0, 100, 0.1)'></el-input>
+			</div>
+			<em>分</em>
+		</li>
+		<li class="zoom">
+			<div class="attributeName">画布缩放</div>
+			<div class="slider">
+				<el-slider v-model="multiple" :min="0.5" :max="10" :step="0.01" @change='sliderGet(multiple, "multiple")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="multiple1" :spellcheck="false" @blur='sliderInpGet(multiple1,"multiple", 0.5, 10, 0.01)'></el-input>
+			</div>
+			<em>倍</em>
+		</li>
+		<li class="longPage">
+			<div class="attributeName">页面增加</div>
+			<div class="input">
+				<el-input size="small" v-model="addScreen" placeholder="请输入百分比" @blur='inputGet(addScreen, "addScreen")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<p>网格辅助线</p>
+		<li class="showHidden">
+			<div class="attributeName">显示/隐藏</div>
+			<div class="switch">
+				<el-switch v-model="value1" on-text="yes" off-text="no" @change='showGet(value1)'></el-switch>
+			</div>
+		</li>
+		<li class="Color">
+			<div class="attributeName">网格颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="color" show-alpha @change='get(color, "color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="color1" :spellcheck="false" @blur='inputColorGet(color1,"color")'></el-input>
+			</div>
+		</li>
+		<li class="crosswise">
+			<div class="attributeName">横向数</div>
+			<div class="slider">
+				<el-slider v-model="crosswise" @change='sliderGet(crosswise, "crosswise")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="crosswise1" :spellcheck="false" @blur='sliderInpGet(crosswise1,"crosswise", 0, 100, 1)'></el-input>
+			</div>
+			<em>格</em>
+		</li>
+		<li class="portrait">
+			<div class="attributeName">纵向数</div>
+			<div class="slider">
+				<el-slider v-model="portrait" @change='sliderGet(portrait, "portrait")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="portrait1" :spellcheck="false" @blur='sliderInpGet(portrait1,"portrait", 0, 100, 1)'></el-input>
+			</div>
+			<em>格</em>
+		</li>
+		<p>画布选择</p>
+		<div class="proportion" >
+			<li @change="radioGet(radio)">
+				<el-radio size="large" class="radio" v-model="radio" label="ratio1">自适应 (16:9)</el-radio>
+			</li>
+			<li @change="radioGet(radio)">
+				<el-radio class="radio" v-model="radio" label="ratio3" >手机屏 (9:16)</el-radio>
+			</li>
+			<li @change="radioGet(radio)">
+				<el-radio class="radio" v-model="radio" label="ratio2">大屏</el-radio>
+			</li>
+			<ul class="fbl" @change="fblGet(radio1)">
+				<li>
+					<el-radio size="large" class="fbl" v-model="radio1" label="fbl1">1366*768</el-radio>
+				</li>
+				<li>
+					<el-radio class="fbl" v-model="radio1" label="fbl2">1440*900</el-radio>
+				</li>
+				<li>
+					<el-radio class="fbl" v-model="radio1" label="fbl3">1920*1080</el-radio>
+				</li>
+				<li>
+					<el-radio class="fbl" v-model="radio1" label="fbl4">
+						<div class="finput">
+							<input type="text" spellcheck="false" class="fenbianlv" />
+							<em>*</em>
+							<input type="text" spellcheck="false" class="fenbianlv" />
+						</div>
+					</el-radio>
+				</li>
+			</ul>
+		</div>
+		<div class="screenshot">
+			<div class="switch">
+				<el-popover ref="popover1" placement="top-start"  title="温馨提醒" width="170" trigger="hover" content="截取封面时只截取可视区域"></el-popover>
+				<el-button size="small" type="primary" v-popover:popover1 @click='buttonGet()'>截取封面</el-button>
+			</div>
+			<div style="width: 250px;">
+				<el-collapse v-model="activeNames">
+					<el-collapse-item title="封面展示" name="1">
+						<div class="cover" style="width: 230px; height: 130px;"></div>
+					</el-collapse-item>
+				</el-collapse>
+			</div>
+		</div>
+	</ul>
+	<script>
+		HBInitializationFun();						
+	</script>
+</body>
+</html>

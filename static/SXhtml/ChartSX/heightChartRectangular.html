@@ -1,0 +1,677 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div class="HTabsAxis TabsName">
+		<span class="TabsNameText Hrectangular">X轴</span>
+		<div id="HxAxis" class="TabsBox TabsBox1">
+			<ul>
+				<li>
+					<div class="attributeName">显示</div>
+					<div class="switch">
+						<el-switch v-model="HxAxisObj.visible" @change='switchGet(HxAxisObj.visible, "xAxis.visible")'></el-switch>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">反转</div>
+					<div class="switch">
+						<el-switch v-model="HxAxisObj.reversed" @change='switchGet(HxAxisObj.reversed, "xAxis.reversed")'></el-switch>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">允许小数</div>
+					<div class="switch">
+						<el-switch v-model="HxAxisObj.allowDecimals" @change='switchGet(HxAxisObj.allowDecimals, "xAxis.allowDecimals")'></el-switch>
+					</div>
+				</li>
+				<el-collapse style="margin-bottom: 10px;" v-model="HxAxisObj.xAxisStyle" accordion @change='tabClickGet(HxAxisObj.xAxisStyle, "xAxis.xAxisStyle")'>
+					<el-collapse-item title="坐标轴标签" name="labels">
+						<li>
+							<div class="attributeName">显示</div>
+							<div class="switch">
+								<el-switch v-model="HxAxisObj.enabled" @change='switchGet(HxAxisObj.enabled, "xAxis.labels.enabled")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">格式化字符串</div>
+							<div class="input">
+								<el-input size="small" v-model="HxAxisObj.format" @blur='inputGet(HxAxisObj.format, "xAxis.labels.format", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">对齐</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HxAxisObj.align" @change='radioGet(HxAxisObj.align, "xAxis.labels.align", "string")'>
+									<el-radio-button label="left">居左</el-radio-button>
+									<el-radio-button label="center">居中</el-radio-button>
+									<el-radio-button label="right">居右</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HxAxisObj.x" @blur='inputGet(HxAxisObj.x, "xAxis.labels.x", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HxAxisObj.y" @blur='inputGet(HxAxisObj.y, "xAxis.labels.y", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">字体</div>
+							<div class="select">
+								<el-select size="small" v-model="HxAxisObj.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HxAxisObj.fontFamily, "xAxis.labels.style.fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="HxAxisObj.color" show-alpha @change='colorGet(HxAxisObj.color, "HxAxisObj.color", "xAxis.labels.style.color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="HxAxisObj.color" :spellcheck="false" @focus="inputColor(HxAxisObj.color)" @blur='inputColorGet(HxAxisObj.color,"HxAxisObj.color", "xAxis.labels.style.color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">大小</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HxAxisObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HxAxisObj.fontSize, "HxAxisObj.fontSize", "xAxis.labels.style.fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HxAxisObj.fontSize1" :spellcheck="false" @focus="inputColor(HxAxisObj.fontSize1)" @blur='sliderInpGet(HxAxisObj.fontSize, "HxAxisObj.fontSize", "xAxis.labels.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HxAxisObj.fontSytle" @change='radioGet(HxAxisObj.fontSytle, "xAxis.labels.style.fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HxAxisObj.fontWeight" @change='radioGet(HxAxisObj.fontWeight, "xAxis.labels.style.fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+					</el-collapse-item>
+					<el-collapse-item title="坐标轴标题" name="title">
+						<li>
+							<div class="attributeName">标题文字</div>
+							<div class="input">
+								<el-input size="small" v-model="HxAxisObj.Ttext" @blur='inputGet(HxAxisObj.Ttext, "xAxis.title.text", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">对齐</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HxAxisObj.Talign" @change='radioGet(HxAxisObj.Talign, "xAxis.title.align", "string")'>
+									<el-radio-button label="low">居左</el-radio-button>
+									<el-radio-button label="middle">居中</el-radio-button>
+									<el-radio-button label="high">居右</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HxAxisObj.Tx" @blur='inputGet(HxAxisObj.Tx, "xAxis.title.x", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HxAxisObj.Ty" @blur='inputGet(HxAxisObj.Ty, "xAxis.title.y", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">旋转</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HxAxisObj.Trotation" :min="0" :max="360" :step="1" @change='sliderGet(HxAxisObj.Trotation, "HxAxisObj.Trotation", "xAxis.title.rotation", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HxAxisObj.Trotation1" :spellcheck="false" @focus="inputColor(HxAxisObj.Trotation1)" @blur='sliderInpGet(HxAxisObj.Trotation1, "HxAxisObj.Trotation", "xAxis.title.rotation", 0, 360, 1, "rem", "number")'></el-input>
+							</div>
+							<em>°</em>
+						</li>
+						<li>
+							<div class="attributeName">字体</div>
+							<div class="select">
+								<el-select size="small" v-model="HxAxisObj.TfontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HxAxisObj.TfontFamily, "xAxis.title.style.fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="HxAxisObj.Tcolor" show-alpha @change='colorGet(HxAxisObj.Tcolor, "HxAxisObj.Tcolor", "xAxis.title.style.color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="HxAxisObj.Tcolor" :spellcheck="false" @focus="inputColor(HxAxisObj.Tcolor)" @blur='inputColorGet(HxAxisObj.Tcolor,"HxAxisObj.Tcolor", "xAxis.title.style.color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">大小</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HxAxisObj.TfontSize" :min="12" :max="100" :step="1" @change='sliderGet(HxAxisObj.TfontSize, "HxAxisObj.TfontSize", "xAxis.title.style.fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HxAxisObj.TfontSize1" :spellcheck="false" @focus="inputColor(HxAxisObj.TfontSize1)" @blur='sliderInpGet(HxAxisObj.TfontSize1, "HxAxisObj.TfontSize", "xAxis.title.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HxAxisObj.TfontSytle" @change='radioGet(HxAxisObj.TfontSytle, "xAxis.title.style.fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HxAxisObj.TfontWeight" @change='radioGet(HxAxisObj.TfontWeight, "xAxis.title.style.fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+					</el-collapse-item>
+				</el-collapse>
+				<li>
+					<div class="attributeName">网格线粗细</div>
+					<div class="slider">
+						<el-slider size="small" v-model="HxAxisObj.gridLineWidth" :min="0" :max="20" :step="1" @change='sliderGet(HxAxisObj.gridLineWidth, "HxAxisObj.gridLineWidth", "xAxis.gridLineWidth", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="HxAxisObj.gridLineWidth1" :spellcheck="false" @focus="inputColor(HxAxisObj.gridLineWidth1)" @blur='sliderInpGet(HxAxisObj.gridLineWidth1, "HxAxisObj.gridLineWidth", "xAxis.gridLineWidth", 0, 20, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">网格线颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="HxAxisObj.gridLineColor" show-alpha @change='colorGet(HxAxisObj.gridLineColor, "HxAxisObj.gridLineColor", "xAxis.gridLineColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="HxAxisObj.gridLineColor" :spellcheck="false" @focus="inputColor(HxAxisObj.gridLineColor)" @blur='inputColorGet(HxAxisObj.gridLineColor, "HxAxisObj.gridLineColor", "xAxis.lineColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">网格线样式</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="HxAxisObj.gridLineDashStyle" @change='radioGet(HxAxisObj.gridLineDashStyle, "xAxis.gridLineDashStyle", "string")'>
+							<el-radio-button label="Solid">实线</el-radio-button>
+							<el-radio-button label="Dash">虚线</el-radio-button>
+							<el-radio-button label="Dot">点状线</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+	<div class="HTabsAxis TabsName">
+		<span class="TabsNameText Hrectangular">Y轴</span>
+		<div  id="HyAxis" class="TabsBox TabsBox1">
+			<ul>
+				<li>
+					<div class="attributeName">显示</div>
+					<div class="switch">
+						<el-switch v-model="HyAxisObj.visible" @change='switchGet(HyAxisObj.visible, "yAxis.visible")'></el-switch>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">反转</div>
+					<div class="switch">
+						<el-switch v-model="HyAxisObj.reversed" @change='switchGet(HyAxisObj.reversed, "yAxis.reversed")'></el-switch>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">允许小数</div>
+					<div class="switch">
+						<el-switch v-model="HyAxisObj.allowDecimals" @change='switchGet(HyAxisObj.allowDecimals, "yAxis.allowDecimals")'></el-switch>
+					</div>
+				</li>
+				<el-collapse style="margin-bottom: 10px;" v-model="HyAxisObj.yAxisStyle" accordion @change='tabClickGet(HyAxisObj.yAxisStyle, "yAxis.yAxisStyle")'>
+					<el-collapse-item title="坐标轴标签" name="labels">
+						<li>
+							<div class="attributeName">显示</div>
+							<div class="switch">
+								<el-switch v-model="HyAxisObj.enabled" @change='switchGet(HyAxisObj.enabled, "yAxis.labels.enabled")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">格式化字符串</div>
+							<div class="input">
+								<el-input size="small" v-model="HyAxisObj.format" @blur='inputGet(HyAxisObj.format, "yAxis.labels.format", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">对齐</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HyAxisObj.align" @change='radioGet(HyAxisObj.align, "yAxis.labels.align", "string")'>
+									<el-radio-button label="left">居左</el-radio-button>
+									<el-radio-button label="center">居中</el-radio-button>
+									<el-radio-button label="right">居右</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HyAxisObj.x" @blur='inputGet(HyAxisObj.x, "yAxis.labels.x", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HyAxisObj.y" @blur='inputGet(HyAxisObj.y, "yAxis.labels.y", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">字体</div>
+							<div class="select">
+								<el-select size="small" v-model="HyAxisObj.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HyAxisObj.fontFamily, "yAxis.labels.style.fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="HyAxisObj.color" show-alpha @change='colorGet(HyAxisObj.color, "HyAxisObj.color", "yAxis.labels.style.color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="HyAxisObj.color" :spellcheck="false" @focus="inputColor(HyAxisObj.color)" @blur='inputColorGet(HyAxisObj.color,"HyAxisObj.color", "yAxis.labels.style.color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">大小</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HyAxisObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HyAxisObj.fontSize, "HyAxisObj.fontSize", "yAxis.labels.style.fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HyAxisObj.fontSize1" :spellcheck="false" @focus="inputColor(HyAxisObj.fontSize1)" @blur='sliderInpGet(HyAxisObj.fontSize, "HyAxisObj.fontSize", "yAxis.labels.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HyAxisObj.fontSytle" @change='radioGet(HyAxisObj.fontSytle, "yAxis.labels.style.fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HyAxisObj.fontWeight" @change='radioGet(HyAxisObj.fontWeight, "yAxis.labels.style.fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+					</el-collapse-item>
+					<el-collapse-item title="坐标轴标题" name="title">
+						<li>
+							<div class="attributeName">标题文字</div>
+							<div class="input">
+								<el-input size="small" v-model="HyAxisObj.Ttext" @blur='inputGet(HyAxisObj.Ttext, "yAxis.title.text", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">对齐</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HyAxisObj.Talign" @change='radioGet(HyAxisObj.Talign, "yAxis.title.align", "string")'>
+									<el-radio-button label="low">居左</el-radio-button>
+									<el-radio-button label="middle">居中</el-radio-button>
+									<el-radio-button label="high">居右</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HyAxisObj.Tx" @blur='inputGet(HyAxisObj.Tx, "yAxis.title.x", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HyAxisObj.Ty" @blur='inputGet(HyAxisObj.Ty, "yAxis.title.y", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">旋转</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HyAxisObj.Trotation" :min="0" :max="360" :step="1" @change='sliderGet(HyAxisObj.Trotation, "HyAxisObj.Trotation", "yAxis.title.rotation", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HyAxisObj.Trotation1" :spellcheck="false" @focus="inputColor(HyAxisObj.Trotation1)" @blur='sliderInpGet(HyAxisObj.Trotation1, "HyAxisObj.Trotation", "yAxis.title.rotation", 0, 360, 1, "rem", "number")'></el-input>
+							</div>
+							<em>°</em>
+						</li>
+						<li>
+							<div class="attributeName">字体</div>
+							<div class="select">
+								<el-select size="small" v-model="HyAxisObj.TfontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HyAxisObj.TfontFamily, "yAxis.title.style.fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="HyAxisObj.Tcolor" show-alpha @change='colorGet(HyAxisObj.Tcolor, "HyAxisObj.Tcolor", "yAxis.title.style.color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="HyAxisObj.Tcolor" :spellcheck="false" @focus="inputColor(HyAxisObj.Tcolor)" @blur='inputColorGet(HyAxisObj.Tcolor,"HyAxisObj.Tcolor", "yAxis.title.style.color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">大小</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HyAxisObj.TfontSize" :min="12" :max="100" :step="1" @change='sliderGet(HyAxisObj.TfontSize, "HyAxisObj.TfontSize", "yAxis.title.style.fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HyAxisObj.TfontSize1" :spellcheck="false" @focus="inputColor(HyAxisObj.TfontSize1)" @blur='sliderInpGet(HyAxisObj.TfontSize1, "HyAxisObj.TfontSize", "yAxis.title.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HyAxisObj.TfontSytle" @change='radioGet(HyAxisObj.TfontSytle, "yAxis.title.style.fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HyAxisObj.TfontWeight" @change='radioGet(HyAxisObj.TfontWeight, "yAxis.title.style.fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+					</el-collapse-item>
+				</el-collapse>
+				<li>
+					<div class="attributeName">网格线粗细</div>
+					<div class="slider">
+						<el-slider size="small" v-model="HyAxisObj.gridLineWidth" :min="0" :max="20" :step="1" @change='sliderGet(HyAxisObj.gridLineWidth, "HyAxisObj.gridLineWidth", "yAxis.gridLineWidth", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="HyAxisObj.gridLineWidth1" :spellcheck="false" @focus="inputColor(HyAxisObj.gridLineWidth1)" @blur='sliderInpGet(HyAxisObj.gridLineWidth1, "HyAxisObj.gridLineWidth", "yAxis.gridLineWidth", 0, 20, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">网格线颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="HyAxisObj.gridLineColor" show-alpha @change='colorGet(HyAxisObj.gridLineColor, "HyAxisObj.gridLineColor", "yAxis.gridLineColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="HyAxisObj.gridLineColor" :spellcheck="false" @focus="inputColor(HyAxisObj.gridLineColor)" @blur='inputColorGet(HyAxisObj.gridLineColor, "HyAxisObj.gridLineColor", "yAxis.lineColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">网格线样式</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="HyAxisObj.gridLineDashStyle" @change='radioGet(HyAxisObj.gridLineDashStyle, "yAxis.gridLineDashStyle", "string")'>
+							<el-radio-button label="Solid">实线</el-radio-button>
+							<el-radio-button label="Dash">虚线</el-radio-button>
+							<el-radio-button label="Dot">点状线</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+	<!-- <div class="HTabsAxis TabsName">
+		<span class="TabsNameText Hrectangular">Z轴</span>
+		<div  id="HzAxis" class="TabsBox TabsBox1">
+			<ul>
+				<li>
+					<div class="attributeName">显示</div>
+					<div class="switch">
+						<el-switch v-model="HzAxisObj.visible" @change='switchGet(HzAxisObj.visible, "zAxis.visible")'></el-switch>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">反转</div>
+					<div class="switch">
+						<el-switch v-model="HzAxisObj.reversed" @change='switchGet(HzAxisObj.reversed, "zAxis.reversed")'></el-switch>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">允许小数</div>
+					<div class="switch">
+						<el-switch v-model="HzAxisObj.allowDecimals" @change='switchGet(HzAxisObj.allowDecimals, "zAxis.allowDecimals")'></el-switch>
+					</div>
+				</li>
+				<el-collapse style="margin-bottom: 10px;" v-model="HzAxisObj.zAxisStyle" accordion @change='tabClickGet(HzAxisObj.zAxisStyle, "zAxis.zAxisStyle")'>
+					<el-collapse-item title="坐标轴标签" name="labels">
+						<li>
+							<div class="attributeName">显示</div>
+							<div class="switch">
+								<el-switch v-model="HzAxisObj.enabled" @change='switchGet(HzAxisObj.enabled, "zAxis.labels.enabled")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">格式化字符串</div>
+							<div class="input">
+								<el-input size="small" v-model="HzAxisObj.format" @blur='inputGet(HzAxisObj.format, "zAxis.labels.format", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">对齐</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HzAxisObj.align" @change='radioGet(HzAxisObj.align, "zAxis.labels.align", "string")'>
+									<el-radio-button label="left">居左</el-radio-button>
+									<el-radio-button label="center">居中</el-radio-button>
+									<el-radio-button label="right">居右</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HzAxisObj.x" @blur='inputGet(HzAxisObj.x, "zAxis.labels.x", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HzAxisObj.y" @blur='inputGet(HzAxisObj.y, "zAxis.labels.y", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">字体</div>
+							<div class="select">
+								<el-select size="small" v-model="HzAxisObj.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HzAxisObj.fontFamily, "zAxis.labels.style.fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="HzAxisObj.color" show-alpha @change='colorGet(HzAxisObj.color, "HzAxisObj.color", "zAxis.labels.style.color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="HzAxisObj.color" :spellcheck="false" @focus="inputColor(HzAxisObj.color)" @blur='inputColorGet(HzAxisObj.color,"HzAxisObj.color", "zAxis.labels.style.color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">大小</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HzAxisObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HzAxisObj.fontSize, "HzAxisObj.fontSize", "zAxis.labels.style.fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HzAxisObj.fontSize1" :spellcheck="false" @focus="inputColor(HzAxisObj.fontSize1)" @blur='sliderInpGet(HzAxisObj.fontSize, "HzAxisObj.fontSize", "zAxis.labels.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HzAxisObj.fontSytle" @change='radioGet(HzAxisObj.fontSytle, "zAxis.labels.style.fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HzAxisObj.fontWeight" @change='radioGet(HzAxisObj.fontWeight, "zAxis.labels.style.fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+					</el-collapse-item>
+					<el-collapse-item title="坐标轴标题" name="title">
+						<li>
+							<div class="attributeName">标题文字</div>
+							<div class="input">
+								<el-input size="small" v-model="HzAxisObj.Ttext" @blur='inputGet(HzAxisObj.Ttext, "zAxis.title.text", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">对齐</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HzAxisObj.Talign" @change='radioGet(HzAxisObj.Talign, "zAxis.title.align", "string")'>
+									<el-radio-button label="low">居左</el-radio-button>
+									<el-radio-button label="middle">居中</el-radio-button>
+									<el-radio-button label="high">居右</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HzAxisObj.Tx" @blur='inputGet(HzAxisObj.Tx, "zAxis.title.x", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移</div>
+							<div class="input">
+								<el-input size="small" v-model="HzAxisObj.Ty" @blur='inputGet(HzAxisObj.Ty, "zAxis.title.y", "number")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">旋转</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HzAxisObj.Trotation" :min="0" :max="360" :step="1" @change='sliderGet(HzAxisObj.Trotation, "HzAxisObj.Trotation", "zAxis.title.rotation", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HzAxisObj.Trotation1" :spellcheck="false" @focus="inputColor(HzAxisObj.Trotation1)" @blur='sliderInpGet(HzAxisObj.Trotation1, "HzAxisObj.Trotation", "zAxis.title.rotation", 0, 360, 1, "rem", "number")'></el-input>
+							</div>
+							<em>°</em>
+						</li>
+						<li>
+							<div class="attributeName">字体</div>
+							<div class="select">
+								<el-select size="small" v-model="HzAxisObj.TfontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HzAxisObj.TfontFamily, "zAxis.title.style.fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="HzAxisObj.Tcolor" show-alpha @change='colorGet(HzAxisObj.Tcolor, "HzAxisObj.Tcolor", "zAxis.title.style.color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="HzAxisObj.Tcolor" :spellcheck="false" @focus="inputColor(HzAxisObj.Tcolor)" @blur='inputColorGet(HzAxisObj.Tcolor,"HzAxisObj.Tcolor", "zAxis.title.style.color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">大小</div>
+							<div class="slider">
+								<el-slider size="small" v-model="HzAxisObj.TfontSize" :min="12" :max="100" :step="1" @change='sliderGet(HzAxisObj.TfontSize, "HzAxisObj.TfontSize", "zAxis.title.style.fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="HzAxisObj.TfontSize1" :spellcheck="false" @focus="inputColor(HzAxisObj.TfontSize1)" @blur='sliderInpGet(HzAxisObj.TfontSize1, "HzAxisObj.TfontSize", "zAxis.title.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">风格</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HzAxisObj.TfontSytle" @change='radioGet(HzAxisObj.TfontSytle, "zAxis.title.style.fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">粗细</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="HzAxisObj.TfontWeight" @change='radioGet(HzAxisObj.TfontWeight, "zAxis.title.style.fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+					</el-collapse-item>
+				</el-collapse>
+				<li>
+					<div class="attributeName">网格线粗细</div>
+					<div class="slider">
+						<el-slider size="small" v-model="HzAxisObj.gridLineWidth" :min="0" :max="20" :step="1" @change='sliderGet(HzAxisObj.gridLineWidth, "HzAxisObj.gridLineWidth", "zAxis.gridLineWidth", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="HzAxisObj.gridLineWidth1" :spellcheck="false" @focus="inputColor(HzAxisObj.gridLineWidth1)" @blur='sliderInpGet(HzAxisObj.gridLineWidth1, "HzAxisObj.gridLineWidth", "zAxis.gridLineWidth", 0, 20, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">网格线颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="HzAxisObj.gridLineColor" show-alpha @change='colorGet(HzAxisObj.gridLineColor, "HzAxisObj.gridLineColor", "zAxis.gridLineColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="HzAxisObj.gridLineColor" :spellcheck="false" @focus="inputColor(HzAxisObj.gridLineColor)" @blur='inputColorGet(HzAxisObj.gridLineColor, "HzAxisObj.gridLineColor", "zAxis.lineColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">网格线样式</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="HzAxisObj.gridLineDashStyle" @change='radioGet(HzAxisObj.gridLineDashStyle, "zAxis.gridLineDashStyle", "string")'>
+							<el-radio-button label="Solid">实线</el-radio-button>
+							<el-radio-button label="Dash">虚线</el-radio-button>
+							<el-radio-button label="Dot">点状线</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				
+			</ul>
+		</div>
+	</div> -->
+</body>
+</html>

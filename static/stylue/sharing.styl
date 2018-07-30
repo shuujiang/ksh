@@ -1,0 +1,295 @@
+*
+	margin 0
+	padding 0
+	line-height 1
+	font-family Microsoft YaiHei
+	box-sizing border-box
+a
+	text-decoration none
+	color inherit
+	&:hover
+	&:visited
+	&:link
+	&:active
+		color inherit
+		text-decoration none
+input,select
+	border 1px solid #aaa
+	background-color transparent
+    font-family inherit
+    font-size inherit
+    line-height inherit
+.left
+	left 0
+.center
+	left 50%
+	transform translate(-50%, 0)
+.right
+	right 0
+.top
+	top 0
+.middle
+	top 50%
+	transform translate(0, -50%)
+.bottom
+	bottom 0
+.otherBox
+	width 100%
+	position absolute
+	top 50%
+	left 50%
+	transform translate(-50%, -50%)
+	line-height 1
+	font-size inherit
+	text-align center
+	overflow hidden
+	span 
+		white-space nowrap
+	.STprefix, .STsuffix
+		float left
+		position relative
+		top 50%
+		transform translateY(-50%)
+	.dataStatistics
+		float left
+		position relative
+		top 50%
+		transform translateY(-50%)
+		overflow hidden
+		.digit_set 
+			color #fff	
+			float left
+			overflow hidden
+			position relative
+			text-align center
+			.digit
+				position absolute
+				height 100%
+				width 100%
+				display none
+				div
+					position absolute
+					left 0
+					height 50%
+					width 100%
+					overflow hidden
+					border-width 0
+					border-style solid
+					z-index 0
+					.digit_wrap
+						display block
+					&:before
+						content ""
+						height 100%
+						width 100%;
+						position absolute
+						left 0
+						top 0				
+				.digit_top
+				.shadow_top
+					border-bottom 1px
+					top 0
+				.digit_bottom
+				.shadow_bottom 
+					border-top-width 1px
+					bottom 0
+					.digit_wrap
+						margin-top -73%
+				.shadow_top
+				.shadow_bottom 				
+					opacity 0
+					transition opacity 0.3s ease-in
+			.previous
+				display block 
+				.digit_top
+				.shadow_top
+					opacity 1
+					z-index 2
+					transform-origin 50% 100%
+					animation flipTop 0.3s ease-in both
+				.digit_bottom,
+				.shadow_bottom
+					z-index 1
+					opacity 1
+			.active 
+				display block 
+				.digit_top 
+					z-index 1
+				.digit_bottom 
+					z-index 2
+					transform-origin 50% 0%
+					animation flipBottom 0.3s 0.3s ease-out both
+textarea
+	background-color transparent
+	width 100%
+	height 100%
+	outline 0
+	word-wrap break-word
+	overflow auto
+	border none
+	resize none
+.element
+	position absolute
+	display block
+	width 100%
+	height 100%
+	top 0
+	left 0
+	overflow hidden
+	.weatherBox
+		width 100%
+		height 100%
+		.cityDate
+			font-size 0.2em
+			height 2em
+			overflow hidden
+			.wendu
+				float left
+				width 3em
+				font-size 1em
+				text-align center
+				line-height 2em
+			.city
+				float left
+				width 3.75em
+				font-size 0.8em
+				text-align center
+				line-height 2.5em
+			i
+				width 2em
+				height 2em
+				float left
+				background-repeat no-repeat
+				background-size 80%
+				background-position 50% 50%
+			span
+				float left
+				font-size 0.8em
+				text-align center
+				line-height 2.5em
+			p
+				width 7em
+				height 2em
+				float left
+				overflow hidden
+				span 
+					float left
+					width  100%
+					height 50%
+					text-align center
+					font-size 0.8em
+					line-height 1.25em
+		.cityDate0
+			width 15em
+		.cityDate1
+			width 12em
+		.cityDate2
+			width 9em
+		.cityDate3
+			width 6em
+
+	.title
+		overflow hidden
+		position absolute
+		border-style solid
+		z-index 2
+		a
+			display inline-block
+			white-space nowrap
+	.grid
+		border-style solid
+		position absolute
+		.series
+			font-size inherit
+			p
+				float left
+				overflow hidden
+				width auto
+				font-size inherit
+				span
+					float left
+		.head
+			.header
+				div	
+					position relative
+					span
+						text-overflow ellipsis
+						white-space nowrap
+					i
+						position absolute
+						float right
+						right 0
+						width 15px
+						height 50%
+						background url(../image/arrow.png) 50% 50% / 15px 20px
+					.ascending
+						top 20%
+					.descending
+						top 40%
+						transform rotate(180deg)
+					.sortingClick
+						background url(../image/arrowClick.png) 50% 50% / 15px 20px
+		.tbBodyBox
+			width 100%
+			position relative
+			text-align center
+			.sfbnbody
+				position absolute
+				z-index 9999
+				.sfbn
+					float left
+					border-radius 50%
+					background rgba(200,200,200,0.3)
+					cursor pointer
+				.sfbnClick
+					background rgba(64, 158, 255, 0.6)
+			.tbBody
+				position relative
+				overflow hidden
+				.paging
+					width 100%
+					height 100%
+					position absolute
+					top -100%
+					left 0
+				.shufflingShow
+					top 0
+					animation show 1s linear 0s 1
+				.shufflingHide
+					top -100%
+					animation hide 1s linear 0s 1
+		.header,
+		.idol,
+		.odd
+			width 100%
+			overflow hidden
+			div
+				text-align center
+				height 100%
+				overflow hidden
+				float left
+				text-overflow ellipsis
+				white-space nowrap
+			.tableHref
+				float left
+				width 100%
+				height 100%
+	.marqueeDiv
+		position absolute
+		left 100%
+		white-space nowrap
+		display inline-block
+		transform translateX(0)
+		animation-name marquee
+		animation-timing-function linear
+		animation-delay 0s
+		animation-iteration-count infinite
+	.nodata
+		white-space nowrap
+		position absolute
+		top 50%
+		left 50%
+		transform transLate(-50%, -50%)
+		font-size 0.5rem
+		color #666
+

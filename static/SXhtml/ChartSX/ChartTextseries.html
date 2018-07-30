@@ -1,0 +1,473 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="seriesText">
+		<li>
+			<div class="attributeName">系列选择</div>
+			<div class="select">
+				<el-select size="small" v-model="seriesIndex" placeholder="请选择" style="width:100%;" @change='selectGet(seriesIndex, "seriesIndex", "string", "", "series")'>
+					<el-option v-for="(item, a) in seriesObj.seriesList" :key="item.value" :label="item.name" :value="a"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">前缀名称</div>
+			<div class="input">
+				<el-input  size="small" v-model="seriesObj.text.textStyle.name" @blur='inputGet(seriesObj.text.textStyle.name, "series."+seriesIndex+".textStyle.name", "string")'></el-input>
+			</div>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">前缀独占一行</div>
+			<div class="switch">
+				<el-switch v-model="seriesObj.text.textStyle.exclusive" on-text="yes" off-text="no" @change='switchGet(seriesObj.text.textStyle.exclusive, "series."+seriesIndex+".textStyle.exclusive")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">后缀名称</div>
+			<div class="input">
+				<el-input  size="small" v-model="seriesObj.text.untextStyle.name" @blur='inputGet(seriesObj.text.untextStyle.name, "series."+seriesIndex+".untextStyle.name", "string")'></el-input>
+			</div>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">后缀独占一行</div>
+			<div class="switch">
+				<el-switch v-model="seriesObj.text.untextStyle.exclusive" on-text="yes" off-text="no" @change='switchGet(seriesObj.text.untextStyle.exclusive, "series."+seriesIndex+".untextStyle.exclusive")'></el-switch>
+			</div>
+		</li>
+		<el-collapse v-model="seriesObj.text.nameSelect" style="margin-bottom: 5px;" accordion @change='tabClickGet(seriesObj.text.nameSelect, "series."+seriesIndex+".nameSelect")'>
+			<el-collapse-item title="前缀样式" name="textStyle">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.text.textStyle.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.text.textStyle.fontFamily, "series."+seriesIndex+".textStyle.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.textStyle.color" show-alpha @change='colorGet(seriesObj.text.textStyle.color, "sseriesObj.textStyle.color", "series."+seriesIndex+".textStyle.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.color" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.color)" @blur='inputColorGet(seriesObj.text.textStyle.color,"seriesObj.text.textStyle.color", "series."+seriesIndex+".textStyle.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(seriesObj.text.textStyle.fontSize, "seriesObj.text.textStyle.fontSize", "series."+seriesIndex+".textStyle.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.fontSize1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.fontSize1)" @blur='sliderInpGet(seriesObj.text.textStyle.fontSize1, "seriesObj.text.textStyle.fontSize", "series."+seriesIndex+".textStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.textStyle.letterSpacing, "seriesObj.text.textStyle.letterSpacing", "series."+seriesIndex+".textStyle.letterSpacing", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.letterSpacing1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.letterSpacing1)" @blur='sliderInpGet(seriesObj.text.textStyle.letterSpacing1, "seriesObj.text.textStyle.letterSpacing", "series."+seriesIndex+".textStyle.letterSpacing", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.text.textStyle.fontStyle" @change='radioGet(seriesObj.text.textStyle.fontStyle, "series."+seriesIndex+".textStyle.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.text.textStyle.fontWeight" @change='radioGet(seriesObj.text.textStyle.fontWeight, "series."+seriesIndex+".textStyle.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">上内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.padding.top" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.textStyle.padding.top, "seriesObj.text.textStyle.padding.top", "series."+seriesIndex+".textStyle.padding.top", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.padding.top1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.padding.top1)" @blur='sliderInpGet(seriesObj.text.textStyle.padding.top1, "seriesObj.text.textStyle.padding.top", "series."+seriesIndex+".textStyle.padding.top", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">下内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.padding.bottom" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.textStyle.padding.bottom, "seriesObj.text.textStyle.padding.bottom", "series."+seriesIndex+".textStyle.padding.bottom", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.padding.bottom1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.padding.bottom1)" @blur='sliderInpGet(seriesObj.text.textStyle.padding.bottom1, "seriesObj.text.textStyle.padding.bottom", "series."+seriesIndex+".textStyle.padding.bottom", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">左内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.padding.left" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.textStyle.padding.left, "seriesObj.text.textStyle.padding.left", "series."+seriesIndex+".textStyle.padding.left", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.padding.left1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.padding.left1)" @blur='sliderInpGet(seriesObj.text.textStyle.padding.left1, "seriesObj.text.textStyle.padding.left", "series."+seriesIndex+".textStyle.padding.left", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">右内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.padding.switch" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.textStyle.padding.switch, "seriesObj.text.textStyle.padding.switch", "series."+seriesIndex+".textStyle.padding.switch", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.padding.switch1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.padding.switch1)" @blur='sliderInpGet(seriesObj.text.textStyle.padding.switch1, "seriesObj.text.textStyle.padding.switch", "series."+seriesIndex+".textStyle.padding.switch", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.textStyle.backgroundColor" show-alpha @change='colorGet(seriesObj.text.textStyle.backgroundColor, "seriesObj.text.textStyle.backgroundColor", "series."+seriesIndex+".textStyle.backgroundColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.backgroundColor" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.backgroundColor)" @blur='inputColorGet(seriesObj.text.textStyle.backgroundColor,"seriesObj.text.textStyle.backgroundColor", "series."+seriesIndex+".textStyle.backgroundColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框粗细</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(seriesObj.text.textStyle.borderWidth, "seriesObj.text.textStyle.borderWidth", "series."+seriesIndex+".textStyle.borderWidth", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.borderWidth1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.borderWidth1)" @blur='sliderInpGet(seriesObj.text.textStyle.borderWidth1, "seriesObj.text.textStyle.borderWidth", "series."+seriesIndex+".textStyle.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">边框圆角</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.textStyle.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.textStyle.borderRadius, "seriesObj.text.textStyle.borderRadius", "series."+seriesIndex+".textStyle.borderRadius", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.borderRadius1" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.borderRadius1)" @blur='sliderInpGet(seriesObj.text.textStyle.borderRadius1, "seriesObj.text.textStyle.borderRadius", "series."+seriesIndex+".textStyle.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">边框颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.textStyle.borderColor" show-alpha @change='colorGet(seriesObj.text.textStyle.borderColor, "seriesObj.text.textStyle.borderColor", "series."+seriesIndex+".textStyle.borderColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.textStyle.borderColor" :spellcheck="false" @focus="inputColor(seriesObj.text.textStyle.borderColor)" @blur='inputColorGet(seriesObj.text.textStyle.borderColor,"seriesObj.text.textStyle.borderColor", "series."+seriesIndex+".textStyle.borderColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框样式</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.text.textStyle.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.text.textStyle.borderStyle, "series."+seriesIndex+".textStyle.borderStyle", "string")'>
+							<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="内容样式" name="subtextStyle">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.text.subtextStyle.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.text.subtextStyle.fontFamily, "series."+seriesIndex+".subtextStyle.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.subtextStyle.color" show-alpha @change='colorGet(seriesObj.text.subtextStyle.color, "sseriesObj.subtextStyle.color", "series."+seriesIndex+".subtextStyle.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.color" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.color)" @blur='inputColorGet(seriesObj.text.subtextStyle.color,"seriesObj.text.subtextStyle.color", "series."+seriesIndex+".subtextStyle.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.fontSize, "seriesObj.text.subtextStyle.fontSize", "series."+seriesIndex+".subtextStyle.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.fontSize1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.fontSize1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.fontSize1, "seriesObj.text.subtextStyle.fontSize", "series."+seriesIndex+".subtextStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.letterSpacing, "seriesObj.text.subtextStyle.letterSpacing", "series."+seriesIndex+".subtextStyle.letterSpacing", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.letterSpacing1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.letterSpacing1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.letterSpacing1, "seriesObj.text.subtextStyle.letterSpacing", "series."+seriesIndex+".subtextStyle.letterSpacing", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.text.subtextStyle.fontStyle" @change='radioGet(seriesObj.text.subtextStyle.fontStyle, "series."+seriesIndex+".subtextStyle.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.text.subtextStyle.fontWeight" @change='radioGet(seriesObj.text.subtextStyle.fontWeight, "series."+seriesIndex+".subtextStyle.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">上内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.padding.top" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.padding.top, "seriesObj.text.subtextStyle.padding.top", "series."+seriesIndex+".subtextStyle.padding.top", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.padding.top1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.padding.top1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.padding.top1, "seriesObj.text.subtextStyle.padding.top", "series."+seriesIndex+".subtextStyle.padding.top", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">下内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.padding.bottom" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.padding.bottom, "seriesObj.text.subtextStyle.padding.bottom", "series."+seriesIndex+".subtextStyle.padding.bottom", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.padding.bottom1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.padding.bottom1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.padding.bottom1, "seriesObj.text.subtextStyle.padding.bottom", "series."+seriesIndex+".subtextStyle.padding.bottom", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">左内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.padding.left" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.padding.left, "seriesObj.text.subtextStyle.padding.left", "series."+seriesIndex+".subtextStyle.padding.left", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.padding.left1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.padding.left1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.padding.left1, "seriesObj.text.subtextStyle.padding.left", "series."+seriesIndex+".subtextStyle.padding.left", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">右内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.padding.switch" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.padding.switch, "seriesObj.text.subtextStyle.padding.switch", "series."+seriesIndex+".subtextStyle.padding.switch", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.padding.switch1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.padding.switch1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.padding.switch1, "seriesObj.text.subtextStyle.padding.switch", "series."+seriesIndex+".subtextStyle.padding.switch", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.subtextStyle.backgroundColor" show-alpha @change='colorGet(seriesObj.text.subtextStyle.backgroundColor, "seriesObj.text.subtextStyle.backgroundColor", "series."+seriesIndex+".subtextStyle.backgroundColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.backgroundColor" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.backgroundColor)" @blur='inputColorGet(seriesObj.text.subtextStyle.backgroundColor,"seriesObj.text.subtextStyle.backgroundColor", "series."+seriesIndex+".subtextStyle.backgroundColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框粗细</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.borderWidth, "seriesObj.text.subtextStyle.borderWidth", "series."+seriesIndex+".subtextStyle.borderWidth", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.borderWidth1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.borderWidth1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.borderWidth1, "seriesObj.text.subtextStyle.borderWidth", "series."+seriesIndex+".subtextStyle.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">边框圆角</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.subtextStyle.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.subtextStyle.borderRadius, "seriesObj.text.subtextStyle.borderRadius", "series."+seriesIndex+".subtextStyle.borderRadius", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.borderRadius1" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.borderRadius1)" @blur='sliderInpGet(seriesObj.text.subtextStyle.borderRadius1, "seriesObj.text.subtextStyle.borderRadius", "series."+seriesIndex+".subtextStyle.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">边框颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.subtextStyle.borderColor" show-alpha @change='colorGet(seriesObj.text.subtextStyle.borderColor, "seriesObj.text.subtextStyle.borderColor", "series."+seriesIndex+".subtextStyle.borderColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.subtextStyle.borderColor" :spellcheck="false" @focus="inputColor(seriesObj.text.subtextStyle.borderColor)" @blur='inputColorGet(seriesObj.text.subtextStyle.borderColor,"seriesObj.text.subtextStyle.borderColor", "series."+seriesIndex+".subtextStyle.borderColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框样式</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.text.subtextStyle.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.text.subtextStyle.borderStyle, "series."+seriesIndex+".subtextStyle.borderStyle", "string")'>
+							<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="后缀样式" name="untextStyle">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.text.untextStyle.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.text.untextStyle.fontFamily, "series."+seriesIndex+".untextStyle.fontFamily", "string")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.untextStyle.color" show-alpha @change='colorGet(seriesObj.text.untextStyle.color, "sseriesObj.untextStyle.color", "series."+seriesIndex+".untextStyle.color", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.color" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.color)" @blur='inputColorGet(seriesObj.text.untextStyle.color,"seriesObj.text.untextStyle.color", "series."+seriesIndex+".untextStyle.color", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(seriesObj.text.untextStyle.fontSize, "seriesObj.text.untextStyle.fontSize", "series."+seriesIndex+".untextStyle.fontSize", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.fontSize1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.fontSize1)" @blur='sliderInpGet(seriesObj.text.untextStyle.fontSize1, "seriesObj.text.untextStyle.fontSize", "series."+seriesIndex+".untextStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.untextStyle.letterSpacing, "seriesObj.text.untextStyle.letterSpacing", "series."+seriesIndex+".untextStyle.letterSpacing", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.letterSpacing1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.letterSpacing1)" @blur='sliderInpGet(seriesObj.text.untextStyle.letterSpacing1, "seriesObj.text.untextStyle.letterSpacing", "series."+seriesIndex+".untextStyle.letterSpacing", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.text.untextStyle.fontStyle" @change='radioGet(seriesObj.text.untextStyle.fontStyle, "series."+seriesIndex+".untextStyle.fontStyle", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="seriesObj.text.untextStyle.fontWeight" @change='radioGet(seriesObj.text.untextStyle.fontWeight, "series."+seriesIndex+".untextStyle.fontWeight", "string")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">上内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.padding.top" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.untextStyle.padding.top, "seriesObj.text.untextStyle.padding.top", "series."+seriesIndex+".untextStyle.padding.top", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.padding.top1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.padding.top1)" @blur='sliderInpGet(seriesObj.text.untextStyle.padding.top1, "seriesObj.text.untextStyle.padding.top", "series."+seriesIndex+".untextStyle.padding.top", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">下内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.padding.bottom" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.untextStyle.padding.bottom, "seriesObj.text.untextStyle.padding.bottom", "series."+seriesIndex+".untextStyle.padding.bottom", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.padding.bottom1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.padding.bottom1)" @blur='sliderInpGet(seriesObj.text.untextStyle.padding.bottom1, "seriesObj.text.untextStyle.padding.bottom", "series."+seriesIndex+".untextStyle.padding.bottom", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">左内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.padding.left" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.untextStyle.padding.left, "seriesObj.text.untextStyle.padding.left", "series."+seriesIndex+".untextStyle.padding.left", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.padding.left1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.padding.left1)" @blur='sliderInpGet(seriesObj.text.untextStyle.padding.left1, "seriesObj.text.untextStyle.padding.left", "series."+seriesIndex+".untextStyle.padding.left", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">右内边距</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.padding.switch" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.untextStyle.padding.switch, "seriesObj.text.untextStyle.padding.switch", "series."+seriesIndex+".untextStyle.padding.switch", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.padding.switch1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.padding.switch1)" @blur='sliderInpGet(seriesObj.text.untextStyle.padding.switch1, "seriesObj.text.untextStyle.padding.switch", "series."+seriesIndex+".untextStyle.padding.switch", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.untextStyle.backgroundColor" show-alpha @change='colorGet(seriesObj.text.untextStyle.backgroundColor, "seriesObj.text.untextStyle.backgroundColor", "series."+seriesIndex+".untextStyle.backgroundColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.backgroundColor" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.backgroundColor)" @blur='inputColorGet(seriesObj.text.untextStyle.backgroundColor,"seriesObj.text.untextStyle.backgroundColor", "series."+seriesIndex+".untextStyle.backgroundColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框粗细</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(seriesObj.text.untextStyle.borderWidth, "seriesObj.text.untextStyle.borderWidth", "series."+seriesIndex+".untextStyle.borderWidth", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.borderWidth1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.borderWidth1)" @blur='sliderInpGet(seriesObj.text.untextStyle.borderWidth1, "seriesObj.text.untextStyle.borderWidth", "series."+seriesIndex+".untextStyle.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">边框圆角</div>
+					<div class="slider">
+						<el-slider v-model="seriesObj.text.untextStyle.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.text.untextStyle.borderRadius, "seriesObj.text.untextStyle.borderRadius", "series."+seriesIndex+".untextStyle.borderRadius", "rem", "number")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.borderRadius1" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.borderRadius1)" @blur='sliderInpGet(seriesObj.text.untextStyle.borderRadius1, "seriesObj.text.untextStyle.borderRadius", "series."+seriesIndex+".untextStyle.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+					</div>
+					<em>px</em>
+				</li>
+				<li>
+					<div class="attributeName">边框颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="seriesObj.text.untextStyle.borderColor" show-alpha @change='colorGet(seriesObj.text.untextStyle.borderColor, "seriesObj.text.untextStyle.borderColor", "series."+seriesIndex+".untextStyle.borderColor", "string")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input  size="small" v-model="seriesObj.text.untextStyle.borderColor" :spellcheck="false" @focus="inputColor(seriesObj.text.untextStyle.borderColor)" @blur='inputColorGet(seriesObj.text.untextStyle.borderColor,"seriesObj.text.untextStyle.borderColor", "series."+seriesIndex+".untextStyle.borderColor", "string")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框样式</div>
+					<div class="select">
+						<el-select size="small" v-model="seriesObj.text.untextStyle.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.text.untextStyle.borderStyle, "series."+seriesIndex+".untextStyle.borderStyle", "string")'>
+							<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+	</ul>
+</body>
+</html>

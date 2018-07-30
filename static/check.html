@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="stylue/sharing.css"/>	
+	<link rel="stylesheet" type="text/css" href="stylue/animation.css"/>
+	<link rel="stylesheet" type="text/css" href="check/check.css">	
+	<link rel="stylesheet" type="text/css" href="./import/css/perfect-scrollbar.css">
+	<script src="./import/js/jquery-3.2.1.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./import/js/echarts2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./import/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<!-- <script src="./import/js/china.js" type="text/javascript" charset="utf-8"></script> -->
+	<title>可数化展示</title>
+	<style>
+		::-webkit-scrollbar {
+			width: 14px;
+			height: 14px;
+		}
+		#palette::-webkit-scrollbar {
+			width: 20px;
+			height: 20px;
+		}		
+		::-webkit-scrollbar-track,
+		::-webkit-scrollbar-thumb {
+			border-radius: 999px;
+			border: 5px solid transparent;
+		}
+		::-webkit-scrollbar-track {
+			box-shadow: 1px 1px 5px rgba(0, 0, 0, .2) inset;
+		}
+		::-webkit-scrollbar-thumb {
+			min-height: 20px;
+			background-clip: content-box;
+			box-shadow: 0 0 0 5px rgba(0, 0, 0, .2) inset;
+		}
+		::-webkit-scrollbar-corner {
+			background: transparent;
+		}
+	</style>
+	<script>
+        $(function(){
+            $(".monter").hover(function(){
+                $(this).animate({right:'-5px'});
+            },function(){
+                $(this).animate({right:'-300px'});
+            });
+        });
+	</script>
+	<script type="text/javascript">
+		//onclick时触发的copy函数
+		function copy(id)
+			{
+				var obj=document.getElementById(id)
+				obj.select();
+				document.execCommand("Copy");
+				top.layer.alert("已复制好");
+			}
+		$(document).ready(function(){
+            catalog = getDataFromAjax('http://172.16.70.59:8080/hlQD/page/qd/qdDesign/findById', {designId: getQueryString("id", window.location.href)}, function (data) {
+            });
+            var qdCatalog = JSON.parse(catalog);
+            if (qdCatalog.type == "2" ) {
+                $('#cb').remove();
+            }else
+            if (qdCatalog.exhibit == '0') {
+                $('#cb').remove();
+            } else {
+                $('#cb').show();
+            }
+
+			$('#biao1').text(document.location.href);
+			$('#btnCopy').click(function(){
+				copy('biao1');
+			});
+			$('#cb .fa-close').click(function(){
+				$('#cb').remove();
+			});
+			$(window).resize(function(){
+				if($(window).width()<768){
+					$('#cb').hide();
+				}else{
+					$('#cb').show();
+				}
+			})
+		})
+	</script>
+	<style type="text/css">
+		#cb {
+			list-style:none;
+			position: fixed;
+			width: 54px;
+		    right: 0px;
+		    margin-left: 502px;
+		    bottom: 25%;
+		    overflow: hidden;
+		    z-index:99999;
+		}
+		#cb  li{
+			position: relative;
+			width: 48px;
+			height: 48px;
+			margin-top:3px;
+	        cursor: pointer;
+	        overflow: hidden;
+	        background-color: #1a7bb9;
+	        text-align: center;
+
+		}
+		#cb li a{
+			width:100%;
+			height:100%;
+		}
+		#cb li .fa{
+			color:#fff;
+			font-size: 24px;
+			/* margin-left: 13px; */
+			margin-top: 11px;
+		}
+	</style>
+</head>
+<body style="position:relative;">
+	<ul id="cb">
+		<li class="li1">
+			 <table:exportDoc url="${ctx}/qd/qdDesign/doc"></table:exportDoc>
+		</li>
+		<li class="li2">
+			<table:exportPdf url="${ctx}/qd/qdDesign/pdf"></table:exportPdf>
+		</li>
+		<li class="li3">
+			<table:exportHtml url="${ctx}/qd/qdDesign/html"></table:exportHtml>
+		</li>
+		<li class="li4">
+			<i class="fa fa-share" title="分享链接" id="btnCopy"></i>
+			<textarea cols="20" rows="10" id="biao1" style="opacity:0;"></textarea>
+		</li>
+		<li class="li5">
+			<i class="fa fa-close" title="关闭面板"></i>
+		</li>
+	</ul>
+	<form id="exportDoc" method="post">
+		<input id="thumbnail" name="thumbnail" type="hidden" value="${dataUrl}"/>
+	</form>
+	<input type="hidden" id="baidu" name="" value=""/>
+	<div class="details-zhong">
+		<div id="palette">
+			<div id="content" class="screen hidden">
+			</div>
+			<div id="moblie" class="screen">
+			</div>
+		</div>
+	</div>
+	<script src="./js/hlframe.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/refresh.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/setAttribute.js" type="text/javascript" charset="utf-8"></script>
+	<script src="check/check.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/createElement.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./import/js/jquery.mousewheel.js"></script>
+	<script src="./import/js/perfect-scrollbar.js"></script>
+	<script src="./import/js/require.js" type="text/javascript" charset="utf-8"></script>
+	
+</body>
+</html>

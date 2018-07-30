@@ -1,0 +1,987 @@
+<htnl>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div id="seriesCommon" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">系列选择</div>
+				<div class="select">
+					<el-select size="small" v-model="seriesIndex" placeholder="请选择" style="width:100%;" @change='selectGet(seriesIndex, "seriesIndex", "number", "", "series")'>
+						<el-option v-for="(item, a) in seriesObj.seriesList" :key="item.value" :label="item.name" :value="a"></el-option>
+					</el-select>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonLine" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">类型</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.line.type" @change='radioGet(seriesObj.line.type, "series."+seriesIndex+".type", "string", "seriesType")'>
+						<el-radio-button label="line">折线</el-radio-button>
+						<el-radio-button label="bar">柱状</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">标记图形显示</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.line.showSymbol" @change='switchGet(seriesObj.line.showSymbol, "series."+seriesIndex+".showSymbol")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">标记图形全部显示</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.line.showAllSymbol" @change='switchGet(seriesObj.line.showAllSymbol, "series."+seriesIndex+".showAllSymbol")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">连接空数据</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.line.connectNulls" @change='switchGet(seriesObj.line.connectNulls, "series."+seriesIndex+".connectNulls")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">超出部分裁剪</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.line.clipOverflow" @change='switchGet(seriesObj.line.clipOverflow, "series."+seriesIndex+".clipOverflow")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">平滑曲线显示</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.line.smooth" @change='switchGet(seriesObj.line.smooth, "series."+seriesIndex+".smooth")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">曲线平滑保持单调</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.line.smoothMonotone" @change='radioGet(seriesObj.line.smoothMonotone, "series."+seriesIndex+".smoothMonotone", "string")'>
+						<el-radio-button label="x">X</el-radio-button>
+						<el-radio-button label="y">Y</el-radio-button>
+						<el-radio-button label="null">否</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">阶梯线图</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.line.step" @change='radioGet(seriesObj.line.step, "series."+seriesIndex+".step", "string")'>
+						<el-radio-button label="start">当前</el-radio-button>
+						<el-radio-button label="middle">中间</el-radio-button>
+						<el-radio-button label="end">下个</el-radio-button>
+						<el-radio-button label="false">否</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">数据堆叠</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.line.stack" @blur='inputGet(seriesObj.line.stack, "series."+seriesIndex+".stack", "string")'></el-input>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonBar" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">类型</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.bar.type" @change='radioGet(seriesObj.bar.type, "series."+seriesIndex+".type", "string", "seriesType")'>
+						<el-radio-button label="line">折线</el-radio-button>
+						<el-radio-button label="bar">柱状</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">数据堆叠</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.bar.stack" @blur='inputGet(seriesObj.bar.stack, "series."+seriesIndex+".stack", "string")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName" title="最后系列为准">柱间距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.bar.barGap" :min="-100" :max="200" :step="1" @change='sliderGet(seriesObj.bar.barGap, "seriesObj.bar.barGap", "series."+seriesIndex+".barGap", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.bar.barGap1" :spellcheck="false" @focus="inputColor(seriesObj.bar.barGap1)" @blur='sliderInpGet(seriesObj.bar.barGap1, "seriesObj.bar.barGap", "series."+seriesIndex+".barGap", -100, 200, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName" title="最后系列为准">类目间柱形距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.bar.barCategoryGap" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.bar.barCategoryGap, "seriesObj.bar.barCategoryGap", "series."+seriesIndex+".barCategoryGap", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.bar.barCategoryGap1" :spellcheck="false" @focus="inputColor(seriesObj.bar.barCategoryGap1)" @blur='sliderInpGet(seriesObj.bar.barCategoryGap1, "seriesObj.bar.barCategoryGap", "series."+seriesIndex+".barCategoryGap", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonPie" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">是否顺时针排布</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.pie.clockwise" @change='switchGet(seriesObj.pie.clockwise, "series."+seriesIndex+".clockwise")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">是否展示成南丁格尔图</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.pie.roseType" @change='switchGet(seriesObj.pie.roseType, "series."+seriesIndex+".roseType")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">选中模式</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.pie.selectedMode" @change='radioGet(seriesObj.pie.selectedMode, "series."+seriesIndex+".selectedMode", "string")'>
+						<el-radio-button label="single">单选</el-radio-button>
+						<el-radio-button label="multiple">多选</el-radio-button>
+						<el-radio-button label="false">关闭</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName" title="最后系列为准">高亮扇区的偏移距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.hoverOffset" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.pie.hoverOffset, "seriesObj.pie.hoverOffset", "series."+seriesIndex+".hoverOffset", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.hoverOffset1" :spellcheck="false" @focus="inputColor(seriesObj.pie.hoverOffset1)" @blur='sliderInpGet(seriesObj.pie.hoverOffset1, "seriesObj.pie.hoverOffset", "series."+seriesIndex+".hoverOffset", 0, 100, 1, "rem", "number")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+			<li>
+				<div class="attributeName">选中扇区的偏移距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.selectedOffset" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.pie.selectedOffset, "seriesObj.pie.selectedOffset", "series."+seriesIndex+".selectedOffset", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.selectedOffset1" :spellcheck="false" @focus="inputColor(seriesObj.pie.selectedOffset1)" @blur='sliderInpGet(seriesObj.pie.selectedOffset1, "seriesObj.pie.selectedOffset", "series."+seriesIndex+".selectedOffset", 0, 100, 1, "rem", "number")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+
+			<li>
+				<div class="attributeName">起始角度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.startAngle" :min="0" :max="360" :step="1" @change='sliderGet(seriesObj.pie.startAngle, "seriesObj.pie.startAngle", "series."+seriesIndex+".startAngle", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.startAngle1" :spellcheck="false" @focus="inputColor(seriesObj.pie.startAngle1)" @blur='sliderInpGet(seriesObj.pie.startAngle1, "seriesObj.pie.startAngle", "series."+seriesIndex+".startAngle", 0, 360, 1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<li>
+				<div class="attributeName">最小扇区角度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.minAngle" :min="0" :max="360" :step="1" @change='sliderGet(seriesObj.pie.minAngle, "seriesObj.pie.minAngle", "series."+seriesIndex+".minAngle", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.minAngle1" :spellcheck="false" @focus="inputColor(seriesObj.pie.minAngle1)" @blur='sliderInpGet(seriesObj.pie.minAngle1, "seriesObj.pie.minAngle", "series."+seriesIndex+".minAngle", 0, 360, 1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<li>
+				<div class="attributeName">圆心横坐标</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.centerX" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.pie.centerX, "seriesObj.pie.centerX", "series."+seriesIndex+".center", "%", "array", 0, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.centerX1" :spellcheck="false" @focus="inputColor(seriesObj.pie.centerX1)" @blur='sliderInpGet(seriesObj.pie.centerX1, "seriesObj.pie.centerX", "series."+seriesIndex+".center", 0, 100, 1, "%", "array", 0, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">圆心纵坐标</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.centerY" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.pie.centerY, "seriesObj.pie.centerY", "series."+seriesIndex+".center", "%", "array", 1, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.centerY1" :spellcheck="false" @focus="inputColor(seriesObj.pie.centerY1)" @blur='sliderInpGet(seriesObj.pie.centerY1, "seriesObj.pie.centerY", "series."+seriesIndex+".center", 0, 100, 1, "%", "array", 1, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">饼图内半径</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.radiusX" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.pie.radiusX, "seriesObj.pie.radiusX", "series."+seriesIndex+".radius", "%", "array", 0, "radius")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.radiusX1" :spellcheck="false" @focus="inputColor(seriesObj.pie.radiusX1)" @blur='sliderInpGet(seriesObj.pie.radiusX1, "seriesObj.pie.radiusX", "series."+seriesIndex+".radius", 0, 100, 1, "%", "array", 0, "radius")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">饼图外半径</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.pie.radiusY" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.pie.radiusY, "seriesObj.pie.radiusY", "series."+seriesIndex+".radius", "%", "array", 1, "radius")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.pie.radiusY1" :spellcheck="false" @focus="inputColor(seriesObj.pie.radiusY1)" @blur='sliderInpGet(seriesObj.pie.radiusY1, "seriesObj.pie.radiusY", "series."+seriesIndex+".radius", 0, 100, 1, "%", "array", 1, "radius")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonScatter" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">大规模散点图优化</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.scatter.large" @change='switchGet(seriesObj.scatter.large, "series."+seriesIndex+".large")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">绘制优化的阈值</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.scatter.largeThreshold" :min="0" :max="10000" :step="100" @change='sliderGet(seriesObj.scatter.largeThreshold, "seriesObj.scatter.largeThreshold", "series."+seriesIndex+".largeThreshold", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.scatter.largeThreshold1" :spellcheck="false" @focus="inputColor(seriesObj.scatter.largeThreshold1)" @blur='sliderInpGet(seriesObj.scatter.largeThreshold1, "seriesObj.scatter.largeThreshold", "series."+seriesIndex+".largeThreshold", 0, 10000, 100, "rem", "number")'></el-input>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonEffectScatter" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">特效显示</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.effectScatter.showEffectOn" @change='radioGet(seriesObj.effectScatter.showEffectOn, "series."+seriesIndex+".showEffectOn", "string")'>
+						<el-radio-button label="render">绘制完成</el-radio-button>
+						<el-radio-button label="emphasis"> 高亮时候</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">大规模散点图优化</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.effectScatter.large" @change='switchGet(seriesObj.effectScatter.large, "series."+seriesIndex+".large")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">绘制优化的阈值</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.effectScatter.largeThreshold" :min="0" :max="10000" :step="100" @change='sliderGet(seriesObj.effectScatter.largeThreshold, "seriesObj.effectScatter.largeThreshold", "series."+seriesIndex+".largeThreshold", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.effectScatter.largeThreshold1" :spellcheck="false" @focus="inputColor(seriesObj.effectScatter.largeThreshold1)" @blur='sliderInpGet(seriesObj.effectScatter.largeThreshold1, "seriesObj.effectScatter.largeThreshold", "series."+seriesIndex+".largeThreshold", 0, 10000, 100, "rem", "number")'></el-input>
+				</div>
+				<em>个</em>
+			</li>
+			<li>
+				<div class="attributeName">涟漪动画时间</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.effectScatter.period" :min="0" :max="50" :step="1" @change='sliderGet(seriesObj.effectScatter.period, "seriesObj.effectScatter.period", "series."+seriesIndex+".rippleEffect.period", "rem", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.effectScatter.period1" :spellcheck="false" @focus="inputColor(seriesObj.effectScatter.period1)" @blur='sliderInpGet(seriesObj.effectScatter.period1, "seriesObj.effectScatter.period", "series."+seriesIndex+".rippleEffect.period", 0, 50, 1, "rem", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em>s</em>
+			</li>
+			<li>
+				<div class="attributeName">涟漪最大缩放比例</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.effectScatter.scale" :min="0" :max="10" :step="0.1" @change='sliderGet(seriesObj.effectScatter.scale, "seriesObj.effectScatter.scale", "series."+seriesIndex+".rippleEffect.scale", "rem", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.effectScatter.scale1" :spellcheck="false" @focus="inputColor(seriesObj.effectScatter.scale1)" @blur='sliderInpGet(seriesObj.effectScatter.scale1, "seriesObj.effectScatter.scale", "series."+seriesIndex+".rippleEffect.scale", 0, 10, 0.1, "rem", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em>s</em>
+			</li>
+			<li>
+				<div class="attributeName">涟漪波纹绘制方式</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.effectScatter.brushType" @change='radioGet(seriesObj.effectScatter.brushType, "series."+seriesIndex+".rippleEffect.brushType", "string")'>
+						<el-radio-button label="fill">填满</el-radio-button>
+						<el-radio-button label="stroke">中空</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonLines" class="seriesCommon">
+		<ul>
+			<el-tabs style="margin-bottom:5px;" v-model="seriesObj.symbolType" type="card" @tab-click='tabsComCusFun(seriesObj.symbolType, "series."+seriesIndex+".symbolType", "series."+seriesIndex+".symbol", "string", "seriesObj.lines.symbol", "list")'>
+				<el-tab-pane name="common" label="标记图形常用">
+					<li>
+						<div class="attributeName">启动标记图形类型</div>
+						<div class="select">
+							<el-select size="small" v-model="seriesObj.lines.symbol1" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.lines.symbol1, "series."+seriesIndex+".symbol", "array", "", "", 0)'>
+								<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+							</el-select>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">终点标记图形类型</div>
+						<div class="select">
+							<el-select size="small" v-model="seriesObj.lines.symbol2" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.lines.symbol2, "series."+seriesIndex+".symbol", "array", "", "", 1)'>
+								<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+							</el-select>
+						</div>
+					</li>
+				</el-tab-pane>
+				<el-tab-pane name="custom" label="标记图形自定义">
+					<li class="textarea">
+						<div class="attributeName">起点标记图形类型</div>
+						<div class="input">
+							<el-input size="small" v-model="seriesObj.lines.symbol1" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.lines.symbol1, "series."+seriesIndex+".symbol", "array", "", 0)'></el-input>									
+						</div>
+					</li>
+					<li class="textarea">
+						<div class="attributeName">终点标记图形类型</div>
+						<div class="input">
+							<el-input size="small" v-model="seriesObj.lines.symbol2" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.lines.symbol2, "series."+seriesIndex+".symbol", "array", "", 1)'></el-input>																	
+						</div>
+					</li>
+				</el-tab-pane>
+			</el-tabs>
+			<li class="textarea">
+				<div class="attributeName">标记图形大小</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.lines.symbolSize" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.lines.symbolSize, "series."+seriesIndex+".symbolSize", "string", null, null, "reconstruction")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+			<li>
+				<div class="attributeName">多段线</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.lines.polyline" @change='switchGet(seriesObj.lines.polyline, "series."+seriesIndex+".polyline")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">大规模散点图优化</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.lines.large" @change='switchGet(seriesObj.lines.large, "series."+seriesIndex+".large")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">绘制优化的阈值</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.lines.largeThreshold" :min="0" :max="10000" :step="100" @change='sliderGet(seriesObj.lines.largeThreshold, "seriesObj.lines.largeThreshold", "series."+seriesIndex+".largeThreshold", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.lines.largeThreshold1" :spellcheck="false" @focus="inputColor(seriesObj.lines.largeThreshold1)" @blur='sliderInpGet(seriesObj.lines.largeThreshold1, "seriesObj.lines.largeThreshold", "series."+seriesIndex+".largeThreshold", 0, 10000, 100, "rem", "number")'></el-input>
+				</div>
+				<em>个</em>
+			</li>
+			<li>
+				<div class="attributeName">线特效显示</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.lines.effectShow" @change='switchGet(seriesObj.lines.effectShow, "series."+seriesIndex+".effect.show")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">线特效循环</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.lines.effectLoop" @change='switchGet(seriesObj.lines.effectLoop, "series."+seriesIndex+".effect.loop", "reconstruction")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">特效图形类型</div>
+				<div class="select">
+					<el-select size="small" v-model="seriesObj.lines.effectSymbol" placeholder="请选择" style="width:100%;"@change='selectGet(seriesObj.lines.effectSymbol, "series."+seriesIndex+".effect.symbol", "string", "reconstruction", null, "")'>
+						<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+					</el-select>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">特效图形大小</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.lines.effectSymbolSize" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.lines.effectSymbolSize, "seriesObj.lines.effectSymbolSize", "series."+seriesIndex+".effect.symbolSize", "rem", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.lines.effectSymbolSize1" :spellcheck="false" @focus="inputColor(seriesObj.lines.effectSymbolSize1)" @blur='sliderInpGet(seriesObj.lines.effectSymbolSize1, "seriesObj.lines.effectSymbolSize", "series."+seriesIndex+".effect.symbolSize", 0, 100, 1, "rem", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+			<li>
+				<div class="attributeName">特效动画时间</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.lines.period" :min="0" :max="50" :step="1" @change='sliderGet(seriesObj.lines.period, "seriesObj.lines.period", "series."+seriesIndex+".effect.period", "rem", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.lines.period1" :spellcheck="false" @focus="inputColor(seriesObj.lines.period1)" @blur='sliderInpGet(seriesObj.lines.period1, "seriesObj.lines.period", "series."+seriesIndex+".effect.period", 0, 50, 1, "rem", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em>s</em>
+			</li>
+			<li>
+				<div class="attributeName" title="设置>0则忽略动画时间">特效固定速度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.lines.constantSpeed" :min="0" :max="500" :step="1" @change='sliderGet(seriesObj.lines.constantSpeed, "seriesObj.lines.constantSpeed", "series."+seriesIndex+".effect.constantSpeed", "rem", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.lines.constantSpeed1" :spellcheck="false" @focus="inputColor(seriesObj.lines.constantSpeed1)" @blur='sliderInpGet(seriesObj.lines.constantSpeed1, "seriesObj.lines.constantSpeed", "series."+seriesIndex+".effect.constantSpeed", 0, 500, 1, "rem", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em>px/s</em>
+			</li>
+			<li>
+				<div class="attributeName">特效尾迹</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.lines.trailLength" :min="0" :max="1" :step="0.1" @change='sliderGet(seriesObj.lines.trailLength, "seriesObj.lines.trailLength", "series."+seriesIndex+".effect.trailLength", "rem", "number", null, "reconstruction")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.lines.trailLength1" :spellcheck="false" @focus="inputColor(seriesObj.lines.trailLength1)" @blur='sliderInpGet(seriesObj.lines.trailLength1, "seriesObj.lines.trailLength", "series."+seriesIndex+".effect.trailLength", 0, 1, 0.1, "rem", "number", null, "reconstruction")'></el-input>
+				</div>
+				<em>s</em>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonTree" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">组件左侧距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.tree.left" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.tree.left, "seriesObj.tree.left", "series."+seriesIndex+".left", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.tree.left1" :spellcheck="false" @focus="inputColor(seriesObj.tree.left1)" @blur='sliderInpGet(seriesObj.tree.left1, "seriesObj.tree.left", "series."+seriesIndex+".left", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">组件右侧距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.tree.switch" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.tree.switch, "seriesObj.tree.switch", "series."+seriesIndex+".switch", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.tree.switch1" :spellcheck="false" @focus="inputColor(seriesObj.tree.switch1)" @blur='sliderInpGet(seriesObj.tree.switch1, "seriesObj.tree.switch", "series."+seriesIndex+".switch", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">组件上侧距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.tree.top" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.tree.top, "seriesObj.tree.top", "series."+seriesIndex+".top", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.tree.top1" :spellcheck="false" @focus="inputColor(seriesObj.tree.top1)" @blur='sliderInpGet(seriesObj.tree.top1, "seriesObj.tree.top", "series."+seriesIndex+".top", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">组件下侧距离</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.tree.bottom" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.tree.bottom, "seriesObj.tree.bottom", "series."+seriesIndex+".bottom", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.tree.bottom1" :spellcheck="false" @focus="inputColor(seriesObj.tree.bottom1)" @blur='sliderInpGet(seriesObj.tree.bottom1, "seriesObj.tree.bottom", "series."+seriesIndex+".bottom", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">布局</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.tree.layout" @change='radioGet(seriesObj.tree.layout, "series."+seriesIndex+".layout", "string")'>
+						<el-radio-button label="orthogonal">正交</el-radio-button>
+						<el-radio-button label="radial">径向</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">正交布局方向</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.tree.orient" @change='radioGet(seriesObj.tree.orient, "series."+seriesIndex+".orient", "string")'>
+						<el-radio-button label="horizontal">水平</el-radio-button>
+						<el-radio-button label="vertical">垂直</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">子树折叠展开交互</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.tree.expandAnd" @change='switchGet(seriesObj.tree.expandAnd, "series."+seriesIndex+".expandAnd")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName" title="-1为全部展开">初始展开层级</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.tree.initialTreeDepth" :min="-1" :max="10" :step="1" @change='sliderGet(seriesObj.tree.initialTreeDepth, "seriesObj.tree.initialTreeDepth", "series."+seriesIndex+".initialTreeDepth", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.tree.initialTreeDepth1" :spellcheck="false" @focus="inputColor(seriesObj.tree.initialTreeDepth1)" @blur='sliderInpGet(seriesObj.tree.initialTreeDepth1, "seriesObj.tree.initialTreeDepth", "series."+seriesIndex+".initialTreeDepth", -1, 10, 1, "rem", "number")'></el-input>
+				</div>
+				<em>级</em>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonMap" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">省级地图</div>
+				<div class="select">
+					<el-select size="small" v-model="seriesObj.map.province" filterable clearable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.map.province, "series."+seriesIndex+".province", "string", "chartMap", "province")'>
+						<el-option v-for="item in provincesList" :key="item.value" :label="item.cityName" :value="item.cityName"></el-option>
+					</el-select>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">市级地图</div>
+				<div class="select">
+					<el-select size="small" v-model="seriesObj.map.city" filterable clearable placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.map.city, "series."+seriesIndex+".city", "string", "chartMap", "city")'>
+						<el-option v-for="item in cityList" :key="item.value" :label="item.cityName" :value="item.cityName"></el-option>
+					</el-select>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">鼠标缩放平移漫游</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.map.roam" @change='switchGet(seriesObj.map.roam, "series."+seriesIndex+".roam")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">图例颜色标识</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.map.showLegendSymbol" @change='switchGet(seriesObj.map.showLegendSymbol, "series."+seriesIndex+".showLegendSymbol")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">视角中心点(坐标)</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.map.mapCenter" @blur='inputGet(seriesObj.map.mapCenter, "series."+seriesIndex+".center", "array", "", null, "map")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">地图的长宽比</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.map.aspectScale" :min="0.1" :max="2" :step="0.01" @change='sliderGet(seriesObj.map.aspectScale, "seriesObj.map.aspectScale", "series."+seriesIndex+".aspectScale", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.map.aspectScale1" :spellcheck="false" @focus="inputColor(seriesObj.map.aspectScale1)" @blur='sliderInpGet(seriesObj.map.aspectScale1, "seriesObj.map.aspectScale", "series."+seriesIndex+".aspectScale", 0.1, 2, 0.01, "rem", "number")'></el-input>
+				</div>
+				<em></em>
+			</li>
+			<li>
+				<div class="attributeName">当前视角缩放比</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.map.zoom" :min="0.1" :max="10" :step="0.1" @change='sliderGet(seriesObj.map.zoom, "seriesObj.map.zoom", "series."+seriesIndex+".zoom", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.map.zoom1" :spellcheck="false" @focus="inputColor(seriesObj.map.zoom1)" @blur='sliderInpGet(seriesObj.map.zoom1, "seriesObj.map.zoom", "series."+seriesIndex+".zoom", 0.1, 10, 0.1, "rem", "number")'></el-input>
+				</div>
+				<em></em>
+			</li>
+			<li>
+				<div class="attributeName">选中模式</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.map.selectedMode" @change='radioGet(seriesObj.map.selectedMode, "series."+seriesIndex+".selectedMode", "string")'>
+						<el-radio-button label="single">单选</el-radio-button>
+						<el-radio-button label="multiple">多选</el-radio-button>
+						<el-radio-button label="false">关闭</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName1">统计方式</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.map.mapValueCalculation" @change='radioGet(seriesObj.map.mapValueCalculation, "series."+seriesIndex+".mapValueCalculation", "string")'>
+						<el-radio-button label="sum">取和</el-radio-button>
+						<el-radio-button label="average">平均值</el-radio-button>
+						<el-radio-button label="max">最大值</el-radio-button>
+						<el-radio-button label="min">最小值</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonFunnel" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">数据图形间距</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.funnel.gap" @blur='inputGet(seriesObj.funnel.gap, "series."+seriesIndex+".gap", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">指定数据最小值</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.funnel.min" @blur='inputGet(seriesObj.funnel.min, "series."+seriesIndex+".min", "string")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">指定数据最大值</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.funnel.max" @blur='inputGet(seriesObj.funnel.max, "series."+seriesIndex+".max", "string")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">最小值映射宽度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.funnel.minSize" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.funnel.minSize, "seriesObj.funnel.minSize", "series."+seriesIndex+".minSize", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.funnel.minSize1" :spellcheck="false" @focus="inputColor(seriesObj.funnel.minSize1)" @blur='sliderInpGet(seriesObj.funnel.minSize1, "seriesObj.funnel.minSize", "series."+seriesIndex+".minSize", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">最大值映射宽度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.funnel.maxSize" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.funnel.maxSize, "seriesObj.funnel.maxSize", "series."+seriesIndex+".maxSize", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.funnel.maxSize1" :spellcheck="false" @focus="inputColor(seriesObj.funnel.maxSize1)" @blur='sliderInpGet(seriesObj.funnel.maxSize1, "seriesObj.funnel.maxSize", "series."+seriesIndex+".maxSize", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">选中模式</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.funnel.sort" @change='radioGet(seriesObj.funnel.sort, "series."+seriesIndex+".sort", "string")'>
+						<el-radio-button label="ascending">升序</el-radio-button>
+						<el-radio-button label="descending">降序</el-radio-button>
+						<el-radio-button label="none">不排序</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">水平对齐布局</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.funnel.funnelAlign" @change='radioGet(seriesObj.funnel.funnelAlign, "series."+seriesIndex+".funnelAlign", "string")'>
+						<el-radio-button label="left">居左</el-radio-button>
+						<el-radio-button label="center">居中</el-radio-button>
+						<el-radio-button label="switch">居右</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonGauge" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">顺时针增长</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.gauge.clockwise" @change='switchGet(seriesObj.gauge.clockwise, "series."+seriesIndex+".clockwise")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">最小数据值</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.gauge.min" @blur='inputGet(seriesObj.gauge.min, "series."+seriesIndex+".min", "string")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">最大数据值</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.gauge.max" @blur='inputGet(seriesObj.gauge.max, "series."+seriesIndex+".max", "string")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">分割段数</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.gauge.splitNumber" @blur='inputGet(seriesObj.gauge.splitNumber, "series."+seriesIndex+".splitNumber", "string")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">仪表盘半径</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.gauge.radius" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.gauge.radius, "seriesObj.gauge.radius", "series."+seriesIndex+".radius", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.gauge.radius1" :spellcheck="false" @focus="inputColor(seriesObj.gauge.radius1)" @blur='sliderInpGet(seriesObj.gauge.radius1, "seriesObj.gauge.radius", "series."+seriesIndex+".radius", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">圆心横坐标</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.gauge.centerX" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.gauge.centerX, "seriesObj.gauge.centerX", "series."+seriesIndex+".center", "%", "array", 0, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.gauge.centerX1" :spellcheck="false" @focus="inputColor(seriesObj.gauge.centerX1)" @blur='sliderInpGet(seriesObj.gauge.centerX1, "seriesObj.gauge.centerX", "series."+seriesIndex+".center", 0, 100, 1, "%", "array", 0, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">圆心纵坐标</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.gauge.centerY" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.gauge.centerY, "seriesObj.gauge.centerY", "series."+seriesIndex+".center", "%", "array", 1, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.gauge.centerY1" :spellcheck="false" @focus="inputColor(seriesObj.gauge.centerY1)" @blur='sliderInpGet(seriesObj.gauge.centerY1, "seriesObj.gauge.centerY", "series."+seriesIndex+".center", 0, 100, 1, "%", "array", 1, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">起始角度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.gauge.startAngle" :min="0" :max="360" :step="1" @change='sliderGet(seriesObj.gauge.startAngle, "seriesObj.gauge.startAngle", "series."+seriesIndex+".startAngle", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.gauge.startAngle1" :spellcheck="false" @focus="inputColor(seriesObj.gauge.startAngle1)" @blur='sliderInpGet(seriesObj.gauge.startAngle1, "seriesObj.gauge.startAngle", "series."+seriesIndex+".startAngle", 0, 360, 1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<li>
+				<div class="attributeName">结束角度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.gauge.endAngle" :min="-360" :max="360" :step="1" @change='sliderGet(seriesObj.gauge.endAngle, "seriesObj.gauge.endAngle", "series."+seriesIndex+".endAngle", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.gauge.endAngle1" :spellcheck="false" @focus="inputColor(seriesObj.gauge.endAngle1)" @blur='sliderInpGet(seriesObj.gauge.endAngle1, "seriesObj.gauge.endAngle", "series."+seriesIndex+".endAngle", -360, 360, 1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<li>
+				<div class="attributeName">仪表盘指针</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.gauge.pointerShow" @change='switchGet(seriesObj.gauge.pointerShow, "series."+seriesIndex+".pointer.show")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">指针长度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.gauge.pointerLength" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.gauge.pointerLength, "seriesObj.gauge.pointerLength", "series."+seriesIndex+".pointer.length", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.gauge.pointerLength1" :spellcheck="false" @focus="inputColor(seriesObj.gauge.pointerLength1)" @blur='sliderInpGet(seriesObj.gauge.pointerLength1, "seriesObj.gauge.pointerLength", "series."+seriesIndex+".pointer.length", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">指针宽度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.gauge.pointerWidth" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.gauge.pointerWidth, "seriesObj.gauge.pointerWidth", "series."+seriesIndex+".pointer.width", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.gauge.pointerWidth1" :spellcheck="false" @focus="inputColor(seriesObj.gauge.pointerWidth1)" @blur='sliderInpGet(seriesObj.gauge.pointerWidth1, "seriesObj.gauge.pointerWidth", "series."+seriesIndex+".pointer.width", 0, 100, 1, "rem", "number")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonGraph" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">布局</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="seriesObj.graph.layout" @change='radioGet(seriesObj.graph.layout, "series."+seriesIndex+".layout", "string")'>
+						<el-radio-button label="circular">环形</el-radio-button>
+						<el-radio-button label="force">力引导</el-radio-button>
+						<el-radio-button label="none">不布局</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">旋转标签(环形)</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.graph.rotateLabel" @change='switchGet(seriesObj.graph.rotateLabel, "series."+seriesIndex+".circular.rotateLabel")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">斥力因子(力引导)</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.graph.forceRepulsion" @blur='inputGet(seriesObj.graph.forceRepulsion, "series."+seriesIndex+".force.repulsion", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">引力因子(力引导)</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.graph.forceGravity" @blur='inputGet(seriesObj.graph.forceGravity, "series."+seriesIndex+".force.gravity", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">节点距离(力引导)</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.graph.forceEdgeLength" @blur='inputGet(seriesObj.graph.forceEdgeLength, "series."+seriesIndex+".force.edgeLength", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">节点拖拽(力引导)</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.graph.draggable" @change='switchGet(seriesObj.graph.draggable, "series."+seriesIndex+".draggable")'></el-switch>
+				</div>
+			</li>
+
+			<li>
+				<div class="attributeName">显示节点的边及邻接节点</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.graph.focusNodeAdjacency" @change='switchGet(seriesObj.graph.focusNodeAdjacency, "series."+seriesIndex+".focusNodeAdjacency")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">鼠标缩放平移漫游</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.graph.roam" @change='switchGet(seriesObj.graph.roam, "series."+seriesIndex+".roam")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">节点相应缩放比</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.graph.nodeScaleRatio" :min="0" :max="1" :step="0.1" @change='sliderGet(seriesObj.graph.nodeScaleRatio, "seriesObj.graph.nodeScaleRatio", "series."+seriesIndex+".nodeScaleRatio", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.graph.nodeScaleRatio1" :spellcheck="false" @focus="inputColor(seriesObj.graph.nodeScaleRatio1)" @blur='sliderInpGet(seriesObj.graph.nodeScaleRatio1, "seriesObj.graph.nodeScaleRatio", "series."+seriesIndex+".nodeScaleRatio", 0, 1, 0.1, "rem", "number")'></el-input>
+				</div>
+				<em></em>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonWordCloud" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">中心横坐标</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.wordCloud.centerX" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.wordCloud.centerX, "seriesObj.wordCloud.centerX", "series."+seriesIndex+".center", "%", "array", 0, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.wordCloud.centerX1" :spellcheck="false" @focus="inputColor(seriesObj.wordCloud.centerX1)" @blur='sliderInpGet(seriesObj.wordCloud.centerX1, "seriesObj.wordCloud.centerX", "series."+seriesIndex+".center", 0, 100, 1, "%", "array", 0, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">中心纵坐标</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.wordCloud.centerY" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.wordCloud.centerY, "seriesObj.wordCloud.centerY", "series."+seriesIndex+".center", "%", "array", 1, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.wordCloud.centerY1" :spellcheck="false" @focus="inputColor(seriesObj.wordCloud.centerY1)" @blur='sliderInpGet(seriesObj.wordCloud.centerY1, "seriesObj.wordCloud.centerY", "series."+seriesIndex+".center", 0, 100, 1, "%", "array", 1, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">宽度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.wordCloud.sizeX" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.wordCloud.sizeX, "seriesObj.wordCloud.sizeX", "series."+seriesIndex+".size", "%", "array", 0, "size")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.wordCloud.sizeX1" :spellcheck="false" @focus="inputColor(seriesObj.wordCloud.sizeX1)" @blur='sliderInpGet(seriesObj.wordCloud.sizeX1, "seriesObj.wordCloud.size", "series."+seriesIndex+".radius", 0, 100, 1, "%", "array", 0, "size")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">高度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.wordCloud.sizeY" :min="0" :max="100" :step="1" @change='sliderGet(seriesObj.wordCloud.sizeY, "seriesObj.wordCloud.sizeY", "series."+seriesIndex+".size", "%", "array", 1, "radius")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.wordCloud.sizeY1" :spellcheck="false" @focus="inputColor(seriesObj.wordCloud.sizeY1)" @blur='sliderInpGet(seriesObj.wordCloud.sizeY1, "seriesObj.wordCloud.sizeY", "series."+seriesIndex+".size", 0, 100, 1, "%", "array", 1, "radius")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">自动计算字体大小</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.wordCloud.enable" @change='switchGet(seriesObj.wordCloud.enable, "series."+seriesIndex+".autoSize.enable")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">自动计算最小字体</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.wordCloud.minSize" :min="12" :max="100" :step="1" @change='sliderGet(seriesObj.wordCloud.minSize, "seriesObj.wordCloud.minSize", "series."+seriesIndex+".autoSize.minSize", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.wordCloud.minSize1" :spellcheck="false" @focus="inputColor(seriesObj.wordCloud.minSize1)" @blur='sliderInpGet(seriesObj.wordCloud.minSize1, "seriesObj.wordCloud.minSize", "series."+seriesIndex+".autoSize.minSize", 12, 100, 1, "rem", "number")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonSilent" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">不触发鼠标事件</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.silent" @change='switchGet(seriesObj.silent, "series."+seriesIndex+".silent")'></el-switch>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonlegendHoverLink" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">鼠标移入图例高亮</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.legendHoverLink" @change='switchGet(seriesObj.legendHoverLink, "series."+seriesIndex+".legendHoverLink")'></el-switch>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonhoverAnimation" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">鼠标移入提示动画</div>
+				<div class="switch">
+					<el-switch v-model="seriesObj.hoverAnimation" @change='switchGet(seriesObj.hoverAnimation, "series."+seriesIndex+".hoverAnimation")'></el-switch>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonAxisIndex" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">X轴选择</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.xAxisIndex" :spellcheck="false" @blur='inputGet(seriesObj.xAxisIndex, "series."+seriesIndex+".xAxisIndex", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">Y轴选择</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.yAxisIndex" :spellcheck="false" @blur='inputGet(seriesObj.yAxisIndex, "series."+seriesIndex+".yAxisIndex", "number")'></el-input>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonZlevel" class="seriesCommon">
+		<ul>
+			<li>
+				<div class="attributeName">系列层级</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.zlevel" :spellcheck="false" @blur='inputGet(seriesObj.zlevel, "series."+seriesIndex+".zlevel", "number")'></el-input>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div id="seriesCommonSymbol" class="seriesCommon">
+		<ul>
+			<li class="textarea">
+				<div class="attributeName">标记图形大小</div>
+				<div class="input">
+					<el-input size="small" v-model="seriesObj.symbolSize" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.symbolSize, "series."+seriesIndex+".symbolSize", "string")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+			<li>
+				<div class="attributeName">标记图形旋转角度</div>
+				<div class="slider">
+					<el-slider v-model="seriesObj.symbolRotate" :min="0" :max="360" :step="1" @change='sliderGet(seriesObj.symbolRotate, "seriesObj.symbolRotate", "series."+seriesIndex+".symbolRotate", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="seriesObj.symbolRotate1" :spellcheck="false" @focus="inputColor(seriesObj.symbolRotate1)" @blur='sliderInpGet(seriesObj.symbolRotate1, "seriesObj.symbolRotate", "series."+seriesIndex+".symbolRotate", 0, 360, 1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<el-tabs style="margin-bottom:5px;" v-model="seriesObj.symbolType" type="card" @tab-click='tabsComCusFun(seriesObj.symbolType, "series."+seriesIndex+".symbolType", "series."+seriesIndex+".symbol", "string", "seriesObj.symbol")'>
+				<el-tab-pane name="common" label="标记图形常用">
+					<li>
+						<div class="attributeName">标记图形类型</div>
+						<div class="select">
+							<el-select size="small" v-model="seriesObj.symbol" placeholder="请选择" style="width:100%;" @change='selectGet(seriesObj.symbol, "series."+seriesIndex+".symbol", "string", "", "")'>
+								<el-option v-for="(item, a) in symbolList" :key="item.value" :label="item.name" :value="item.label"></el-option>
+							</el-select>
+						</div>
+					</li>
+				</el-tab-pane>
+				<el-tab-pane name="custom" label="标记图形自定义">
+					<li class="textarea">
+						<div class="attributeName">标记图形类型</div>
+						<div class="input">
+							<el-input size="small" v-model="seriesObj.symbol" type="textarea" :rows="3" :spellcheck="false" @blur='inputGet(seriesObj.symbol, "series."+seriesIndex+".symbol", "string")'></el-input>	
+						</div>
+					</li>
+				</el-tab-pane>
+			</el-tabs>
+		</ul>
+	</div>
+</body>
+</htnl>

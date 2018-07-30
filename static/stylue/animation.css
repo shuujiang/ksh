@@ -1,0 +1,364 @@
+@-moz-keyframes animate {
+  50% {
+    transform: scaleY(0);
+  }
+}
+@-webkit-keyframes animate {
+  50% {
+    transform: scaleY(0);
+  }
+}
+@-o-keyframes animate {
+  50% {
+    transform: scaleY(0);
+  }
+}
+@keyframes animate {
+  50% {
+    transform: scaleY(0);
+  }
+}
+@-moz-keyframes show {
+  0% {
+    top: 100%;
+  }
+  20% {
+    top: 80%;
+  }
+  40% {
+    top: 60%;
+  }
+  60% {
+    top: 40%;
+  }
+  80% {
+    top: 20%;
+  }
+  100% {
+    top: 0;
+  }
+}
+@-webkit-keyframes show {
+  0% {
+    top: 100%;
+  }
+  20% {
+    top: 80%;
+  }
+  40% {
+    top: 60%;
+  }
+  60% {
+    top: 40%;
+  }
+  80% {
+    top: 20%;
+  }
+  100% {
+    top: 0;
+  }
+}
+@-o-keyframes show {
+  0% {
+    top: 100%;
+  }
+  20% {
+    top: 80%;
+  }
+  40% {
+    top: 60%;
+  }
+  60% {
+    top: 40%;
+  }
+  80% {
+    top: 20%;
+  }
+  100% {
+    top: 0;
+  }
+}
+@keyframes show {
+  0% {
+    top: 100%;
+  }
+  20% {
+    top: 80%;
+  }
+  40% {
+    top: 60%;
+  }
+  60% {
+    top: 40%;
+  }
+  80% {
+    top: 20%;
+  }
+  100% {
+    top: 0;
+  }
+}
+@-moz-keyframes hide {
+  0% {
+    top: 0;
+  }
+  20% {
+    top: -20%;
+  }
+  40% {
+    top: -40%;
+  }
+  60% {
+    top: -60%;
+  }
+  80% {
+    top: -80%;
+  }
+  100% {
+    top: -100%;
+  }
+}
+@-webkit-keyframes hide {
+  0% {
+    top: 0;
+  }
+  20% {
+    top: -20%;
+  }
+  40% {
+    top: -40%;
+  }
+  60% {
+    top: -60%;
+  }
+  80% {
+    top: -80%;
+  }
+  100% {
+    top: -100%;
+  }
+}
+@-o-keyframes hide {
+  0% {
+    top: 0;
+  }
+  20% {
+    top: -20%;
+  }
+  40% {
+    top: -40%;
+  }
+  60% {
+    top: -60%;
+  }
+  80% {
+    top: -80%;
+  }
+  100% {
+    top: -100%;
+  }
+}
+@keyframes hide {
+  0% {
+    top: 0;
+  }
+  20% {
+    top: -20%;
+  }
+  40% {
+    top: -40%;
+  }
+  60% {
+    top: -60%;
+  }
+  80% {
+    top: -80%;
+  }
+  100% {
+    top: -100%;
+  }
+}
+@-moz-keyframes shujuSelectShow {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.4;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes shujuSelectShow {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.4;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes shujuSelectShow {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.4;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes shujuSelectShow {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.4;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes marquee {
+  0% {
+    left: 100%;
+    transform: translateX(0);
+  }
+  100% {
+    left: 0;
+    transform: translateX(-100%);
+  }
+}
+@-webkit-keyframes marquee {
+  0% {
+    left: 100%;
+    transform: translateX(0);
+  }
+  100% {
+    left: 0;
+    transform: translateX(-100%);
+  }
+}
+@-o-keyframes marquee {
+  0% {
+    left: 100%;
+    transform: translateX(0);
+  }
+  100% {
+    left: 0;
+    transform: translateX(-100%);
+  }
+}
+@keyframes marquee {
+  0% {
+    left: 100%;
+    transform: translateX(0);
+  }
+  100% {
+    left: 0;
+    transform: translateX(-100%);
+  }
+}
+@-moz-keyframes flipTop {
+  0% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(-90deg);
+  }
+}
+@-webkit-keyframes flipTop {
+  0% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(-90deg);
+  }
+}
+@-o-keyframes flipTop {
+  0% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(-90deg);
+  }
+}
+@keyframes flipTop {
+  0% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(-90deg);
+  }
+}
+@-moz-keyframes flipBottom {
+  0% {
+    transform: perspective(400px) rotateX(90deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+}
+@-webkit-keyframes flipBottom {
+  0% {
+    transform: perspective(400px) rotateX(90deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+}
+@-o-keyframes flipBottom {
+  0% {
+    transform: perspective(400px) rotateX(90deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+}
+@keyframes flipBottom {
+  0% {
+    transform: perspective(400px) rotateX(90deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+}

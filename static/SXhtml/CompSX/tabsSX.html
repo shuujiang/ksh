@@ -1,0 +1,271 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul class="setting" id="tabsattr">
+		<li>
+			<div class="attributeName">tabs元素编辑</div>
+			<div class="switch">
+				<el-button size="small" type="primary" @click="tabsClick()">内容编辑</el-button>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">tab页增减</div>
+			<div class="switch">
+				<el-button size="small" type="primary" @click="tabsListAdd()">添加</el-button>
+				<el-button size="small" type="primary" @click="tabsListRemove()">减少</el-button>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">tab页选择</div>
+			<div class="select">
+				<el-select size="small" v-model="tabsObj.tabIndex" placeholder="请选择" style="width:100%;" @change='tabSelectGet(tabsObj.tabIndex, "tabIndex")'>
+					<el-option v-for="(item, i) in tabsList" :key="i" :label="item.name" :value="i"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">tab页导航显示</div>
+			<div class="switch">
+				<el-switch v-model="tabsObj.tabShow" on-text="yes" off-text="no" @change='switchGet(tabsObj.tabShow, "tabShow")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">tab页导航名称</div>
+			<div class="select">
+				<el-input size="small" v-model="tabsObj.tabName" @blur='inputGet(tabsObj.tabName, "tabsList."+tabsObj.tabIndex+".name")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">切换时间</div>
+			<div class="slider">
+				<el-slider v-model="tabsObj.time" :min="0" :max="50" :step="0.1" @change='sliderGet(tabsObj.time, "tabsObj.time", "time")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tabsObj.time1" :spellcheck="false" @focus="inputColor(tabsObj.time1)" @blur='sliderInpGet(time1, "tabsObj.time", "time", 0, 50, 0.1)'></el-input>
+			</div>
+			<em>s</em>
+		</li>
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="tabsObj.width" @focus="inputColor(tabsObj.width)" @blur='inputNumGet(tabsObj.width, "tabsObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="tabsObj.height" @focus="inputColor(tabsObj.height)" @blur='inputNumGet(tabsObj.height, "tabsObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="tabsObj.left" @focus="inputColor(tabsObj.left)" @blur='inputNumGet(tabsObj.left, "tabsObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="tabsObj.top" @focus="inputColor(tabsObj.top)" @blur='inputNumGet(tabsObj.top, "tabsObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<el-collapse v-model="tabsObj.select" style="margin-bottom: 5px;" accordion @change='selectGet(tabsObj.select, "select")'>
+			<el-collapse-item title="未选中tab页样式" name="unselected">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="tabsObj.unselected.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(tabsObj.unselected.fontFamily, "unselected.fontFamily")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="tabsObj.unselected.color" show-alpha @change='colorGet(tabsObj.unselected.color, "unselected.color")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="tabsObj.unselected.color" :spellcheck="false" @focus="inputColor(tabsObj.color)" @blur='inputColorGet(tabsObj.unselected.color, "tabsObj.unselected.color", "unselected.color")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="tabsObj.unselected.backgroundColor" show-alpha @change='colorGet(tabsObj.unselected.backgroundColor, "unselected.backgroundColor")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="tabsObj.unselected.backgroundColor" :spellcheck="false" @focus="inputColor(tabsObj.unselected.backgroundColor)" @blur='inputColorGet(tabsObj.unselected.backgroundColor, "tabsObj.unselected.backgroundColor", "unselected.backgroundColor")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="tabsObj.unselected.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(tabsObj.unselected.fontSize, "tabsObj.unselected.fontSize", "unselected.fontSize")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="tabsObj.unselected.fontSize1" :spellcheck="false" @focus="inputColor(tabsObj.unselected.fontSize1)" @blur='sliderInpGet(tabsObj.unselected.fontSize1, "tabsObj.funselected.fontSize", "unselected.fontSize", 12, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="tabsObj.unselected.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(tabsObj.unselected.letterSpacing, "tabsObj.unselected.letterSpacing", "unselected.letterSpacing")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="tabsObj.unselected.letterSpacing1" :spellcheck="false" @focus="inputColor(tabsObj.unselected.letterSpacing1)" @blur='sliderInpGet(tabsObj.unselected.letterSpacing1, "tabsObj.lunselected.letterSpacing", "unselected.letterSpacing", 0, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="tabsObj.unselected.fontStyle" @change='radioGet(tabsObj.unselected.fontStyle, "unselected.fontStyle")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="tabsObj.unselected.fontWeight" @change='radioGet(tabsObj.unselected.fontWeight, "unselected.fontWeight")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="选中tab页样式" name="selected">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="tabsObj.selected.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(tabsObj.selected.fontFamily, "selected.fontFamily")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="tabsObj.selected.color" show-alpha @change='colorGet(tabsObj.selected.color, "selected.color")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="tabsObj.selected.color" :spellcheck="false" @focus="inputColor(tabsObj.color)" @blur='inputColorGet(tabsObj.selected.color, "tabsObj.selected.color", "selected.color")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">背景颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="tabsObj.selected.backgroundColor" show-alpha @change='colorGet(tabsObj.selected.backgroundColor, "selected.backgroundColor")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="tabsObj.selected.backgroundColor" :spellcheck="false" @focus="inputColor(tabsObj.selected.backgroundColor)" @blur='inputColorGet(tabsObj.selected.backgroundColor, "tabsObj.selected.backgroundColor", "selected.backgroundColor")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="tabsObj.selected.borderColor" show-alpha @change='colorGet(tabsObj.selected.borderColor, "selected.borderColor")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="tabsObj.selected.borderColor" :spellcheck="false" @focus="inputColor(tabsObj.selected.borderColor)" @blur='inputColorGet(tabsObj.selected.borderColor, "tabsObj.selected.borderColor", "selected.borderColor")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">边框粗细</div>
+					<div class="slider">
+						<el-slider v-model="tabsObj.selected.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(tabsObj.selected.borderWidth, "tabsObj.selected.borderWidth", "selected.borderWidth")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="tabsObj.selected.borderWidth1" :spellcheck="false" @focus="inputColor(tabsObj.selected.borderWidth1)" @blur='sliderInpGet(tabsObj.selected.borderWidth1, "tabsObj.selected.borderWidth", "selected.borderWidth", 0, 20, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="tabsObj.selected.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(tabsObj.selected.fontSize, "tabsObj.selected.fontSize", "selected.fontSize")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="tabsObj.selected.fontSize1" :spellcheck="false" @focus="inputColor(tabsObj.selected.fontSize1)" @blur='sliderInpGet(tabsObj.selected.fontSize1, "tabsObj.selected.fontSize", "selected.fontSize", 12, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="tabsObj.selected.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(tabsObj.selected.letterSpacing, "tabsObj.selected.letterSpacing", "selected.letterSpacing")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="tabsObj.selected.letterSpacing1" :spellcheck="false" @focus="inputColor(tabsObj.selected.letterSpacing1)" @blur='sliderInpGet(tabsObj.selected.letterSpacing1, "tabsObj.selected.letterSpacing", "selected.letterSpacing", 0, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="tabsObj.selected.fontStyle" @change='radioGet(tabsObj.selected.fontStyle, "selected.fontStyle")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="tabsObj.selected.fontWeight" @change='radioGet(tabsObj.selected.fontWeight, "selected.fontWeight")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="tabsObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(tabsObj.borderWidth, "tabsObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tabsObj.borderWidth1" :spellcheck="false" @focus="inputColor(tabsObj.borderWidth1)" @blur='sliderInpGet(tabsObj.borderWidth1, "tabsObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="tabsObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(tabsObj.borderRadius, "tabsObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="tabsObj.borderRadius1" :spellcheck="false" @focus="inputColor(tabsObj.borderRadius1)" @blur='sliderInpGet(tabsObj.borderRadius1, "tabsObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="tabsObj.borderColor" show-alpha @change='colorGet(tabsObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="tabsObj.borderColor" :spellcheck="false" @focus="inputColor(tabsObj.borderColor)" @blur='inputColorGet(tabsObj.borderColor,"tabsObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="tabsObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(tabsObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

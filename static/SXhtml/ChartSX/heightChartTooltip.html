@@ -1,0 +1,134 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <ul id="HchartsTooltip">
+        <li>
+            <div class="attributeName">提示框显示</div>
+            <div class="switch">
+                <el-switch v-model="HtooltipObj.enabled" @change='switchGet(HtooltipObj.enabled, "tooltip.enabled")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">启用动画</div>
+            <div class="switch">
+                <el-switch v-model="HtooltipObj.animation" @change='switchGet(HtooltipObj.animation, "tooltip.animation")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">跟随鼠标</div>
+            <div class="switch">
+                <el-switch v-model="HtooltipObj.followPointer" @change='switchGet(HtooltipObj.followPointer, "tooltip.followPointer")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">跟随鼠标</div>
+            <div class="switch">
+                <el-switch v-model="HtooltipObj.followPointer" @change='switchGet(HtooltipObj.followPointer, "tooltip.followPointer")'></el-switch>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">边距</div>
+            <div class="input">
+                <el-input v-model="HtooltipObj.padding" size="small" @blur='inputGet(HtooltipObj.padding, "tooltip.padding", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">保留小数位数</div>
+            <div class="input">
+                <el-input v-model="HtooltipObj.valueDecimals" size="small" @blur='inputGet(HtooltipObj.valueDecimals, "tooltip.valueDecimals", "number")'></el-input>
+            </div>
+        </li>
+        <el-collapse v-model="HtooltipObj.Tname" accordion @change='tabClickGet(HtooltipObj.Tname, "tooltip.Tname")'>
+            <el-collapse-item title="文本样式" name="textStyle">
+                <li>
+                    <div class="attributeName">文本字体</div>
+                    <div class="select">
+                        <el-select size="small" v-model="HtooltipObj.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(HtooltipObj.fontFamily, "tooltip.style.fontFamily", "string")'>
+                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li>
+                    <div class="attributeName">文本颜色</div>
+                    <div class="color">
+                        <el-color-picker size="small" v-model="HtooltipObj.color" show-alpha @change='colorGet(HtooltipObj.color, "HtooltipObj.color", "tooltip.style.color", "string")'></el-color-picker>
+                    </div>
+                    <div class="colorInput">
+                        <el-input size="small" v-model="HtooltipObj.color" :spellcheck="false" @focus="inputColor(HtooltipObj.color)" @blur='inputColorGet(HtooltipObj.color,"HtooltipObj.color", "tooltip.style.color", "string")'></el-input>
+                    </div>
+                </li>
+                <li>
+                    <div class="attributeName">文本大小</div>
+                    <div class="slider">
+                        <el-slider v-model="HtooltipObj.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(HtooltipObj.fontSize, "HtooltipObj.fontSize", "tooltip.style.fontSize", "rem", "number")'></el-slider>
+                    </div>
+                    <div class="sliderInput">
+                        <el-input size="small" v-model="HtooltipObj.fontSize1" :spellcheck="false" @focus="inputColor(HtooltipObj.fontSize1)" @blur='sliderInpGet(HtooltipObj.fontSize, "HtooltipObj.fontSize", "tooltip.style.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+                    </div>
+                    <em>px</em>
+                </li>
+                <li>
+                    <div class="attributeName">文本风格</div>
+                    <div class="radioButton">
+                        <el-radio-group size="small" v-model="HtooltipObj.fontSytle" @change='radioGet(HtooltipObj.fontSytle, "tooltip.style.fontStyle", "string")'>
+                            <el-radio-button label="normal">普通</el-radio-button>
+                            <el-radio-button label="italic">斜体</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                </li>
+                <li>
+                    <div class="attributeName">文本粗细</div>
+                    <div class="radioButton">
+                        <el-radio-group size="small" v-model="HtooltipObj.fontWeight" @change='radioGet(HtooltipObj.fontWeight, "tooltip.style.fontWeight", "string")'>
+                            <el-radio-button label="normal">普通</el-radio-button>
+                            <el-radio-button label="bold">加粗</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                </li>
+            </el-collapse-item>
+        </el-collapse>
+        <li>
+            <div class="attributeName">背景颜色</div>
+            <div class="color">
+                <el-color-picker v-model="HtooltipObj.backgroundColor" size="small" show-alpha @change='colorGet(HtooltipObj.backgroundColor, "HtooltipObj.backgroundColor", "tooltip.backgroundColor", "string")'></el-color-picker>
+            </div>
+            <div class="colorInput">
+                <el-input v-model="HtooltipObj.backgroundColor" size="small" :spellcheck="false" @focus="inputColor(HtooltipObj.backgroundColor)" @blur='inputColorGet(HtooltipObj.backgroundColor,"HtooltipObj.backgroundColor", "tooltip.backgroundColor", "string")'></el-input>
+            </div>
+        </li>
+        <li>
+            <div class="attributeName">边框粗细</div>
+            <div class="slider">
+                <el-slider v-model="HtooltipObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(HtooltipObj.borderWidth, "HtooltipObj.borderWidth", "tooltip.borderWidth", "rem", "number")'></el-slider>
+            </div>
+            <div class="sliderInput">
+                <el-input v-model="HtooltipObj.borderWidth1" size="small" :spellcheck="false" @focus="inputColor(HtooltipObj.borderWidth1)" @blur='sliderInpGet(HtooltipObj.borderWidth1, "HtooltipObj.borderWidth", "tooltip.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">边框圆角</div>
+            <div class="slider">
+                <el-slider v-model="HtooltipObj.borderRadius" :min="0" input-size="small" :max="100" :step="1" @change='sliderGet(HtooltipObj.borderRadius, "HtooltipObj.borderRadius", "tooltip.borderRadius", "rem", "number")'></el-slider>
+            </div>
+            <div class="sliderInput">
+                <el-input v-model="HtooltipObj.borderRadius1" size="small" :spellcheck="false" @focus="inputColor(HtooltipObj.borderRadius1)" @blur='sliderInpGet(HtooltipObj.borderRadius1, "HtooltipObj.borderRadius", "tooltip.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+            </div>
+            <em>px</em>
+        </li>
+        <li>
+            <div class="attributeName">边框颜色</div>
+            <div class="color">
+                <el-color-picker v-model="HtooltipObj.borderColor" size="small" show-alpha @change='colorGet(HtooltipObj.borderColor, "HtooltipObj.borderColor", "tooltip.borderColor", "string")'></el-color-picker>
+            </div>
+            <div class="colorInput">
+                <el-input v-model="HtooltipObj.borderColor" size="small" :spellcheck="false" @focus="inputColor(HtooltipObj.borderColor)" @blur='inputColorGet(HtooltipObj.borderColor,"HtooltipObj.borderColor", "tooltip.borderColor", "string")'></el-input>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>

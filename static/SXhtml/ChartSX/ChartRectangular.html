@@ -1,0 +1,1565 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div>
+		<div class="TabsAxis TabsName">
+			<span class="TabsNameText rectangular">X轴</span>
+			<div id="xAxis" class="TabsBox TabsBox1">
+				<ul>
+					<div id="xAxis1" class="aXisOne">
+						<li>
+							<div class="attributeName">轴选择</div>
+							<div class="select">
+								<el-select size="small" v-model="xAxisIndex" placeholder="请选择" style="width:100%;" @change='selectGet(xAxisIndex, "xAxisIndex", "number", "", "Axis")'>
+									<el-option v-for="(item, a) in xAxisObj.xAxisList" :key="item.value" :label="item.name" :value="a"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">X轴显示</div>
+							<div class="switch">
+								<el-switch v-model="xAxisObj.xAxisShow" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisShow, "xAxis."+xAxisIndex+".show")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">X轴位置</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="xAxisObj.xAxisPosition" @change='radioGet(xAxisObj.xAxisPosition, "xAxis."+xAxisIndex+".position", "string")'>
+									<el-radio-button label="top">居上</el-radio-button>
+									<el-radio-button label="bottom">居下</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">X轴反向</div>
+							<div class="switch">
+								<el-switch v-model="xAxisObj.xAxisInverse" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisInverse, "xAxis."+xAxisIndex+".inverse")'></el-switch>
+							</div>
+						</li>
+						<li class="xAxisCategory">
+							<div class="attributeName">X轴留白</div>
+							<div class="switch">
+								<el-switch v-model="xAxisObj.xAxisBoundaryGap" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisBoundaryGap, "xAxis."+xAxisIndex+".boundaryGap")'></el-switch>
+							</div>
+						</li>
+						<li class="xAxisScale">
+							<div class="attributeName">X轴脱离 0</div>
+							<div class="switch">
+								<el-switch v-model="xAxisObj.xAxisScalee" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisScalee, "xAxis."+xAxisIndex+".scale")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">X轴名称</div>
+							<div class="input">
+								<el-input size="small" v-model="xAxisObj.xAxisName" @blur='inputGet(xAxisObj.xAxisName, "xAxis."+xAxisIndex+".name", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">X轴名称位置</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="xAxisObj.xAxisNameLocation" @change='radioGet(xAxisObj.xAxisNameLocation, "xAxis."+xAxisIndex+".nameLocation", "string")'>
+									<el-radio-button label="start">起点</el-radio-button>
+									<el-radio-button label="middle">中间</el-radio-button>
+									<el-radio-button label="end">终点</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">轴名称与轴线距离</div>
+							<div class="slider">
+								<el-slider v-model="xAxisObj.xAxisNameGap" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisNameGap, "xAxisObj.xAxisNameGap", "xAxis."+xAxisIndex+".nameGap", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="xAxisObj.xAxisNameGap1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameGap1)" @blur='sliderInpGet(xAxisObj.xAxisNameGap1, "xAxisObj.xAxisNameGap", "xAxis."+xAxisIndex+".nameGap", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">X轴名字旋转角度</div>
+							<div class="slider">
+								<el-slider v-model="xAxisObj.xAxisNameRotate" :min="-90" :max="90" :step="1" @change='sliderGet(xAxisObj.xAxisNameRotate, "xAxisObj.xAxisNameRotate", "xAxis."+xAxisIndex+".nameRotate", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="xAxisObj.xAxisNameRotate1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameRotate1)" @blur='sliderInpGet(xAxisObj.xAxisNameRotate1, "xAxisObj.xAxisNameRotate", "xAxis."+xAxisIndex+".nameRotate", -90, 90, 1, "rem", "number")'></el-input>
+							</div>
+							<em>°</em>
+						</li>
+						<el-collapse v-model="xAxisObj.xAxisStyle" accordion @change='tabClickGet(xAxisObj.xAxisStyle, "xAxis."+xAxisIndex+".xAxisStyle")'>
+							<el-collapse-item title="X轴名称字体样式" name="xAxisNameTextStyle">
+								<li>
+									<div class="attributeName">文本字体</div>
+									<div class="select">
+										<el-select size="small" v-model="xAxisObj.xAxisNameTextStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(xAxisObj.xAxisNameTextStyleFontFamily, "xAxis."+xAxisIndex+".nameTextStyle.fontFamily", "string")'>
+											<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">文本颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisNameTextStyleColor" show-alpha @change='colorGet(xAxisObj.xAxisNameTextStyleColor, "xAxisObj.xAxisNameTextStyleColor", "xAxis."+xAxisIndex+".nameTextStyle.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleColor)" @blur='inputColorGet(xAxisObj.xAxisNameTextStyleColor,"xAxisObj.xAxisNameTextStyleColor", "xAxis."+xAxisIndex+".nameTextStyle.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisNameTextStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisNameTextStyleFontSize, "xAxisObj.xAxisNameTextStyleFontSize", "xAxis."+xAxisIndex+".nameTextStyle.fontSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleFontSize1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleFontSize1)" @blur='sliderInpGet(xAxisObj.xAxisNameTextStyleFontSize1, "xAxisObj.xAxisNameTextStyleFontSize", "xAxis."+xAxisIndex+".nameTextStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="xAxisObj.xAxisNameTextStyleFontSytle" @change='radioGet(xAxisObj.xAxisNameTextStyleFontSytle, "xAxis."+xAxisIndex+".nameTextStyle.fontStyle", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="italic">斜体</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="xAxisObj.xAxisNameTextStyleFontWeight" @change='radioGet(xAxisObj.xAxisNameTextStyleFontWeight, "xAxis."+xAxisIndex+".nameTextStyle.fontWeight", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="bold">加粗</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">背景颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisNameTextStyleBackgroundColor" show-alpha @change='colorGet(xAxisObj.xAxisNameTextStyleBackgroundColor, "xAxisObj.xAxisNameTextStyleBackgroundColor", "xAxis."+xAxisIndex+".nameTextStyle.backgroundColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleBackgroundColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleBackgroundColor)" @blur='inputColorGet(xAxisObj.xAxisNameTextStyleBackgroundColor,"xAxisObj.xAxisNameTextStyleBackgroundColor", "xAxis."+xAxisIndex+".nameTextStyle.backgroundColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">边框粗细</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisNameTextStyleBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(xAxisObj.xAxisNameTextStyleBorderWidth, "xAxisObj.xAxisNameTextStyleBorderWidth", "xAxis."+xAxisIndex+".nameTextStyle.borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleBorderWidth1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleBorderWidth1)" @blur='sliderInpGet(xAxisObj.xAxisNameTextStyleBorderWidth1, "xAxisObj.xAxisNameTextStyleBorderWidth", "xAxis."+xAxisIndex+".nameTextStyle.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框圆角</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisNameTextStyleBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisNameTextStyleBorderRadius, "xAxisObj.xAxisNameTextStyleBorderRadius", "xAxis."+xAxisIndex+".nameTextStyle.borderRadius", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleBorderRadius1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleBorderRadius1)" @blur='sliderInpGet(xAxisObj.xAxisNameTextStyleBorderRadius1, "xAxisObj.xAxisNameTextStyleBorderRadius", "xAxis."+xAxisIndex+".nameTextStyle.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisNameTextStyleBorderColor" show-alpha @change='colorGet(xAxisObj.xAxisNameTextStyleBorderColor, "xAxisObj.xAxisNameTextStyleBorderColor", "xAxis."+xAxisIndex+".nameTextStyle.borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleBorderColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleBorderColor)" @blur='inputColorGet(xAxisObj.xAxisNameTextStyleBorderColor, "xAxisObj.xAxisNameTextStyleBorderColor", "xAxis."+xAxisIndex+".nameTextStyle.borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisNameTextStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisNameTextStyleShadowBlur, "xAxisObj.xAxisNameTextStyleShadowBlur", "xAxis."+xAxisIndex+".nameTextStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleShadowBlur1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleShadowBlur1)" @blur='sliderInpGet(xAxisObj.xAxisNameTextStyleShadowBlur1, "xAxisObj.xAxisNameTextStyleShadowBlur", "xAxis."+xAxisIndex+".nameTextStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisNameTextStyleShadowColor" show-alpha @change='colorGet(xAxisObj.xAxisNameTextStyleShadowColor, "xAxisObj.xAxisNameTextStyleShadowColor", "xAxis."+xAxisIndex+".nameTextStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleShadowColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleShadowColor)" @blur='inputColorGet(xAxisObj.xAxisNameTextStyleShadowColor,"xAxisObj.xAxisNameTextStyleShadowColor", "xAxis."+xAxisIndex+".nameTextStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisNameTextStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisNameTextStyleShadowOffsetX, "xAxisObj.xAxisNameTextStyleShadowOffsetX", "xAxis."+xAxisIndex+".nameTextStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleShadowOffsetX1)" @blur='sliderInpGet(xAxisObj.xAxisNameTextStyleShadowOffsetX1, "xAxisObj.xAxisNameTextStyleShadowOffsetX", "xAxis."+xAxisIndex+".nameTextStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisNameTextStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisNameTextStyleShadowOffsetY, "xAxisObj.xAxisNameTextStyleShadowOffsetY", "xAxis."+xAxisIndex+".nameTextStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisNameTextStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisNameTextStyleShadowOffsetY1)" @blur='sliderInpGet(xAxisObj.xAxisNameTextStyleShadowOffsetY1, "xAxisObj.xAxisNameTextStyleShadowOffsetY", "xAxis."+xAxisIndex+".nameTextStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+						</el-collapse>
+					</div>
+					<div id="xAxis2" class="aXisTwo">
+						<el-collapse v-model="xAxisObj.xAxisStyle" accordion style="margin-bottom:5px;" @change='tabClickGet(xAxisObj.xAxisStyle, "xAxis."+xAxisIndex+".xAxisStyle")'>
+							<el-collapse-item title="X轴轴线设置" name="xAxisLine">
+								<li>
+									<div class="attributeName">轴线显示</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisLineShow" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisLineShow, "xAxis."+xAxisIndex+".axisLine.show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">轴线颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisLineStyleColor" show-alpha @change='colorGet(xAxisObj.xAxisLineStyleColor, "xAxisObj.xAxisLineStyleColor", "xAxis."+xAxisIndex+".axisLine.lineStyle.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLineStyleColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLineStyleColor)" @blur='inputColorGet(xAxisObj.xAxisLineStyleColor,"xAxisObj.xAxisLineStyleColor", "xAxis."+xAxisIndex+".axisLine.lineStyle.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">轴线粗细</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLineStyleWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(xAxisObj.xAxisLineStyleWidth, "xAxisObj.xAxisLineStyleWidth", "xAxis."+xAxisIndex+".axisLine.lineStyle.width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLineStyleWidth1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLineStyleWidth1)" @blur='sliderInpGet(xAxisObj.xAxisLineStyleWidth1, "xAxisObj.xAxisLineStyleWidth", "xAxis."+xAxisIndex+".axisLine.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">轴线类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="xAxisObj.xAxisLineStyleType" @change='radioGet(xAxisObj.xAxisLineStyleType, "xAxis."+xAxisIndex+".axisLine.lineStyle.type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLineStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLineStyleShadowBlur, "xAxisObj.xAxisLineStyleShadowBlur", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLineStyleShadowBlur1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLineStyleShadowBlur1)" @blur='sliderInpGet(xAxisObj.xAxisLineStyleShadowBlur1, "xAxisObj.xAxisLineStyleShadowBlur", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisLineStyleShadowColor" show-alpha @change='colorGet(xAxisObj.xAxisLineStyleShadowColor, "xAxisObj.xAxisLineStyleShadowColor", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLineStyleShadowColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLineStyleShadowColor)" @blur='inputColorGet(xAxisObj.xAxisLineStyleShadowColor,"xAxisObj.xAxisLineStyleShadowColor", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLineStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLineStyleShadowOffsetX, "xAxisObj.xAxisLineStyleShadowOffsetX", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLineStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLineStyleShadowOffsetX1)" @blur='sliderInpGet(xAxisObj.xAxisLineStyleShadowOffsetX1, "xAxisObj.xAxisLineStyleShadowOffsetX", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLineStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLineStyleShadowOffsetY, "xAxisObj.xAxisLineStyleShadowOffsetY", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLineStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLineStyleShadowOffsetY1)" @blur='sliderInpGet(xAxisObj.xAxisLineStyleShadowOffsetY1, "xAxisObj.xAxisLineStyleShadowOffsetY", "xAxis."+xAxisIndex+".axisLine.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="X轴刻度线设置" name="xAxisTick">
+								<li>
+									<div class="attributeName">刻度线显示</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisTickShow" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisTickShow, "xAxis."+xAxisIndex+".axisTick.show")'></el-switch>
+									</div>
+								</li>
+								<li class="xAxisCategory" title="X轴有留白时有效">
+									<!-- <el-popover ref="popover4" placement="left-start"  title="温馨提醒" width="150" trigger="hover" content="X轴有留白时有效"></el-popover> -->
+									<div class="attributeName">刻度线和标签对齐</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisTickAlignWithLabel" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisTickAlignWithLabel, "xAxis."+xAxisIndex+".axisTick.alignWithLabel")'></el-switch>
+									</div>
+								</li>
+								<li  class="xAxisCategory" title="auto会采用标签不重叠的策略间隔显示标签。可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。">
+									<!-- <el-popover ref="popover3" placement="left-start"  title="温馨提醒" width="150" trigger="hover" content="auto会采用标签不重叠的策略间隔显示标签。可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。"></el-popover> -->
+									<div class="attributeName">刻度线显示间隔</div>
+									<div class="input">
+										<el-input size="small" v-model="xAxisObj.xAxisTickInterval" @blur='inputGet(xAxisObj.xAxisTickInterval, "xAxis."+xAxisIndex+".axisTick.interval", "number")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">刻度线是否朝内</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisTickInside" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisTickInside, "xAxis."+xAxisIndex+".axisTick.inside")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">刻度线长度</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisTickStyleLength" :min="1" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisTickStyleLength, "xAxisObj.xAxisTickStyleLength", "xAxis."+xAxisIndex+".axisTick.length", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisTickStyleLength1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisTickStyleLength1)" @blur='sliderInpGet(xAxisObj.xAxisTickStyleLength1, "xAxisObj.xAxisTickStyleLength", "xAxis."+xAxisIndex+".axisTick.length", 1, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">刻度线粗细</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisTickStyleWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(xAxisObj.xAxisTickStyleWidth, "xAxisObj.xAxisTickStyleWidth", "xAxis."+xAxisIndex+".axisTick.lineStyle.width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisTickStyleWidth1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisTickStyleWidth1)" @blur='sliderInpGet(xAxisObj.xAxisTickStyleWidth1, "xAxisObj.xAxisTickStyleWidth", "xAxis."+xAxisIndex+".axisTick.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">刻度线颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisTickStyleColor" show-alpha @change='colorGet(xAxisObj.xAxisTickStyleColor, "xAxisObj.xAxisTickStyleColor", "xAxis."+xAxisIndex+".axisTick.lineStyle.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisTickStyleColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisTickStyleColor)" @blur='inputColorGet(xAxisObj.xAxisTickStyleColor,"xAxisObj.xAxisTickStyleColor", "xAxis."+xAxisIndex+".axisTick.lineStyle.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">刻度线类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="xAxisObj.xAxisTickStyleType" @change='radioGet(xAxisObj.xAxisTickStyleType, "xAxis."+xAxisIndex+".axisTick.lineStyle.type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisTickStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisTickStyleShadowBlur, "xAxisObj.xAxisTickStyleShadowBlur", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisTickStyleShadowBlur1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisTickStyleShadowBlur1)" @blur='sliderInpGet(xAxisObj.xAxisTickStyleShadowBlur1, "xAxisObj.xAxisTickStyleShadowBlur", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisTickStyleShadowColor" show-alpha @change='colorGet(xAxisObj.xAxisTickStyleShadowColor, "xAxisObj.xAxisTickStyleShadowColor", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisTickStyleShadowColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisTickStyleShadowColor)" @blur='inputColorGet(xAxisObj.xAxisTickStyleShadowColor,"xAxisObj.xAxisTickStyleShadowColor", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisTickStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisTickStyleShadowOffsetX, "xAxisObj.xAxisTickStyleShadowOffsetX", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisTickStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisTickStyleShadowOffsetX1)" @blur='sliderInpGet(xAxisObj.xAxisTickStyleShadowOffsetX1, "xAxisObj.xAxisTickStyleShadowOffsetX", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisTickStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisTickStyleShadowOffsetY, "xAxisObj.xAxisTickStyleShadowOffsetY", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisTickStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisTickStyleShadowOffsetY1)" @blur='sliderInpGet(xAxisObj.xAxisTickStyleShadowOffsetY1, "xAxisObj.xAxisTickStyleShadowOffsetY", "xAxis."+xAxisIndex+".axisTick.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="X轴标签设置" name="xAxisLabel">
+								<li>
+									<div class="attributeName">标签显示</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisLabelShow" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisLabelShow, "xAxis."+xAxisIndex+".axisLabel.show")'></el-switch>
+									</div>
+								</li>
+								<li  class="xAxisCategory">
+									<!-- <el-popover ref="popover3" placement="left-start"  title="温馨提醒" width="150" trigger="hover" content="auto会采用标签不重叠的策略间隔显示标签。可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。"></el-popover> -->
+									<div class="attributeName">标签显示间隔</div>
+									<div class="input">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelInterval" @blur='inputGet(xAxisObj.xAxisLabelInterval, "xAxis."+xAxisIndex+".axisLabel.interval", "number")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签是否朝内</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisLabelInside" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisLabelInside, "xAxis."+xAxisIndex+".axisLabel.inside")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">X轴标签旋转角度</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelRotate" :min="-90" :max="90" :step="1" @change='sliderGet(xAxisObj.xAxisLabelRotate, "xAxisObj.xAxisLabelRotate", "xAxis."+xAxisIndex+".axisLabel.rotate", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelRotate1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelRotate1)" @blur='sliderInpGet(xAxisObj.xAxisLabelRotate1, "xAxisObj.xAxisLabelRotate", "xAxis."+xAxisIndex+".axisLabel.rotate", -90, 90, 1, "rem", "number")'></el-input>
+									</div>
+									<em>°</em>
+								</li>
+								<li>
+									<div class="attributeName">标签与轴线距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelMargin" :min="1" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLabelMargin, "xAxisObj.xAxisLabelMargin", "xAxis."+xAxisIndex+".axisLabel.margin", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelMargin1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelMargin1)" @blur='sliderInpGet(xAxisObj.xAxisLabelMargin1, "xAxisObj.xAxisLabelMargin", "xAxis."+xAxisIndex+".axisLabel.margin", 1, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">文本字体</div>
+									<div class="select">
+										<el-select size="small" v-model="xAxisObj.xAxisLabelFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(xAxisObj.xAxisLabelFontFamily, "xAxis."+xAxisIndex+".axisLabel.fontFamily", "string")'>
+											<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">文本颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisLabelColor" show-alpha @change='colorGet(xAxisObj.xAxisLabelColor, "xAxisObj.xAxisLabelColor", "xAxis."+xAxisIndex+".axisLabel.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelColor)" @blur='inputColorGet(xAxisObj.xAxisLabelColor,"xAxisObj.xAxisLabelColor", "xAxis."+xAxisIndex+".axisLabel.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelFontSize" :min="12" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLabelFontSize, "xAxisObj.xAxisLabelFontSize", "xAxis."+xAxisIndex+".axisLabel.fontSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelFontSize1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelFontSize1)" @blur='sliderInpGet(xAxisObj.xAxisLabelFontSize1, "xAxisObj.xAxisLabelFontSize", "xAxis."+xAxisIndex+".axisLabel.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="xAxisObj.xAxisLabelFontSytle" @change='radioGet(xAxisObj.xAxisLabelFontSytle, "xAxis."+xAxisIndex+".axisLabel.fontStyle", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="italic">斜体</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="xAxisObj.xAxisLabelFontWeight" @change='radioGet(xAxisObj.xAxisLabelFontWeight, "xAxis."+xAxisIndex+".axisLabel.fontWeight", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="bold">加粗</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">背景颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisLabelBackgroundColor" show-alpha @change='colorGet(xAxisObj.xAxisLabelBackgroundColor, "xAxisObj.xAxisLabelBackgroundColor", "xAxis."+xAxisIndex+".axisLabel.backgroundColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelBackgroundColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelBackgroundColor)" @blur='inputColorGet(xAxisObj.xAxisLabelBackgroundColor,"xAxisObj.xAxisLabelBackgroundColor", "xAxis."+xAxisIndex+".axisLabel.backgroundColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">边框粗细</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(xAxisObj.xAxisLabelBorderWidth, "xAxisObj.xAxisLabelBorderWidth", "xAxis."+xAxisIndex+".axisLabel.borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelBorderWidth1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelBorderWidth1)" @blur='sliderInpGet(xAxisObj.xAxisLabelBorderWidth1, "xAxisObj.xAxisLabelBorderWidth", "xAxis."+xAxisIndex+".axisLabel.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框圆角</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLabelBorderRadius, "xAxisObj.xAxisLabelBorderRadius", "xAxis."+xAxisIndex+".axisLabel.borderRadius", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelBorderRadius1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelBorderRadius1)" @blur='sliderInpGet(xAxisObj.xAxisLabelBorderRadius1, "xAxisObj.xAxisLabelBorderRadius", "xAxis."+xAxisIndex+".axisLabel.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisLabelBorderColor" show-alpha @change='colorGet(xAxisObj.xAxisLabelBorderColor, "xAxisObj.xAxisLabelBorderColor", "xAxis."+xAxisIndex+".axisLabel.borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelBorderColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelBorderColor)" @blur='inputColorGet(xAxisObj.xAxisLabelBorderColor,"xAxisObj.xAxisLabelBorderColor", "xAxis."+xAxisIndex+".axisLabel.borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLabelShadowBlur, "xAxisObj.xAxisLabelShadowBlur", "xAxis."+xAxisIndex+".axisLabel.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelShadowBlur1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelShadowBlur1)" @blur='sliderInpGet(xAxisObj.xAxisLabelShadowBlur1, "xAxisObj.xAxisLabelShadowBlur", "xAxis."+xAxisIndex+".axisLabel.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisLabelShadowColor" show-alpha @change='colorGet(xAxisObj.xAxisLabelShadowColor, "xAxisObj.xAxisLabelShadowColor", "xAxis."+xAxisIndex+".axisLabel.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelShadowColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelShadowColor)" @blur='inputColorGet(xAxisObj.xAxisLabelShadowColor,"xAxisObj.xAxisLabelShadowColor", "xAxis."+xAxisIndex+".axisLabel.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLabelShadowOffsetX, "xAxisObj.xAxisLabelShadowOffsetX", "xAxis."+xAxisIndex+".axisLabel.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelShadowOffsetX1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelShadowOffsetX1)" @blur='sliderInpGet(xAxisObj.xAxisLabelShadowOffsetX1, "xAxisObj.xAxisLabelShadowOffsetX", "xAxis."+xAxisIndex+".axisLabel.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisLabelShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisLabelShadowOffsetY, "xAxisObj.xAxisLabelShadowOffsetY", "xAxis."+xAxisIndex+".axisLabel.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisLabelShadowOffsetY1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisLabelShadowOffsetY1)" @blur='sliderInpGet(xAxisObj.xAxisLabelShadowOffsetY1, "xAxisObj.xAxisLabelShadowOffsetY", "xAxis."+xAxisIndex+".axisLabel.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="X轴隔线设置" name="xAxisSplitLine">
+								<li>
+									<div class="attributeName">隔线显示</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisSplitLineShow" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisSplitLineShow, "xAxis."+xAxisIndex+".splitLine.show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">隔线颜色</div>
+									<div class="addColor" @click='colorAdd("xAxisObj.xAxisSplitLineColorList", "xAxisSplitLineColor", "xAxis."+xAxisIndex+".splitLine.lineStyle.color", "array", "axisSplitLine")'>
+										<el-button size="small" type="primary">添加</el-button>
+									</div>
+								</li>
+								<div v-for="(item, i) in xAxisObj.xAxisSplitLineColorList" class="addColor" >
+									<li>
+										<div class="attributeName"></div>
+										<div class="color">
+											<el-color-picker size="small" v-model="item.color" show-alpha @change='colorGet(item.color, "xAxisSplitLineColor", "xAxis."+xAxisIndex+".splitLine.lineStyle.color", "array", i, "axisSplitLine")'></el-color-picker>
+										</div>
+										<div class="colorInput" id="color">
+											<el-input size="small" v-model="item.color" :spellcheck="false" @focus="inputColor(item.color)" @blur='inputColorGet(item.color,"xAxisSplitLineColor", "xAxis."+xAxisIndex+".splitLine.lineStyle.color", "array", i, "axisSplitLine")'></el-input>
+										</div>
+									</li>
+								</div>
+								<li>
+									<div class="attributeName">隔线粗细</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisSplitLineWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(xAxisObj.xAxisSplitLineWidth, "xAxisObj.xAxisSplitLineWidth", "xAxis."+xAxisIndex+".splitLine.lineStyle.width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitLineWidth1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitLineWidth1)" @blur='sliderInpGet(xAxisObj.xAxisSplitLineWidth1, "xAxisObj.xAxisSplitLineWidth", "xAxis."+xAxisIndex+".splitLine.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">隔线类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="xAxisObj.xAxisSplitLineType" @change='radioGet(xAxisObj.xAxisSplitLineType, "xAxis."+xAxisIndex+".splitLine.lineStyle.type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisSplitLineShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisSplitLineShadowBlur, "xAxisObj.xAxisSplitLineShadowBlur", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitLineShadowBlur1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitLineShadowBlur1)" @blur='sliderInpGet(xAxisObj.xAxisSplitLineShadowBlur1, "xAxisObj.xAxisSplitLineShadowBlur", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisSplitLineShadowColor" show-alpha @change='colorGet(xAxisObj.xAxisSplitLineShadowColor, "xAxisObj.xAxisSplitLineShadowColor", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitLineShadowColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitLineShadowColor)" @blur='inputColorGet(xAxisObj.xAxisSplitLineShadowColor,"xAxisObj.xAxisSplitLineShadowColor", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisSplitLineShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisSplitLineShadowOffsetX, "xAxisObj.xAxisSplitLineShadowOffsetX", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitLineShadowOffsetX1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitLineShadowOffsetX1)" @blur='sliderInpGet(xAxisObj.xAxisSplitLineShadowOffsetX1, "xAxisObj.xAxisSplitLineShadowOffsetX", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisSplitLineShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisSplitLineShadowOffsetY, "xAxisObj.xAxisSplitLineShadowOffsetY", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitLineShadowOffsetY1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitLineShadowOffsetY1)" @blur='sliderInpGet(xAxisObj.xAxisSplitLineShadowOffsetY1, "xAxisObj.xAxisSplitLineShadowOffsetY", "xAxis."+xAxisIndex+".splitLine.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="X轴隔区设置" name="xAxisObj.xAxisSplitArea">
+								<li>
+									<div class="attributeName">隔区显示</div>
+									<div class="switch">
+										<el-switch v-model="xAxisObj.xAxisSplitAreaShow" on-text="yes" off-text="no" @change='switchGet(xAxisObj.xAxisSplitAreaShow, "xAxis."+xAxisIndex+".splitArea.show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">隔区颜色</div>
+									<div class="addColor" @click='colorAdd("xAxisObj.xAxisSplitAreaColorList", "xAxisObj.xAxisSplitAreaColor", "xAxis."+xAxisIndex+".splitArea.areaStyle.color", "array", "axisSplitArea")'>
+										<el-button size="small" type="primary">添加</el-button>
+									</div>
+								</li>
+								<div v-for="(item, i) in xAxisObj.xAxisSplitAreaColorList" class="addColor" >
+									<li>
+										<div class="attributeName">隔区颜色</div>
+										<div class="color">
+											<el-color-picker size="small" v-model="item.color" show-alpha @change='colorGet(item.color, "xAxisObj.xAxisSplitAreaColor", "xAxis."+xAxisIndex+".splitArea.areaStyle.color", "array", i, "axisSplitArea")'></el-color-picker>
+										</div>
+										<div class="colorInput" id="color">
+											<el-input size="small" v-model="item.color" :spellcheck="false" @focus="inputColor(item.color)" @blur='inputColorGet(item.color,"xAxisObj.xAxisSplitAreaColor", "xAxis."+xAxisIndex+".splitArea.areaStyle.color", "array", i, "axisSplitArea")'></el-input>
+										</div>
+									</li>
+								</div>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisSplitAreaShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisSplitAreaShadowBlur, "xAxisObj.xAxisSplitAreaShadowBlur", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitAreaShadowBlur1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitAreaShadowBlur1)" @blur='sliderInpGet(xAxisObj.xAxisSplitAreaShadowBlur1, "xAxisObj.xAxisSplitAreaShadowBlur", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="xAxisObj.xAxisSplitAreaShadowColor" show-alpha @change='colorGet(xAxisObj.xAxisSplitAreaShadowColor, "xAxisObj.xAxisSplitAreaShadowColor", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitAreaShadowColor" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitAreaShadowColor)" @blur='inputColorGet(xAxisObj.xAxisSplitAreaShadowColor,"xAxisObj.xAxisSplitAreaShadowColor", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisSplitAreaShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisSplitAreaShadowOffsetX, "xAxisObj.xAxisSplitAreaShadowOffsetX", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitAreaShadowOffsetX1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitAreaShadowOffsetX1)" @blur='sliderInpGet(xAxisObj.xAxisSplitAreaShadowOffsetX1, "xAxisObj.xAxisSplitAreaShadowOffsetX", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="xAxisObj.xAxisSplitAreaShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(xAxisObj.xAxisSplitAreaShadowOffsetY, "xAxisObj.xAxisSplitAreaShadowOffsetY", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="xAxisObj.xAxisSplitAreaShadowOffsetY1" :spellcheck="false" @focus="inputColor(xAxisObj.xAxisSplitAreaShadowOffsetY1)" @blur='sliderInpGet(xAxisObj.xAxisSplitAreaShadowOffsetY1, "xAxisObj.xAxisSplitAreaShadowOffsetY", "xAxis."+xAxisIndex+".splitArea.areaStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+						</el-collapse>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<div class="TabsAxis TabsName">
+			<span class="TabsNameText rectangular">Y轴</span>
+			<div  id="yAxis" class="TabsBox TabsBox1">
+				<ul>
+					<div id="yAxis1" class="aXisOne">
+						<li>
+							<div class="attributeName">轴选择</div>
+							<div class="select">
+								<el-select size="small" v-model="yAxisIndex" placeholder="请选择" style="width:100%;" @change='selectGet(yAxisIndex, "yAxisIndex", "number", "", "Axis")'>
+									<el-option v-for="(item, a) in yAxisObj.yAxisList" :key="item.value" :label="item.name" :value="a"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">Y轴显示</div>
+							<div class="switch">
+								<el-switch v-model="yAxisObj.yAxisShow" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisShow, "yAxis."+yAxisIndex+".show")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">Y轴位置</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="yAxisObj.yAxisPosition" @change='radioGet(yAxisObj.yAxisPosition, "yAxis."+yAxisIndex+".position", "string")'>
+									<el-radio-button label="left">居左</el-radio-button>
+									<el-radio-button label="switch">居右</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">Y轴反向</div>
+							<div class="switch">
+								<el-switch v-model="yAxisObj.yAxisInverse" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisInverse, "yAxis."+yAxisIndex+".inverse")'></el-switch>
+							</div>
+						</li>
+						<li class="yAxisCategory">
+							<div class="attributeName">Y轴留白</div>
+							<div class="switch">
+								<el-switch v-model="yAxisObj.yAxisBoundaryGap" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisBoundaryGap, "yAxis."+yAxisIndex+".boundaryGap")'></el-switch>
+							</div>
+						</li>
+						<li class="yAxisScale">
+							<div class="attributeName">Y轴脱离 0</div>
+							<div class="switch">
+								<el-switch v-model="yAxisObj.yAxisScalee" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisScalee, "yAxis."+yAxisIndex+".scale")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">Y轴名称</div>
+							<div class="input">
+								<el-input size="small" v-model="yAxisObj.yAxisName" @blur='inputGet(yAxisObj.yAxisName, "yAxis."+yAxisIndex+".name", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">Y轴名称位置</div>
+							<div class="radioButton">
+								<el-radio-group size="small" v-model="yAxisObj.yAxisNameLocation" @change='radioGet(yAxisObj.yAxisNameLocation, "yAxis."+yAxisIndex+".nameLocation", "string")'>
+									<el-radio-button label="start">起点</el-radio-button>
+									<el-radio-button label="middle">中间</el-radio-button>
+									<el-radio-button label="end">终点</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">轴名称与轴线距离</div>
+							<div class="slider">
+								<el-slider v-model="yAxisObj.yAxisNameGap" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisNameGap, "yAxisObj.yAxisNameGap", "yAxis."+yAxisIndex+".nameGap", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="yAxisObj.yAxisNameGap1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameGap1)" @blur='sliderInpGet(yAxisObj.yAxisNameGap1, "yAxisObj.yAxisNameGap", "yAxis."+yAxisIndex+".nameGap", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">Y轴名字旋转角度</div>
+							<div class="slider">
+								<el-slider v-model="yAxisObj.yAxisNameRotate" :min="-90" :max="90" :step="1" @change='sliderGet(yAxisObj.yAxisNameRotate, "yAxisObj.yAxisNameRotate", "yAxis."+yAxisIndex+".nameRotate", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="yAxisObj.yAxisNameRotate1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameRotate1)" @blur='sliderInpGet(yAxisObj.yAxisNameRotate1, "yAxisObj.yAxisNameRotate", "yAxis."+yAxisIndex+".nameRotate", -90, 90, 1, "rem", "number")'></el-input>
+							</div>
+							<em>°</em>
+						</li>
+						<el-collapse v-model="yAxisObj.yAxisStyle" accordion @change='tabClickGet(yAxisObj.yAxisStyle, "yAxis."+yAxisIndex+".yAxisStyle")'>
+							<el-collapse-item title="Y轴名称字体样式" name="yAxisNameTextStyle">
+								<li>
+									<div class="attributeName">文本字体</div>
+									<div class="select">
+										<el-select size="small" v-model="yAxisObj.yAxisNameTextStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(yAxisObj.yAxisNameTextStyleFontFamily, "yAxis."+yAxisIndex+".nameTextStyle.fontFamily", "string")'>
+											<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">文本颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisNameTextStyleColor" show-alpha @change='colorGet(yAxisObj.yAxisNameTextStyleColor, "yAxisObj.yAxisNameTextStyleColor", "yAxis."+yAxisIndex+".nameTextStyle.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleColor)" @blur='inputColorGet(yAxisObj.yAxisNameTextStyleColor,"yAxisObj.yAxisNameTextStyleColor", "yAxis."+yAxisIndex+".nameTextStyle.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisNameTextStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisNameTextStyleFontSize, "yAxisObj.yAxisNameTextStyleFontSize", "yAxis."+yAxisIndex+".nameTextStyle.fontSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleFontSize1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleFontSize1)" @blur='sliderInpGet(yAxisObj.yAxisNameTextStyleFontSize1, "yAxisObj.yAxisNameTextStyleFontSize", "yAxis."+yAxisIndex+".nameTextStyle.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="yAxisObj.yAxisNameTextStyleFontSytle" @change='radioGet(yAxisObj.yAxisNameTextStyleFontSytle, "yAxis."+yAxisIndex+".nameTextStyle.fontStyle", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="italic">斜体</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="yAxisObj.yAxisNameTextStyleFontWeight" @change='radioGet(yAxisObj.yAxisNameTextStyleFontWeight, "yAxis."+yAxisIndex+".nameTextStyle.fontWeight", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="bold">加粗</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">背景颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisNameTextStyleBackgroundColor" show-alpha @change='colorGet(yAxisObj.yAxisNameTextStyleBackgroundColor, "yAxisObj.yAxisNameTextStyleBackgroundColor", "yAxis."+yAxisIndex+".nameTextStyle.backgroundColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleBackgroundColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleBackgroundColor)" @blur='inputColorGet(yAxisObj.yAxisNameTextStyleBackgroundColor,"yAxisObj.yAxisNameTextStyleBackgroundColor", "yAxis."+yAxisIndex+".nameTextStyle.backgroundColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">边框粗细</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisNameTextStyleBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(yAxisObj.yAxisNameTextStyleBorderWidth, "yAxisObj.yAxisNameTextStyleBorderWidth", "yAxis."+yAxisIndex+".nameTextStyle.borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleBorderWidth1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleBorderWidth1)" @blur='sliderInpGet(yAxisObj.yAxisNameTextStyleBorderWidth1, "yAxisObj.yAxisNameTextStyleBorderWidth", "yAxis."+yAxisIndex+".nameTextStyle.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框圆角</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisNameTextStyleBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisNameTextStyleBorderRadius, "yAxisObj.yAxisNameTextStyleBorderRadius", "yAxis."+yAxisIndex+".nameTextStyle.borderRadius", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleBorderRadius1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleBorderRadius1)" @blur='sliderInpGet(yAxisObj.yAxisNameTextStyleBorderRadius1, "yAxisObj.yAxisNameTextStyleBorderRadius", "yAxis."+yAxisIndex+".nameTextStyle.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisNameTextStyleBorderColor" show-alpha @change='colorGet(yAxisObj.yAxisNameTextStyleBorderColor, "yAxisObj.yAxisNameTextStyleBorderColor", "yAxis."+yAxisIndex+".nameTextStyle.borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleBorderColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleBorderColor)" @blur='inputColorGet(yAxisObj.yAxisNameTextStyleBorderColor, "yAxisObj.yAxisNameTextStyleBorderColor", "yAxis."+yAxisIndex+".nameTextStyle.borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisNameTextStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisNameTextStyleShadowBlur, "yAxisObj.yAxisNameTextStyleShadowBlur", "yAxis."+yAxisIndex+".nameTextStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleShadowBlur1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleShadowBlur1)" @blur='sliderInpGet(yAxisObj.yAxisNameTextStyleShadowBlur1, "yAxisObj.yAxisNameTextStyleShadowBlur", "yAxis."+yAxisIndex+".nameTextStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisNameTextStyleShadowColor" show-alpha @change='colorGet(yAxisObj.yAxisNameTextStyleShadowColor, "yAxisObj.yAxisNameTextStyleShadowColor", "yAxis."+yAxisIndex+".nameTextStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleShadowColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleShadowColor)" @blur='inputColorGet(yAxisObj.yAxisNameTextStyleShadowColor,"yAxisObj.yAxisNameTextStyleShadowColor", "yAxis."+yAxisIndex+".nameTextStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisNameTextStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisNameTextStyleShadowOffsetX, "yAxisObj.yAxisNameTextStyleShadowOffsetX", "yAxis."+yAxisIndex+".nameTextStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleShadowOffsetX1)" @blur='sliderInpGet(yAxisObj.yAxisNameTextStyleShadowOffsetX1, "yAxisObj.yAxisNameTextStyleShadowOffsetX", "yAxis."+yAxisIndex+".nameTextStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisNameTextStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisNameTextStyleShadowOffsetY, "yAxisObj.yAxisNameTextStyleShadowOffsetY", "yAxis."+yAxisIndex+".nameTextStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisNameTextStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisNameTextStyleShadowOffsetY1)" @blur='sliderInpGet(yAxisObj.yAxisNameTextStyleShadowOffsetY1, "yAxisObj.yAxisNameTextStyleShadowOffsetY", "yAxis."+yAxisIndex+".nameTextStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+						</el-collapse>
+					</div>
+					<div id="yAxis2" class="aXisTwo">
+						<el-collapse v-model="yAxisObj.yAxisStyle" accordion style="margin-bottom:5px;" @change='tabClickGet(yAxisObj.yAxisStyle, "yAxis."+yAxisIndex+".yAxisStyle")'>
+							<el-collapse-item title="Y轴轴线设置" name="yAxisLine">
+								<li>
+									<div class="attributeName">轴线显示</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisLineShow" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisLineShow, "yAxis."+yAxisIndex+".axisLine.show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">轴线颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisLineStyleColor" show-alpha @change='colorGet(yAxisObj.yAxisLineStyleColor, "yAxisObj.yAxisLineStyleColor", "yAxis."+yAxisIndex+".axisLine.lineStyle.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLineStyleColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLineStyleColor)" @blur='inputColorGet(yAxisObj.yAxisLineStyleColor,"yAxisObj.yAxisLineStyleColor", "yAxis."+yAxisIndex+".axisLine.lineStyle.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">轴线粗细</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLineStyleWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(yAxisObj.yAxisLineStyleWidth, "yAxisObj.yAxisLineStyleWidth", "yAxis."+yAxisIndex+".axisLine.lineStyle.width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLineStyleWidth1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLineStyleWidth1)" @blur='sliderInpGet(yAxisObj.yAxisLineStyleWidth1, "yAxisObj.yAxisLineStyleWidth", "yAxis."+yAxisIndex+".axisLine.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">轴线类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="yAxisObj.yAxisLineStyleType" @change='radioGet(yAxisObj.yAxisLineStyleType, "yAxis."+yAxisIndex+".axisLine.lineStyle.type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLineStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLineStyleShadowBlur, "yAxisObj.yAxisLineStyleShadowBlur", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLineStyleShadowBlur1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLineStyleShadowBlur1)" @blur='sliderInpGet(yAxisObj.yAxisLineStyleShadowBlur1, "yAxisObj.yAxisLineStyleShadowBlur", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisLineStyleShadowColor" show-alpha @change='colorGet(yAxisObj.yAxisLineStyleShadowColor, "yAxisObj.yAxisLineStyleShadowColor", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLineStyleShadowColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLineStyleShadowColor)" @blur='inputColorGet(yAxisObj.yAxisLineStyleShadowColor,"yAxisObj.yAxisLineStyleShadowColor", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLineStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLineStyleShadowOffsetX, "yAxisObj.yAxisLineStyleShadowOffsetX", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLineStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLineStyleShadowOffsetX1)" @blur='sliderInpGet(yAxisObj.yAxisLineStyleShadowOffsetX1, "yAxisObj.yAxisLineStyleShadowOffsetX", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLineStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLineStyleShadowOffsetY, "yAxisObj.yAxisLineStyleShadowOffsetY", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLineStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLineStyleShadowOffsetY1)" @blur='sliderInpGet(yAxisObj.yAxisLineStyleShadowOffsetY1, "yAxisObj.yAxisLineStyleShadowOffsetY", "yAxis."+yAxisIndex+".axisLine.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="Y轴刻度线设置" name="yAxisTick">
+								<li>
+									<div class="attributeName">刻度线显示</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisTickShow" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisTickShow, "yAxis."+yAxisIndex+".axisTick.show")'></el-switch>
+									</div>
+								</li>
+								<li class="yAxisCategory" title="Y轴有留白时有效">
+									<!-- <el-popover ref="popover4" placement="left-start"  title="温馨提醒" width="150" trigger="hover" content="Y轴有留白时有效"></el-popover> -->
+									<div class="attributeName">刻度线和标签对齐</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisTickAlignWithLabel" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisTickAlignWithLabel, "yAxis."+yAxisIndex+".axisTick.alignWithLabel")'></el-switch>
+									</div>
+								</li>
+								<li  class="yAxisCategory" title="auto会采用标签不重叠的策略间隔显示标签。可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。">
+									<!-- <el-popover ref="popover3" placement="left-start"  title="温馨提醒" width="150" trigger="hover" content="auto会采用标签不重叠的策略间隔显示标签。可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。"></el-popover> -->
+									<div class="attributeName">刻度线显示间隔</div>
+									<div class="input">
+										<el-input size="small" v-model="yAxisObj.yAxisTickInterval" @blur='inputGet(yAxisObj.yAxisTickInterval, "yAxis."+yAxisIndex+".axisTick.interval", "number")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">刻度线是否朝内</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisTickInside" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisTickInside, "yAxis."+yAxisIndex+".axisTick.inside")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">刻度线长度</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisTickStyleLength" :min="1" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisTickStyleLength, "yAxisObj.yAxisTickStyleLength", "yAxis."+yAxisIndex+".axisTick.length", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisTickStyleLength1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisTickStyleLength1)" @blur='sliderInpGet(yAxisObj.yAxisTickStyleLength1, "yAxisObj.yAxisTickStyleLength", "yAxis."+yAxisIndex+".axisTick.length", 1, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">刻度线粗细</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisTickStyleWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(yAxisObj.yAxisTickStyleWidth, "yAxisObj.yAxisTickStyleWidth", "yAxis."+yAxisIndex+".axisTick.lineStyle.width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisTickStyleWidth1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisTickStyleWidth1)" @blur='sliderInpGet(yAxisObj.yAxisTickStyleWidth1, "yAxisObj.yAxisTickStyleWidth", "yAxis."+yAxisIndex+".axisTick.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">刻度线颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisTickStyleColor" show-alpha @change='colorGet(yAxisObj.yAxisTickStyleColor, "yAxisObj.yAxisTickStyleColor", "yAxis."+yAxisIndex+".axisTick.lineStyle.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisTickStyleColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisTickStyleColor)" @blur='inputColorGet(yAxisObj.yAxisTickStyleColor,"yAxisObj.yAxisTickStyleColor", "yAxis."+yAxisIndex+".axisTick.lineStyle.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">刻度线类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="yAxisObj.yAxisTickStyleType" @change='radioGet(yAxisObj.yAxisTickStyleType, "yAxis."+yAxisIndex+".axisTick.lineStyle.type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisTickStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisTickStyleShadowBlur, "yAxisObj.yAxisTickStyleShadowBlur", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisTickStyleShadowBlur1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisTickStyleShadowBlur1)" @blur='sliderInpGet(yAxisObj.yAxisTickStyleShadowBlur1, "yAxisObj.yAxisTickStyleShadowBlur", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisTickStyleShadowColor" show-alpha @change='colorGet(yAxisObj.yAxisTickStyleShadowColor, "yAxisObj.yAxisTickStyleShadowColor", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisTickStyleShadowColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisTickStyleShadowColor)" @blur='inputColorGet(yAxisObj.yAxisTickStyleShadowColor,"yAxisObj.yAxisTickStyleShadowColor", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisTickStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisTickStyleShadowOffsetX, "yAxisObj.yAxisTickStyleShadowOffsetX", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisTickStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisTickStyleShadowOffsetX1)" @blur='sliderInpGet(yAxisObj.yAxisTickStyleShadowOffsetX1, "yAxisObj.yAxisTickStyleShadowOffsetX", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisTickStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisTickStyleShadowOffsetY, "yAxisObj.yAxisTickStyleShadowOffsetY", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisTickStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisTickStyleShadowOffsetY1)" @blur='sliderInpGet(yAxisObj.yAxisTickStyleShadowOffsetY1, "yAxisObj.yAxisTickStyleShadowOffsetY", "yAxis."+yAxisIndex+".axisTick.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="Y轴标签设置" name="yAxisLabel">
+								<li>
+									<div class="attributeName">标签显示</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisLabelShow" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisLabelShow, "yAxis."+yAxisIndex+".axisLabel.show")'></el-switch>
+									</div>
+								</li>
+								<li  class="yAxisCategory">
+									<!-- <el-popover ref="popover3" placement="left-start"  title="温馨提醒" width="150" trigger="hover" content="auto会采用标签不重叠的策略间隔显示标签。可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。"></el-popover> -->
+									<div class="attributeName">标签显示间隔</div>
+									<div class="input">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelInterval" @blur='inputGet(yAxisObj.yAxisLabelInterval, "yAxis."+yAxisIndex+".axisLabel.interval", "number")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">标签是否朝内</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisLabelInside" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisLabelInside, "yAxis."+yAxisIndex+".axisLabel.inside")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">Y轴标签旋转角度</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelRotate" :min="-90" :max="90" :step="1" @change='sliderGet(yAxisObj.yAxisLabelRotate, "yAxisObj.yAxisLabelRotate", "yAxis."+yAxisIndex+".axisLabel.rotate", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelRotate1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelRotate1)" @blur='sliderInpGet(yAxisObj.yAxisLabelRotate1, "yAxisObj.yAxisLabelRotate", "yAxis."+yAxisIndex+".axisLabel.rotate", -90, 90, 1, "rem", "number")'></el-input>
+									</div>
+									<em>°</em>
+								</li>
+								<li>
+									<div class="attributeName">标签与轴线距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelMargin" :min="1" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLabelMargin, "yAxisObj.yAxisLabelMargin", "yAxis."+yAxisIndex+".axisLabel.margin", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelMargin1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelMargin1)" @blur='sliderInpGet(yAxisObj.yAxisLabelMargin1, "yAxisObj.yAxisLabelMargin", "yAxis."+yAxisIndex+".axisLabel.margin", 1, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">文本字体</div>
+									<div class="select">
+										<el-select size="small" v-model="yAxisObj.yAxisLabelFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(yAxisObj.yAxisLabelFontFamily, "yAxis."+yAxisIndex+".axisLabel.fontFamily", "string")'>
+											<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">文本颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisLabelColor" show-alpha @change='colorGet(yAxisObj.yAxisLabelColor, "yAxisObj.yAxisLabelColor", "yAxis."+yAxisIndex+".axisLabel.color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelColor)" @blur='inputColorGet(yAxisObj.yAxisLabelColor,"yAxisObj.yAxisLabelColor", "yAxis."+yAxisIndex+".axisLabel.color", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelFontSize" :min="12" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLabelFontSize, "yAxisObj.yAxisLabelFontSize", "yAxis."+yAxisIndex+".axisLabel.fontSize", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelFontSize1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelFontSize1)" @blur='sliderInpGet(yAxisObj.yAxisLabelFontSize1, "yAxisObj.yAxisLabelFontSize", "yAxis."+yAxisIndex+".axisLabel.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="yAxisObj.yAxisLabelFontSytle" @change='radioGet(yAxisObj.yAxisLabelFontSytle, "yAxis."+yAxisIndex+".axisLabel.fontStyle", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="italic">斜体</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">字体风格</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="yAxisObj.yAxisLabelFontWeight" @change='radioGet(yAxisObj.yAxisLabelFontWeight, "yAxis."+yAxisIndex+".axisLabel.fontWeight", "string")'>
+											<el-radio-button label="normal">普通</el-radio-button>
+											<el-radio-button label="bold">加粗</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">背景颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisLabelBackgroundColor" show-alpha @change='colorGet(yAxisObj.yAxisLabelBackgroundColor, "yAxisObj.yAxisLabelBackgroundColor", "yAxis."+yAxisIndex+".axisLabel.backgroundColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelBackgroundColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelBackgroundColor)" @blur='inputColorGet(yAxisObj.yAxisLabelBackgroundColor,"yAxisObj.yAxisLabelBackgroundColor", "yAxis."+yAxisIndex+".axisLabel.backgroundColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">边框粗细</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(yAxisObj.yAxisLabelBorderWidth, "yAxisObj.yAxisLabelBorderWidth", "yAxis."+yAxisIndex+".axisLabel.borderWidth", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelBorderWidth1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelBorderWidth1)" @blur='sliderInpGet(yAxisObj.yAxisLabelBorderWidth1, "yAxisObj.yAxisLabelBorderWidth", "yAxis."+yAxisIndex+".axisLabel.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框圆角</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLabelBorderRadius, "yAxisObj.yAxisLabelBorderRadius", "yAxis."+yAxisIndex+".axisLabel.borderRadius", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelBorderRadius1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelBorderRadius1)" @blur='sliderInpGet(yAxisObj.yAxisLabelBorderRadius1, "yAxisObj.yAxisLabelBorderRadius", "yAxis."+yAxisIndex+".axisLabel.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">边框颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisLabelBorderColor" show-alpha @change='colorGet(yAxisObj.yAxisLabelBorderColor, "yAxisObj.yAxisLabelBorderColor", "yAxis."+yAxisIndex+".axisLabel.borderColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelBorderColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelBorderColor)" @blur='inputColorGet(yAxisObj.yAxisLabelBorderColor,"yAxisObj.yAxisLabelBorderColor", "yAxis."+yAxisIndex+".axisLabel.borderColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLabelShadowBlur, "yAxisObj.yAxisLabelShadowBlur", "yAxis."+yAxisIndex+".axisLabel.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelShadowBlur1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelShadowBlur1)" @blur='sliderInpGet(yAxisObj.yAxisLabelShadowBlur1, "yAxisObj.yAxisLabelShadowBlur", "yAxis."+yAxisIndex+".axisLabel.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisLabelShadowColor" show-alpha @change='colorGet(yAxisObj.yAxisLabelShadowColor, "yAxisObj.yAxisLabelShadowColor", "yAxis."+yAxisIndex+".axisLabel.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelShadowColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelShadowColor)" @blur='inputColorGet(yAxisObj.yAxisLabelShadowColor,"yAxisObj.yAxisLabelShadowColor", "yAxis."+yAxisIndex+".axisLabel.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLabelShadowOffsetX, "yAxisObj.yAxisLabelShadowOffsetX", "yAxis."+yAxisIndex+".axisLabel.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelShadowOffsetX1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelShadowOffsetX1)" @blur='sliderInpGet(yAxisObj.yAxisLabelShadowOffsetX1, "yAxisObj.yAxisLabelShadowOffsetX", "yAxis."+yAxisIndex+".axisLabel.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisLabelShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisLabelShadowOffsetY, "yAxisObj.yAxisLabelShadowOffsetY", "yAxis."+yAxisIndex+".axisLabel.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisLabelShadowOffsetY1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisLabelShadowOffsetY1)" @blur='sliderInpGet(yAxisObj.yAxisLabelShadowOffsetY1, "yAxisObj.yAxisLabelShadowOffsetY", "yAxis."+yAxisIndex+".axisLabel.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="Y轴隔线设置" name="yAxisSplitLine">
+								<li>
+									<div class="attributeName">隔线显示</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisSplitLineShow" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisSplitLineShow, "yAxis."+yAxisIndex+".splitLine.show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">隔线颜色</div>
+									<div class="addColor" @click='colorAdd("yAxisObj.yAxisSplitLineColorList", "yAxisSplitLineColor", "yAxis."+yAxisIndex+".splitLine.lineStyle.color", "array", "axisSplitLine")'>
+										<el-button size="small" type="primary">添加</el-button>
+									</div>
+								</li>
+								<div v-for="(item, i) in yAxisObj.yAxisSplitLineColorList">
+									<li>
+										<div class="attributeName"></div>
+										<div class="color">
+											<el-color-picker size="small" v-model="item.color" show-alpha @change='colorGet(item.color, "yAxisSplitLineColor", "yAxis."+yAxisIndex+".splitLine.lineStyle.color", "array", i, "axisSplitLine")'></el-color-picker>
+										</div>
+										<div class="colorInput" id="color">
+											<el-input size="small" v-model="item.color" :spellcheck="false" @focus="inputColor(item.color)" @blur='inputColorGet(item.color,"yAxisSplitLineColor", "yAxis."+yAxisIndex+".splitLine.lineStyle.color", "array", i, "axisSplitLine")'></el-input>
+										</div>
+									</li>
+									
+								</div>
+								<li>
+									<div class="attributeName">隔线粗细</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisSplitLineWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(yAxisObj.yAxisSplitLineWidth, "yAxisObj.yAxisSplitLineWidth", "yAxis."+yAxisIndex+".splitLine.lineStyle.width", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitLineWidth1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitLineWidth1)" @blur='sliderInpGet(yAxisObj.yAxisSplitLineWidth1, "yAxisObj.yAxisSplitLineWidth", "yAxis."+yAxisIndex+".splitLine.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">隔线类型</div>
+									<div class="radioButton">
+										<el-radio-group size="small" v-model="yAxisObj.yAxisSplitLineType" @change='radioGet(yAxisObj.yAxisSplitLineType, "yAxis."+yAxisIndex+".splitLine.lineStyle.type", "string")'>
+											<el-radio-button label="solid">实线</el-radio-button>
+											<el-radio-button label="dashed">虚线</el-radio-button>
+											<el-radio-button label="dotted">点状线</el-radio-button>
+										</el-radio-group>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisSplitLineShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisSplitLineShadowBlur, "yAxisObj.yAxisSplitLineShadowBlur", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitLineShadowBlur1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitLineShadowBlur1)" @blur='sliderInpGet(yAxisObj.yAxisSplitLineShadowBlur1, "yAxisObj.yAxisSplitLineShadowBlur", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisSplitLineShadowColor" show-alpha @change='colorGet(yAxisObj.yAxisSplitLineShadowColor, "yAxisObj.yAxisSplitLineShadowColor", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitLineShadowColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitLineShadowColor)" @blur='inputColorGet(yAxisObj.yAxisSplitLineShadowColor,"yAxisObj.yAxisSplitLineShadowColor", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisSplitLineShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisSplitLineShadowOffsetX, "yAxisObj.yAxisSplitLineShadowOffsetX", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitLineShadowOffsetX1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitLineShadowOffsetX1)" @blur='sliderInpGet(yAxisObj.yAxisSplitLineShadowOffsetX1, "yAxisObj.yAxisSplitLineShadowOffsetX", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisSplitLineShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisSplitLineShadowOffsetY, "yAxisObj.yAxisSplitLineShadowOffsetY", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitLineShadowOffsetY1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitLineShadowOffsetY1)" @blur='sliderInpGet(yAxisObj.yAxisSplitLineShadowOffsetY1, "yAxisObj.yAxisSplitLineShadowOffsetY", "yAxis."+yAxisIndex+".splitLine.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+							<el-collapse-item title="Y轴隔区设置" name="yAxisObj.yAxisSplitArea">
+								<li>
+									<div class="attributeName">隔区显示</div>
+									<div class="switch">
+										<el-switch v-model="yAxisObj.yAxisSplitAreaShow" on-text="yes" off-text="no" @change='switchGet(yAxisObj.yAxisSplitAreaShow, "yAxis."+yAxisIndex+".splitArea.show")'></el-switch>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">隔区颜色</div>
+									<div class="addColor" @click='colorAdd("yAxisObj.yAxisSplitAreaColorList", "yAxisObj.yAxisSplitAreaColor", "yAxis."+yAxisIndex+".splitArea.areaStyle.color", "array", "axisSplitArea")'>
+										<el-button type="primary">添加</el-button>
+									</div>
+								</li>
+								<div v-for="(item, i) in yAxisObj.yAxisSplitAreaColorList">
+									<li>
+										<div class="attributeName"></div>
+										<div class="color">
+											<el-color-picker size="small" v-model="item.color" show-alpha @change='colorGet(item.color, "yAxisObj.yAxisSplitAreaColor", "yAxis."+yAxisIndex+".splitArea.areaStyle.color", "array", i, "axisSplitArea")'></el-color-picker>
+										</div>
+										<div class="colorInput" id="color">
+											<el-input size="small" v-model="item.color" :spellcheck="false" @focus="inputColor(item.color)" @blur='inputColorGet(item.color,"yAxisObj.yAxisSplitAreaColor", "yAxis."+yAxisIndex+".splitArea.areaStyle.color", "array", i, "axisSplitArea")'></el-input>
+										</div>
+									</li>
+								</div>
+								<li>
+									<div class="attributeName">阴影模糊大小</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisSplitAreaShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisSplitAreaShadowBlur, "yAxisObj.yAxisSplitAreaShadowBlur", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowBlur", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitAreaShadowBlur1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitAreaShadowBlur1)" @blur='sliderInpGet(yAxisObj.yAxisSplitAreaShadowBlur1, "yAxisObj.yAxisSplitAreaShadowBlur", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">阴影模糊颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="yAxisObj.yAxisSplitAreaShadowColor" show-alpha @change='colorGet(yAxisObj.yAxisSplitAreaShadowColor, "yAxisObj.yAxisSplitAreaShadowColor", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitAreaShadowColor" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitAreaShadowColor)" @blur='inputColorGet(yAxisObj.yAxisSplitAreaShadowColor,"yAxisObj.yAxisSplitAreaShadowColor", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowColor", "string")'></el-input>
+									</div>
+								</li>
+								<li>
+									<div class="attributeName">水平偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisSplitAreaShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisSplitAreaShadowOffsetX, "yAxisObj.yAxisSplitAreaShadowOffsetX", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowOffsetX", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitAreaShadowOffsetX1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitAreaShadowOffsetX1)" @blur='sliderInpGet(yAxisObj.yAxisSplitAreaShadowOffsetX1, "yAxisObj.yAxisSplitAreaShadowOffsetX", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+								<li>
+									<div class="attributeName">垂直偏移距离</div>
+									<div class="slider">
+										<el-slider v-model="yAxisObj.yAxisSplitAreaShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(yAxisObj.yAxisSplitAreaShadowOffsetY, "yAxisObj.yAxisSplitAreaShadowOffsetY", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowOffsetY", "rem", "number")'></el-slider>
+									</div>
+									<div class="sliderInput">
+										<el-input size="small" v-model="yAxisObj.yAxisSplitAreaShadowOffsetY1" :spellcheck="false" @focus="inputColor(yAxisObj.yAxisSplitAreaShadowOffsetY1)" @blur='sliderInpGet(yAxisObj.yAxisSplitAreaShadowOffsetY1, "yAxisObj.yAxisSplitAreaShadowOffsetY", "yAxis."+yAxisIndex+".splitArea.areaStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+									</div>
+									<em>px</em>
+								</li>
+							</el-collapse-item>
+						</el-collapse>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<div class="TabsAxis TabsName">
+			<span class="TabsNameText rectangular">图表区</span>
+			<div id="Grid" class="TabsBox TabsBox1">
+				<ul>
+					<li class="showHidden">
+						<div class="attributeName">视区网格显示</div>
+						<div class="switch">
+							<el-switch v-model="gridObj.gridShow" on-text="yes" off-text="no" @change='switchGet(gridObj.gridShow, "grid.show")'></el-switch>
+						</div>
+					</li>
+					<li class="showHidden">
+						<div class="attributeName">刻度标签包含</div>
+						<div class="switch">
+							<el-switch v-model="gridObj.gridContainLabel" on-text="yes" off-text="no" @change='switchGet(gridObj.gridContainLabel, "grid.containLabel")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">视区宽度</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridWidth" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridWidth, "gridObj.gridWidth", "grid.width", "%", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridWidth1" :spellcheck="false" @focus="inputColor(gridObj.gridWidth1)" @blur='sliderInpGet(gridObj.gridWidth1, "gridObj.gridWidth", "grid.width", 0, 100, 1, "%", "number")'></el-input>
+						</div>
+						<em>%</em>
+					</li>
+					<li>
+						<div class="attributeName">视区高度</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridHeight" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridHeight, "gridObj.gridHeight", "grid.height", "%", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridHeight1" :spellcheck="false" @focus="inputColor(gridObj.gridHeight1)" @blur='sliderInpGet(gridObj.gridHeight1, "gridObj.gridHeight", "grid.height", 0, 100, 1, "%", "number")'></el-input>
+						</div>
+						<em>%</em>
+					</li>
+					<li>
+						<div class="attributeName">左侧距离</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridLeft" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridLeft, "gridObj.gridLeft", "grid.left", "%", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridLeft1" :spellcheck="false" @focus="inputColor(gridObj.gridLeft1)" @blur='sliderInpGet(gridObj.gridLeft1, "gridObj.gridLeft", "grid.left", 0, 100, 1, "%", "number")'></el-input>
+						</div>
+						<em>%</em>
+					</li>
+					<li>
+						<div class="attributeName">上侧距离</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridTop" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridTop, "gridObj.gridTop", "grid.top", "%", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridTop1" :spellcheck="false" @focus="inputColor(gridObj.gridTop1)" @blur='sliderInpGet(gridObj.gridTop1, "gridObj.gridTop", "grid.top", 0, 100, 1, "%", "number")'></el-input>
+						</div>
+						<em>%</em>
+					</li>
+					<li>
+						<div class="attributeName">背景颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="gridObj.gridBackgroundColor" show-alpha @change='colorGet(gridObj.gridBackgroundColor, "gridObj.gridBackgroundColor", "grid.backgroundColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="gridObj.gridBackgroundColor" :spellcheck="false" @focus="inputColor(gridObj.gridBackgroundColor)" @blur='inputColorGet(gridObj.gridBackgroundColor,"gridObj.gridBackgroundColor", "grid.backgroundColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">边框粗细</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(gridObj.gridBorderWidth, "gridObj.gridBorderWidth", "grid.borderWidth", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridBorderWidth1" :spellcheck="false" @focus="inputColor(gridObj.gridBorderWidth1)" @blur='sliderInpGet(gridObj.gridBorderWidth1, "gridObj.gridBorderWidth", "grid.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框圆角</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridBorderRadius, "gridObj.gridBorderRadius", "grid.borderRadius", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridBorderRadius1" :spellcheck="false" @focus="inputColor(gridObj.gridBorderRadius1)" @blur='sliderInpGet(gridObj.gridBorderRadius1, "gridObj.gridBorderRadius", "grid.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="gridObj.gridBorderColor" show-alpha @change='colorGet(gridObj.gridBorderColor, "gridObj.gridBorderColor", "grid.borderColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="gridObj.gridBorderColor" :spellcheck="false" @focus="inputColor(gridObj.gridBorderColor)" @blur='inputColorGet(gridObj.gridBorderColor,"gridObj.gridBorderColor", "grid.borderColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridShadowBlur, "gridObj.gridShadowBlur", "grid.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridShadowBlur1" :spellcheck="false" @focus="inputColor(gridObj.gridShadowBlur1)" @blur='sliderInpGet(gridObj.gridShadowBlur1, "gridObj.gridShadowBlur", "grid.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="gridObj.gridShadowColor" show-alpha @change='colorGet(gridObj.gridShadowColor, "gridObj.gridShadowColor", "grid.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="gridObj.gridShadowColor" :spellcheck="false" @focus="inputColor(gridObj.gridShadowColor)" @blur='inputColorGet(gridObj.gridShadowColor,"gridObj.gridShadowColor", "grid.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridShadowOffsetX, "gridObj.gridShadowOffsetX", "grid.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridShadowOffsetX1" :spellcheck="false" @focus="inputColor(gridObj.gridShadowOffsetX1)" @blur='sliderInpGet(gridObj.gridShadowOffsetX1, "gridObj.gridShadowOffsetX", "grid.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="gridObj.gridShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridShadowOffsetY, "gridObj.gridShadowOffsetY", "grid.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="gridObj.gridShadowOffsetY1" :spellcheck="false" @focus="inputColor(gridObj.gridShadowOffsetY1)" @blur='sliderInpGet(gridObj.gridShadowOffsetY1, "gridObj.gridShadowOffsetY", "grid.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="seriesGeo">
+		<li class="showHidden">
+			<div class="attributeName">组件显示</div>
+			<div class="switch">
+				<el-switch v-model="geoObj.show" on-text="yes" off-text="no" @change='switchGet(geoObj.show, "geo.show")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">省级地图</div>
+			<div class="select">
+				<el-select size="small" v-model="geoObj.province" filterable clearable placeholder="请选择" style="width:100%;" @change='selectGet(geoObj.province, "geo.province", "string", "chartMap", "province")'>
+					<el-option v-for="item in provincesList" :key="item.value" :label="item.cityName" :value="item.cityName"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">市级地图</div>
+			<div class="select">
+				<el-select size="small" v-model="geoObj.city" filterable clearable placeholder="请选择" style="width:100%;" @change='selectGet(geoObj.city, "geo.city", "string", "chartMap", "city")'>
+					<el-option v-for="item in cityList" :key="item.value" :label="item.cityName" :value="item.cityName"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">鼠标缩放平移漫游</div>
+			<div class="switch">
+				<el-switch v-model="geoObj.roam" on-text="yes" off-text="no" @change='switchGet(geoObj.roam, "geo.roam")'></el-switch>
+			</div>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">不触发鼠标事件</div>
+			<div class="switch">
+				<el-switch v-model="geoObj.silent" on-text="yes" off-text="no" @change='switchGet(geoObj.silent, "geo.silent")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">视角中心点(坐标)</div>
+			<div class="input">
+				<el-input size="small" v-model="geoObj.center" @blur='inputGet(geoObj.center, "geo.center", "array", "", null, "map")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">地图的长宽比</div>
+			<div class="slider">
+				<el-slider v-model="geoObj.aspectScale" :min="0.1" :max="2" :step="0.01" @change='sliderGet(geoObj.aspectScale, "geoObj.aspectScale", "geo.aspectScale", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="geoObj.aspectScale1" :spellcheck="false" @focus="inputColor(geoObj.aspectScale1)" @blur='sliderInpGet(geoObj.aspectScale1, "geoObj.aspectScale", "geo.aspectScale", 0.1, 2, 0.01, "rem", "number")'></el-input>
+			</div>
+			<em></em>
+		</li>
+		<li>
+			<div class="attributeName">当前视角缩放比</div>
+			<div class="slider">
+				<el-slider v-model="geoObj.zoom" :min="0.1" :max="10" :step="0.1" @change='sliderGet(geoObj.zoom, "geoObj.zoom", "geo.zoom", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="geoObj.zoom1" :spellcheck="false" @focus="inputColor(geoObj.zoom1)" @blur='sliderInpGet(geoObj.zoom1, "geoObj.zoom", "geo.zoom", 0.1, 10, 0.1, "rem", "number")'></el-input>
+			</div>
+			<em></em>
+		</li>
+		<li>
+			<div class="attributeName">选中模式</div>
+			<div class="radioButton1">
+				<el-radio-group size="small" v-model="geoObj.selectedMode" @change='radioGet(geoObj.selectedMode, "geo.selectedMode", "string")'>
+					<el-radio-button label="single">单选</el-radio-button>
+					<el-radio-button label="multiple">多选</el-radio-button>
+					<el-radio-button label="false">关闭</el-radio-button>
+				</el-radio-group>
+			</div>
+		</li>
+		<el-collapse v-model="geoObj.seriseStyle" accordion @change='tabClickGet(geoObj.seriseStyle, "geo.seriseStyle")'>
+			<el-collapse-item title="文本标签样式" name="label">
+				<el-tabs v-model="geoObj.labelSelect" @tab-click='tabClickGet(geoObj.labelSelect, "geo.labelSelect")'>
+					<el-tab-pane :key="aitem.name"  v-for="(aitem, a) in geoObj.labelList" :label="aitem.name" :name="aitem.labelSelect">
+						<li class="showHidden">
+							<div class="attributeName">文本显示</div>
+							<div class="switch">
+								<el-switch v-model="aitem.show" on-text="yes" off-text="no" @change='switchGet(aitem.show, "geo.label."+aitem.labelSelect+".show")'></el-switch>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">文本字体</div>
+							<div class="select">
+								<el-select size="small" v-model="aitem.fontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(aitem.fontFamily, "geo.label."+aitem.labelSelect+".fontFamily", "string")'>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+								</el-select>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">文本颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="aitem.color" show-alpha @change='colorGet(aitem.color, "geoObj.labelList."+a+".color", "geo.label."+aitem.labelSelect+".color", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="aitem.color" :spellcheck="false" @focus="inputColor(aitem.color)" @blur='inputColorGet(aitem.color, "geoObj.labelList."+a+".color", "geo.label."+aitem.labelSelect+".color", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">字体大小</div>
+							<div class="slider">
+								<el-slider v-model="aitem.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(aitem.fontSize, "geoObj.labelList."+a+".fontSize", "geo.label."+aitem.labelSelect+".fontSize", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.fontSize1" :spellcheck="false" @focus="inputColor(aitem.fontSize1)" @blur='sliderInpGet(aitem.fontSize1, "geoObj.labelList."+a+".fontSize", "geo.label."+aitem.labelSelect+".fontSize", 12, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">字体风格</div>
+							<div class="radioButton1">
+								<el-radio-group size="small" v-model="aitem.fontStyle" @change='radioGet(aitem.fontStyle, "geo.label."+aitem.labelSelect+".fontStyle", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="italic">斜体</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">字体风格</div>
+							<div class="radioButton1">
+								<el-radio-group size="small" v-model="aitem.fontWeight" @change='radioGet(aitem.fontWeight, "geo.label."+aitem.labelSelect+".fontWeight", "string")'>
+									<el-radio-button label="normal">普通</el-radio-button>
+									<el-radio-button label="bold">加粗</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">文字内边距</div>
+							<div class="slider">
+								<el-slider v-model="aitem.padding" :min="0" :max="100" :step="1" @change='sliderGet(aitem.padding, "geoObj.labelList."+a+".padding", "geo.label."+aitem.labelSelect+".padding", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.padding1" :spellcheck="false" @focus="inputColor(aitem.padding1)" @blur='sliderInpGet(aitem.padding1, "geoObj.labelList."+a+".padding", "geo.label."+aitem.labelSelect+".padding", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">背景颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="aitem.backgroundColor" show-alpha @change='colorGet(aitem.backgroundColor, "geoObj.labelList."+a+".backgroundColor", "geo.label."+aitem.labelSelect+".backgroundColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="aitem.backgroundColor" :spellcheck="false" @focus="inputColor(aitem.backgroundColor)" @blur='inputColorGet(aitem.backgroundColor, "geoObj.labelList."+a+".backgroundColor", "geo.label."+aitem.labelSelect+".backgroundColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">边框粗细</div>
+							<div class="slider">
+								<el-slider v-model="aitem.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(aitem.borderWidth, "geoObj.labelList."+a+".borderWidth", "geo.label."+aitem.labelSelect+".borderWidth", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.borderWidth1" :spellcheck="false" @focus="inputColor(aitem.borderWidth1)" @blur='sliderInpGet(aitem.borderWidth1, "geoObj.labelList."+a+".borderWidth", "geo.label."+aitem.labelSelect+".borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">边框圆角</div>
+							<div class="slider">
+								<el-slider v-model="aitem.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(aitem.borderRadius, "geoObj.labelList."+a+".borderRadius", "geo.label."+aitem.labelSelect+".borderRadius", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.borderRadius1" :spellcheck="false" @focus="inputColor(aitem.borderRadius1)" @blur='sliderInpGet(aitem.borderRadius1, "geoObj.labelList."+a+".borderRadius", "geo.label."+aitem.labelSelect+".borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">边框颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="aitem.borderColor" show-alpha @change='colorGet(aitem.borderColor, "geoObj.labelList."+a+".borderColor", "geo.label."+aitem.labelSelect+".borderColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="aitem.borderColor" :spellcheck="false" @focus="inputColor(aitem.borderColor)" @blur='inputColorGet(aitem.borderColor, "geoObj.labelList."+a+".borderColor", "geo.label."+aitem.labelSelect+".borderColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊大小</div>
+							<div class="slider">
+								<el-slider v-model="aitem.shadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitem.shadowBlur, "geoObj.labelList."+a+".shadowBlur", "geo.label."+aitem.labelSelect+".shadowBlur", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.shadowBlur1" :spellcheck="false" @focus="inputColor(aitem.shadowBlur1)" @blur='sliderInpGet(aitem.shadowBlur1, "geoObj.labelList."+a+".shadowBlur", "geo.label."+aitem.labelSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="aitem.shadowColor" show-alpha @change='colorGet(aitem.shadowColor, "geoObj.labelList."+a+".shadowColor", "geo.label."+aitem.labelSelect+".shadowColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="aitem.shadowColor" :spellcheck="false" @focus="inputColor(aitem.shadowColor)" @blur='inputColorGet(aitem.shadowColor, "geoObj.labelList."+a+".shadowColor", "geo.label."+aitem.labelSelect+".shadowColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="aitem.shadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitem.shadowOffsetX, "geoObj.labelList."+a+".shadowOffsetX", "geo.label."+aitem.labelSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.shadowOffsetX1" :spellcheck="false" @focus="inputColor(aitem.shadowOffsetX1)" @blur='sliderInpGet(aitem.shadowOffsetX1, "geoObj.labelList."+a+".shadowOffsetX", "geo.label."+aitem.labelSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="aitem.shadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitem.shadowOffsetY, "geoObj.labelList."+a+".shadowOffsetY", "geo.label."+aitem.labelSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.shadowOffsetY1" :spellcheck="false" @focus="inputColor(aitem.shadowOffsetY1)" @blur='sliderInpGet(aitem.shadowOffsetY1, "geoObj.labelList."+a+".shadowOffsetY", "geo.label."+aitem.labelSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+					</el-tab-pane>
+				</el-tabs>
+			</el-collapse-item>
+			<el-collapse-item title="图形样式" name="itemStyle">
+				<el-tabs v-model="geoObj.itemStyleSelect" @tab-click='tabClickGet(geoObj.itemStyleSelect, "geo.itemStyleSelect")'>
+					<el-tab-pane :key="aitem.name"  v-for="(aitem, a) in geoObj.itemStyleList" :label="aitem.name" :name="aitem.itemStyleSelect">
+						<li>
+							<div class="attributeName">描边线类型</div>
+							<div class="radioButton1">
+								<el-radio-group size="small" v-model="aitem.borderType" @change='radioGet(aitem.borderType, "geo.itemStyle."+aitem.itemStyleSelect+".borderType", "string")'>
+									<el-radio-button label="solid">实线</el-radio-button>
+									<el-radio-button label="dashed">虚线</el-radio-button>
+									<el-radio-button label="dotted">点状线</el-radio-button>
+								</el-radio-group>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">描边线宽</div>
+							<div class="slider">
+								<el-slider v-model="aitem.borderWidth" :min="0" :max="100" :step="1" @change='sliderGet(aitem.borderWidth, "geoObj.itemStyleList."+a+".borderWidth", "geo.itemStyle."+aitem.itemStyleSelect+".borderWidth", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.borderWidth1" :spellcheck="false" @focus="inputColor(aitem.borderWidth1)" @blur='sliderInpGet(aitem.borderWidth1, "geoObj.itemStyleList."+a+".borderWidth", "geo.itemStyle."+aitem.itemStyleSelect+".borderWidth", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">描边线颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="aitem.borderColor" show-alpha @change='colorGet(aitem.borderColor, "geoObj.itemStyleList."+a+".borderColor", "geo.itemStyle."+aitem.itemStyleSelect+".borderColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="aitem.borderColor" :spellcheck="false" @focus="inputColor(aitem.borderColor)" @blur='inputColorGet(aitem.borderColor, "geoObj.itemStyleList."+a+".borderColor", "geo.itemStyle."+aitem.itemStyleSelect+".borderColor", "string")'></el-input>
+							</div>
+						</li>
+						<p class="attributeName">地图区域颜色</p>
+						<li class="card">
+							<el-tabs v-model="aitem.itemStyleareaColor" type="border-card" @tab-click='gradientColorGet(aitem.itemStyleareaColor, "geo.itemStyle."+aitem.itemStyleSelect+".itemStyleareaColor", "geoObj.itemStyleList."+a+".areaColor", "geoObj.itemStyleList."+a+".areaGradationColor", "geoObj.itemStyleList."+a+".areaGradationColor1", "geoObj.itemStyleList."+a+".areaGradationType", "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", seriesIndex)'>
+								<el-tab-pane label="普通" name="ordinary">
+									<div class="attributeName">颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitem.areaColor" show-alpha @change='colorGet(aitem.areaColor, "geoObj.itemStyleList."+a+".color", "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", "string")'></el-color-picker>
+									</div>
+									<div class="colorInputCard">
+										<el-input size="small" v-model="aitem.areaColor" :spellcheck="false" @focus="inputColor(aitem.areaColor)" @blur='inputColorGet(aitem.areaColor, "geoObj.itemStyleList."+a+".areaColor", "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", "string")'></el-input>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane label="渐变" name="shade">
+									<div class="attributeName">渐变色1</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitem.areaGradationColor" show-alpha @change='colorGet(aitem.areaGradationColor, "geoObj.itemStyleList."+a+".areaGradationColor", "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", "object", 0)'></el-color-picker>
+									</div>
+									<div class="colorInputCard">
+										<el-input size="small" v-model="aitem.areaGradationColor" :spellcheck="false" @focus="inputColor(aitem.areaGradationColor)" @blur='inputColorGet(aitem.areaGradationColor, "geoObj.itemStyleList."+a+".areaGradationColor", "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", "object", 0)'></el-input>
+									</div>
+									<div class="attributeName">渐变色2</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitem.areaGradationColor1" show-alpha @change='colorGet(aitem.areaGradationColor1, "geoObj.itemStyleList."+a+".areaGradationColor1", "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", "object", 1)'></el-color-picker>
+									</div>
+									<div class="colorInputCard">
+										<el-input size="small" v-model="aitem.areaGradationColor1" :spellcheck="false" @focus="inputColor(aitem.areaGradationColor1)" @blur='inputColorGet(aitem.areaGradationColor1, "geoObj.itemStyleList."+a+".areaGradationColor1", "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", "object", 1)'></el-input>
+									</div>
+									<div class="attributeName">渐变类型</div>
+									<div class="radioButton2">
+										<el-radio-group size="small" v-model="aitem.areaGradationType" @change='radioGet(aitem.areaGradationType, "geo.itemStyle."+aitem.itemStyleSelect+".areaColor", "object")'>
+											<el-radio-button label="linear">线性</el-radio-button>
+											<el-radio-button label="radial">径向</el-radio-button>
+										</el-radio-group>
+									</div>
+								</el-tab-pane>
+							</el-tabs>
+						</li>
+						<p class="attributeName">图形颜色</p>
+						<li class="card">
+							<el-tabs v-model="aitem.itemStyleColor" type="border-card" @tab-click='gradientColorGet(aitem.itemStyleColor, "geo.itemStyle."+aitem.itemStyleSelect+".itemStyleColor", "geoObj.itemStyleList."+a+".color", "geoObj.itemStyleList."+a+".gradationColor", "geoObj.itemStyleList."+a+".gradationColor1", "geoObj.itemStyleList."+a+".gradationType", "geo.itemStyle."+aitem.itemStyleSelect+".color", seriesIndex)'>
+								<el-tab-pane label="普通" name="ordinary">
+									<div class="attributeName">颜色</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitem.color" show-alpha @change='colorGet(aitem.color, "geoObj.itemStyleList."+a+".color", "geo.itemStyle."+aitem.itemStyleSelect+".color", "string")'></el-color-picker>
+									</div>
+									<div class="colorInputCard">
+										<el-input size="small" v-model="aitem.color" :spellcheck="false" @focus="inputColor(aitem.color)" @blur='inputColorGet(aitem.color, "geoObj.itemStyleList."+a+".color", "geo.itemStyle."+aitem.itemStyleSelect+".color", "string")'></el-input>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane label="渐变" name="shade">
+									<div class="attributeName">渐变色1</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitem.gradationColor" show-alpha @change='colorGet(aitem.gradationColor, "geoObj.itemStyleList."+a+".gradationColor", "geo.itemStyle."+aitem.itemStyleSelect+".color", "object", 0)'></el-color-picker>
+									</div>
+									<div class="colorInputCard">
+										<el-input size="small" v-model="aitem.gradationColor" :spellcheck="false" @focus="inputColor(aitem.gradationColor)" @blur='inputColorGet(aitem.gradationColor, "geoObj.itemStyleList."+a+".gradationColor", "geo.itemStyle."+aitem.itemStyleSelect+".color", "object", 0)'></el-input>
+									</div>
+									<div class="attributeName">渐变色2</div>
+									<div class="color">
+										<el-color-picker size="small" v-model="aitem.gradationColor1" show-alpha @change='colorGet(aitem.gradationColor1, "geoObj.itemStyleList."+a+".gradationColor1", "geo.itemStyle."+aitem.itemStyleSelect+".color", "object", 1)'></el-color-picker>
+									</div>
+									<div class="colorInputCard">
+										<el-input size="small" v-model="aitem.gradationColor1" :spellcheck="false" @focus="inputColor(aitem.gradationColor1)" @blur='inputColorGet(aitem.gradationColor1, "geoObj.itemStyleList."+a+".gradationColor1", "geo.itemStyle."+aitem.itemStyleSelect+".color", "object", 1)'></el-input>
+									</div>
+									<div class="attributeName">渐变类型</div>
+									<div class="radioButton2">
+										<el-radio-group size="small" v-model="aitem.gradationType" @change='radioGet(aitem.gradationType, "geo.itemStyle."+aitem.itemStyleSelect+".color", "object")'>
+											<el-radio-button label="linear">线性</el-radio-button>
+											<el-radio-button label="radial">径向</el-radio-button>
+										</el-radio-group>
+									</div>
+								</el-tab-pane>
+							</el-tabs>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊大小</div>
+							<div class="slider">
+								<el-slider v-model="aitem.shadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(aitem.shadowBlur, "geoObj.itemStyleList."+a+".shadowBlur", "geo.itemStyle."+aitem.itemStyleSelect+".shadowBlur", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.shadowBlur1" :spellcheck="false" @focus="inputColor(aitem.shadowBlur1)" @blur='sliderInpGet(aitem.shadowBlur1, "geoObj.itemStyleList."+a+".shadowBlur", "geo.itemStyle."+aitem.itemStyleSelect+".shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">阴影模糊颜色</div>
+							<div class="color">
+								<el-color-picker size="small" v-model="aitem.shadowColor" show-alpha @change='colorGet(aitem.shadowColor, "geoObj.itemStyleList."+a+".shadowColor", "geo.itemStyle."+aitem.itemStyleSelect+".shadowColor", "string")'></el-color-picker>
+							</div>
+							<div class="colorInput">
+								<el-input size="small" v-model="aitem.shadowColor" :spellcheck="false" @focus="inputColor(aitem.shadowColor)" @blur='inputColorGet(aitem.shadowColor, "geoObj.itemStyleList."+a+".shadowColor", "geo.itemStyle."+aitem.itemStyleSelect+".shadowColor", "string")'></el-input>
+							</div>
+						</li>
+						<li>
+							<div class="attributeName">水平偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="aitem.shadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(aitem.shadowOffsetX, "geoObj.itemStyleList."+a+".shadowOffsetX", "geo.itemStyle."+aitem.itemStyleSelect+".shadowOffsetX", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.shadowOffsetX1" :spellcheck="false" @focus="inputColor(aitem.shadowOffsetX1)" @blur='sliderInpGet(aitem.shadowOffsetX1, "geoObj.itemStyleList."+a+".shadowOffsetX", "geo.itemStyle."+aitem.itemStyleSelect+".shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+						<li>
+							<div class="attributeName">垂直偏移距离</div>
+							<div class="slider">
+								<el-slider v-model="aitem.shadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(aitem.shadowOffsetY, "geoObj.itemStyleList."+a+".shadowOffsetY", "geo.itemStyle."+aitem.itemStyleSelect+".shadowOffsetY", "rem", "number")'></el-slider>
+							</div>
+							<div class="sliderInput">
+								<el-input size="small" v-model="aitem.shadowOffsetY1" :spellcheck="false" @focus="inputColor(aitem.shadowOffsetY1)" @blur='sliderInpGet(aitem.shadowOffsetY1, "geoObj.itemStyleList."+a+".shadowOffsetY", "geo.itemStyle."+aitem.itemStyleSelect+".shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+							</div>
+							<em>px</em>
+						</li>
+					</el-tab-pane>
+				</el-tabs>
+			</el-collapse-item>
+		</el-collapse>
+	</ul>
+</body>
+</html>

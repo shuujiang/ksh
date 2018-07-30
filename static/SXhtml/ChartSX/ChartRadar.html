@@ -1,0 +1,737 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul>
+		<div id="radar1" class="aXisOne">
+			<li>
+				<div class="attributeName">轴选择</div>
+				<div class="select">
+					<el-select size="small" v-model="radarIndex" placeholder="请选择" style="width:100%;" @change='selectGet(radarIndex, "radarIndex", "number", "", "radar")'>
+						<el-option v-for="(item, a) in radarObj.radarList" :key="item.value" :label="item.name" :value="a"></el-option>
+					</el-select>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">圆心横坐标</div>
+				<div class="slider">
+					<el-slider v-model="radarObj.radarCenterX" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarCenterX, "radarObj.radarCenterX", "radar."+radarIndex+".center", "%", "array", 0, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="radarObj.radarCenterX1" :spellcheck="false" @focus="inputColor(radarObj.radarCenterX1)" @blur='sliderInpGet(radarObj.radarCenterX1, "radarObj.radarCenterX", "radar."+radarIndex+".center", 0, 100, 1, "%", "array", 0, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">圆心纵坐标</div>
+				<div class="slider">
+					<el-slider v-model="radarObj.radarCenterY" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarCenterY, "radarObj.radarCenterY", "radar."+radarIndex+".center", "%", "array", 1, "center")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="radarObj.radarCenterY1" :spellcheck="false" @focus="inputColor(radarObj.radarCenterY1)" @blur='sliderInpGet(radarObj.radarCenterY1, "radarObj.radarCenterY", "radar."+radarIndex+".center", 0, 100, 1, "%", "array", 1, "center")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">雷达图半径</div>
+				<div class="slider">
+					<el-slider v-model="radarObj.radarRadius" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarRadius, "radarObj.radarRadius", "radar."+radarIndex+".radius", "%", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="radarObj.radarRadius1" :spellcheck="false" @focus="inputColor(radarObj.radarRadius1)" @blur='sliderInpGet(radarObj.radarRadius1, "radarObj.radarRadius", "radar."+radarIndex+".radius", 0, 100, 1, "%", "number")'></el-input>
+				</div>
+				<em>%</em>
+			</li>
+			<li>
+				<div class="attributeName">雷达轴起始角度</div>
+				<div class="slider">
+					<el-slider v-model="radarObj.radarStartAngle" :min="0" :max="360" :step="1" @change='sliderGet(radarObj.radarStartAngle, "radarObj.radarStartAngle", "radar."+radarIndex+".startAngle", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="radarObj.radarStartAngle1" :spellcheck="false" @focus="inputColor(radarObj.radarStartAngle1)" @blur='sliderInpGet(radarObj.radarStartAngle1, "radarObj.radarStartAngle", "radar."+radarIndex+".startAngle", 0, 360, 1, "rem", "number")'></el-input>
+				</div>
+				<em>°</em>
+			</li>
+			<li>
+				<div class="attributeName">雷达图绘制类型</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="radarObj.radarShape" @change='radioGet(radarObj.radarShape, "radar."+radarIndex+".shape", "string")'>
+						<el-radio-button label="polygon">正多边形</el-radio-button>
+						<el-radio-button label="circle">圆形</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+			<li class="radarScale">
+				<div class="attributeName">雷达轴脱离 0</div>
+				<div class="switch">
+					<el-switch v-model="radarObj.radarScalee" on-text="yes" off-text="no" @change='switchGet(radarObj.radarScalee, "radar."+radarIndex+".scale")'></el-switch>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">雷达轴分割段数</div>
+				<div class="slider">
+					<el-slider v-model="radarObj.radarSplitNumber" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarSplitNumber, "radarObj.radarSplitNumber", "radar."+radarIndex+".splitNumber", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="radarObj.radarSplitNumber1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitNumber1)" @blur='sliderInpGet(radarObj.radarSplitNumber1, "radarObj.radarSplitNumber", "radar."+radarIndex+".splitNumber", 0, 100, 1, "rem", "number")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">轴名称与轴线距离</div>
+				<div class="slider">
+					<el-slider v-model="radarObj.radarNameGap" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarNameGap, "radarObj.radarNameGap", "radar."+radarIndex+".nameGap", "rem", "number")'></el-slider>
+				</div>
+				<div class="sliderInput">
+					<el-input size="small" v-model="radarObj.radarNameGap1" :spellcheck="false" @focus="inputColor(radarObj.radarNameGap1)" @blur='sliderInpGet(radarObj.radarNameGap1, "radarObj.radarNameGap", "radar."+radarIndex+".nameGap", 0, 100, 1, "rem", "number")'></el-input>
+				</div>
+				<em>px</em>
+			</li>
+			<el-collapse v-model="radarObj.radarStyle" accordion @change='tabClickGet(radarObj.radarStyle, "radar."+radarIndex+".radarStyle")'>
+				<el-collapse-item title="雷达轴名称字体样式" name="radarNameTextStyle">
+					<li>
+						<div class="attributeName">X轴显示</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarNameShow" on-text="yes" off-text="no" @change='switchGet(radarObj.radarNameShow, "radar."+radarIndex+".name.show")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">文本字体</div>
+						<div class="select">
+							<el-select size="small" v-model="radarObj.radarNameTextStyleFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(radarObj.radarNameTextStyleFontFamily, "radar."+radarIndex+".name.fontFamily", "string")'>
+								<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">文本颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarNameTextStyleColor" show-alpha @change='colorGet(radarObj.radarNameTextStyleColor, "radarObj.radarNameTextStyleColor", "radar."+radarIndex+".name.color", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleColor" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleColor)" @blur='inputColorGet(radarObj.radarNameTextStyleColor,"radarObj.radarNameTextStyleColor", "radar."+radarIndex+".name.color", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">字体大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarNameTextStyleFontSize" :min="12" :max="100" :step="1" @change='sliderGet(radarObj.radarNameTextStyleFontSize, "radarObj.radarNameTextStyleFontSize", "radar."+radarIndex+".name.fontSize", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleFontSize1" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleFontSize1)" @blur='sliderInpGet(radarObj.radarNameTextStyleFontSize1, "radarObj.radarNameTextStyleFontSize", "radar."+radarIndex+".name.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">字体风格</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="radarObj.radarNameTextStyleFontSytle" @change='radioGet(radarObj.radarNameTextStyleFontSytle, "radar."+radarIndex+".name.fontStyle", "string")'>
+								<el-radio-button label="normal">普通</el-radio-button>
+								<el-radio-button label="italic">斜体</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">字体风格</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="radarObj.radarNameTextStyleFontWeight" @change='radioGet(radarObj.radarNameTextStyleFontWeight, "radar."+radarIndex+".name.fontWeight", "string")'>
+								<el-radio-button label="normal">普通</el-radio-button>
+								<el-radio-button label="bold">加粗</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">背景颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarNameTextStyleBackgroundColor" show-alpha @change='colorGet(radarObj.radarNameTextStyleBackgroundColor, "radarObj.radarNameTextStyleBackgroundColor", "radar."+radarIndex+".name.backgroundColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleBackgroundColor" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleBackgroundColor)" @blur='inputColorGet(radarObj.radarNameTextStyleBackgroundColor,"radarObj.radarNameTextStyleBackgroundColor", "radar."+radarIndex+".name.backgroundColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">边框粗细</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarNameTextStyleBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(radarObj.radarNameTextStyleBorderWidth, "radarObj.radarNameTextStyleBorderWidth", "radar."+radarIndex+".name.borderWidth", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleBorderWidth1" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleBorderWidth1)" @blur='sliderInpGet(radarObj.radarNameTextStyleBorderWidth1, "radarObj.radarNameTextStyleBorderWidth", "radar."+radarIndex+".name.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框圆角</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarNameTextStyleBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarNameTextStyleBorderRadius, "radarObj.radarNameTextStyleBorderRadius", "radar."+radarIndex+".name.borderRadius", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleBorderRadius1" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleBorderRadius1)" @blur='sliderInpGet(radarObj.radarNameTextStyleBorderRadius1, "radarObj.radarNameTextStyleBorderRadius", "radar."+radarIndex+".name.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarNameTextStyleBorderColor" show-alpha @change='colorGet(radarObj.radarNameTextStyleBorderColor, "radarObj.radarNameTextStyleBorderColor", "radar."+radarIndex+".name.borderColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleBorderColor" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleBorderColor)" @blur='inputColorGet(radarObj.radarNameTextStyleBorderColor, "radarObj.radarNameTextStyleBorderColor", "radar."+radarIndex+".name.borderColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarNameTextStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarNameTextStyleShadowBlur, "radarObj.radarNameTextStyleShadowBlur", "radar."+radarIndex+".name.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleShadowBlur1" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleShadowBlur1)" @blur='sliderInpGet(radarObj.radarNameTextStyleShadowBlur1, "radarObj.radarNameTextStyleShadowBlur", "radar."+radarIndex+".name.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarNameTextStyleShadowColor" show-alpha @change='colorGet(radarObj.radarNameTextStyleShadowColor, "radarObj.radarNameTextStyleShadowColor", "radar."+radarIndex+".name.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleShadowColor" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleShadowColor)" @blur='inputColorGet(radarObj.radarNameTextStyleShadowColor,"radarObj.radarNameTextStyleShadowColor", "radar."+radarIndex+".name.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarNameTextStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarNameTextStyleShadowOffsetX, "radarObj.radarNameTextStyleShadowOffsetX", "radar."+radarIndex+".name.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleShadowOffsetX1)" @blur='sliderInpGet(radarObj.radarNameTextStyleShadowOffsetX1, "radarObj.radarNameTextStyleShadowOffsetX", "radar."+radarIndex+".name.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarNameTextStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarNameTextStyleShadowOffsetY, "radarObj.radarNameTextStyleShadowOffsetY", "radar."+radarIndex+".name.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarNameTextStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(radarObj.radarNameTextStyleShadowOffsetY1)" @blur='sliderInpGet(radarObj.radarNameTextStyleShadowOffsetY1, "radarObj.radarNameTextStyleShadowOffsetY", "radar."+radarIndex+".name.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</el-collapse-item>
+			</el-collapse>
+		</div>
+		<div id="radar2" class="aXisTwo">
+			<el-collapse v-model="radarObj.radarStyle" accordion style="margin-bottom:5px;" @change='tabClickGet(radarObj.radarStyle, "radar."+radarIndex+".radarStyle")'>
+				<el-collapse-item title="雷达轴轴线设置" name="radarLine">
+					<li>
+						<div class="attributeName">轴线显示</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarLineShow" on-text="yes" off-text="no" @change='switchGet(radarObj.radarLineShow, "radar."+radarIndex+".axisLine.show")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">轴线颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarLineStyleColor" show-alpha @change='colorGet(radarObj.radarLineStyleColor, "radarObj.radarLineStyleColor", "radar."+radarIndex+".axisLine.lineStyle.color", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarLineStyleColor" :spellcheck="false" @focus="inputColor(radarObj.radarLineStyleColor)" @blur='inputColorGet(radarObj.radarLineStyleColor,"radarObj.radarLineStyleColor", "radar."+radarIndex+".axisLine.lineStyle.color", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">轴线粗细</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLineStyleWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(radarObj.radarLineStyleWidth, "radarObj.radarLineStyleWidth", "radar."+radarIndex+".axisLine.lineStyle.width", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLineStyleWidth1" :spellcheck="false" @focus="inputColor(radarObj.radarLineStyleWidth1)" @blur='sliderInpGet(radarObj.radarLineStyleWidth1, "radarObj.radarLineStyleWidth", "radar."+radarIndex+".axisLine.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">轴线类型</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="radarObj.radarLineStyleType" @change='radioGet(radarObj.radarLineStyleType, "radar."+radarIndex+".axisLine.lineStyle.type", "string")'>
+								<el-radio-button label="solid">实线</el-radio-button>
+								<el-radio-button label="dashed">虚线</el-radio-button>
+								<el-radio-button label="dotted">点状线</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLineStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarLineStyleShadowBlur, "radarObj.radarLineStyleShadowBlur", "radar."+radarIndex+".axisLine.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLineStyleShadowBlur1" :spellcheck="false" @focus="inputColor(radarObj.radarLineStyleShadowBlur1)" @blur='sliderInpGet(radarObj.radarLineStyleShadowBlur1, "radarObj.radarLineStyleShadowBlur", "radar."+radarIndex+".axisLine.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarLineStyleShadowColor" show-alpha @change='colorGet(radarObj.radarLineStyleShadowColor, "radarObj.radarLineStyleShadowColor", "radar."+radarIndex+".axisLine.lineStyle.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarLineStyleShadowColor" :spellcheck="false" @focus="inputColor(radarObj.radarLineStyleShadowColor)" @blur='inputColorGet(radarObj.radarLineStyleShadowColor,"radarObj.radarLineStyleShadowColor", "radar."+radarIndex+".axisLine.lineStyle.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLineStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarLineStyleShadowOffsetX, "radarObj.radarLineStyleShadowOffsetX", "radar."+radarIndex+".axisLine.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLineStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(radarObj.radarLineStyleShadowOffsetX1)" @blur='sliderInpGet(radarObj.radarLineStyleShadowOffsetX1, "radarObj.radarLineStyleShadowOffsetX", "radar."+radarIndex+".axisLine.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLineStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarLineStyleShadowOffsetY, "radarObj.radarLineStyleShadowOffsetY", "radar."+radarIndex+".axisLine.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLineStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(radarObj.radarLineStyleShadowOffsetY1)" @blur='sliderInpGet(radarObj.radarLineStyleShadowOffsetY1, "radarObj.radarLineStyleShadowOffsetY", "radar."+radarIndex+".axisLine.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</el-collapse-item>
+				<el-collapse-item title="雷达轴刻度线设置" name="radarTick">
+					<li>
+						<div class="attributeName">刻度线显示</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarTickShow" on-text="yes" off-text="no" @change='switchGet(radarObj.radarTickShow, "radar."+radarIndex+".axisTick.show")'></el-switch>
+						</div>
+					</li>
+					<li class="radarCategory" title="雷达轴有留白时有效">
+						<div class="attributeName">刻度线和标签对齐</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarTickAlignWithLabel" on-text="yes" off-text="no" @change='switchGet(radarObj.radarTickAlignWithLabel, "radar."+radarIndex+".axisTick.alignWithLabel")'></el-switch>
+						</div>
+					</li>
+					<li  class="radarCategory" title="auto会采用标签不重叠的策略间隔显示标签。可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。">
+						<div class="attributeName">刻度线显示间隔</div>
+						<div class="input">
+							<el-input size="small" v-model="radarObj.radarTickInterval" @blur='inputGet(radarObj.radarTickInterval, "radar."+radarIndex+".axisTick.interval", "number")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">刻度线是否朝内</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarTickInside" on-text="yes" off-text="no" @change='switchGet(radarObj.radarTickInside, "radar."+radarIndex+".axisTick.inside")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">刻度线长度</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarTickStyleLength" :min="1" :max="100" :step="1" @change='sliderGet(radarObj.radarTickStyleLength, "radarObj.radarTickStyleLength", "radar."+radarIndex+".axisTick.length", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarTickStyleLength1" :spellcheck="false" @focus="inputColor(radarObj.radarTickStyleLength1)" @blur='sliderInpGet(radarObj.radarTickStyleLength1, "radarObj.radarTickStyleLength", "radar."+radarIndex+".axisTick.length", 1, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">刻度线粗细</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarTickStyleWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(radarObj.radarTickStyleWidth, "radarObj.radarTickStyleWidth", "radar."+radarIndex+".axisTick.lineStyle.width", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarTickStyleWidth1" :spellcheck="false" @focus="inputColor(radarObj.radarTickStyleWidth1)" @blur='sliderInpGet(radarObj.radarTickStyleWidth1, "radarObj.radarTickStyleWidth", "radar."+radarIndex+".axisTick.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">刻度线颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarTickStyleColor" show-alpha @change='colorGet(radarObj.radarTickStyleColor, "radarObj.radarTickStyleColor", "radar."+radarIndex+".axisTick.lineStyle.color", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarTickStyleColor" :spellcheck="false" @focus="inputColor(radarObj.radarTickStyleColor)" @blur='inputColorGet(radarObj.radarTickStyleColor,"radarObj.radarTickStyleColor", "radar."+radarIndex+".axisTick.lineStyle.color", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">刻度线类型</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="radarObj.radarTickStyleType" @change='radioGet(radarObj.radarTickStyleType, "radar."+radarIndex+".axisTick.lineStyle.type", "string")'>
+								<el-radio-button label="solid">实线</el-radio-button>
+								<el-radio-button label="dashed">虚线</el-radio-button>
+								<el-radio-button label="dotted">点状线</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarTickStyleShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarTickStyleShadowBlur, "radarObj.radarTickStyleShadowBlur", "radar."+radarIndex+".axisTick.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarTickStyleShadowBlur1" :spellcheck="false" @focus="inputColor(radarObj.radarTickStyleShadowBlur1)" @blur='sliderInpGet(radarObj.radarTickStyleShadowBlur1, "radarObj.radarTickStyleShadowBlur", "radar."+radarIndex+".axisTick.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarTickStyleShadowColor" show-alpha @change='colorGet(radarObj.radarTickStyleShadowColor, "radarObj.radarTickStyleShadowColor", "radar."+radarIndex+".axisTick.lineStyle.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarTickStyleShadowColor" :spellcheck="false" @focus="inputColor(radarObj.radarTickStyleShadowColor)" @blur='inputColorGet(radarObj.radarTickStyleShadowColor,"radarObj.radarTickStyleShadowColor", "radar."+radarIndex+".axisTick.lineStyle.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarTickStyleShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarTickStyleShadowOffsetX, "radarObj.radarTickStyleShadowOffsetX", "radar."+radarIndex+".axisTick.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarTickStyleShadowOffsetX1" :spellcheck="false" @focus="inputColor(radarObj.radarTickStyleShadowOffsetX1)" @blur='sliderInpGet(radarObj.radarTickStyleShadowOffsetX1, "radarObj.radarTickStyleShadowOffsetX", "radar."+radarIndex+".axisTick.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarTickStyleShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarTickStyleShadowOffsetY, "radarObj.radarTickStyleShadowOffsetY", "radar."+radarIndex+".axisTick.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarTickStyleShadowOffsetY1" :spellcheck="false" @focus="inputColor(radarObj.radarTickStyleShadowOffsetY1)" @blur='sliderInpGet(radarObj.radarTickStyleShadowOffsetY1, "radarObj.radarTickStyleShadowOffsetY", "radar."+radarIndex+".axisTick.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</el-collapse-item>
+				<el-collapse-item title="雷达轴标签设置" name="radarLabel">
+					<li>
+						<div class="attributeName">标签显示</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarLabelShow" on-text="yes" off-text="no" @change='switchGet(radarObj.radarLabelShow, "radar."+radarIndex+".axisLabel.show")'></el-switch>
+						</div>
+					</li>
+					<li  class="radarCategory">
+						<div class="attributeName">标签显示间隔</div>
+						<div class="input">
+							<el-input size="small" v-model="radarObj.radarLabelInterval" @blur='inputGet(radarObj.radarLabelInterval, "radar."+radarIndex+".axisLabel.interval", "number")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">标签是否朝内</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarLabelInside" on-text="yes" off-text="no" @change='switchGet(radarObj.radarLabelInside, "radar."+radarIndex+".axisLabel.inside")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">雷达轴名字旋转角度</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelRotate" :min="-90" :max="90" :step="1" @change='sliderGet(radarObj.radarLabelRotate, "radarObj.radarLabelRotate", "radar."+radarIndex+".axisLabel.rotate", "", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelRotate1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelRotate1)" @blur='sliderInpGet(radarObj.radarLabelRotate1, "radarObj.radarLabelRotate", "radar."+radarIndex+".axisLabel.rotate", -90, 90, 1, "", "number")'></el-input>
+						</div>
+						<em>°</em>
+					</li>
+					<li>
+						<div class="attributeName">标签与轴线距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelMargin" :min="1" :max="100" :step="1" @change='sliderGet(radarObj.radarLabelMargin, "radarObj.radarLabelMargin", "radar."+radarIndex+".axisLabel.margin", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelMargin1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelMargin1)" @blur='sliderInpGet(radarObj.radarLabelMargin1, "radarObj.radarLabelMargin", "radar."+radarIndex+".axisLabel.margin", 1, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">文本字体</div>
+						<div class="select">
+							<el-select size="small" v-model="radarObj.radarLabelFontFamily" placeholder="请选择" style="width:100%;" @change='selectGet(radarObj.radarLabelFontFamily, "radar."+radarIndex+".axisLabel.fontFamily", "string")'>
+								<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">文本颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarLabelColor" show-alpha @change='colorGet(radarObj.radarLabelColor, "radarObj.radarLabelColor", "radar."+radarIndex+".axisLabel.color", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarLabelColor" :spellcheck="false" @focus="inputColor(radarObj.radarLabelColor)" @blur='inputColorGet(radarObj.radarLabelColor,"radarObj.radarLabelColor", "radar."+radarIndex+".axisLabel.color", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">字体大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelFontSize" :min="12" :max="100" :step="1" @change='sliderGet(radarObj.radarLabelFontSize, "radarObj.radarLabelFontSize", "radar."+radarIndex+".axisLabel.fontSize", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelFontSize1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelFontSize1)" @blur='sliderInpGet(radarObj.radarLabelFontSize1, "radarObj.radarLabelFontSize", "radar."+radarIndex+".axisLabel.fontSize", 12, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">字体风格</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="radarObj.radarLabelFontSytle" @change='radioGet(radarObj.radarLabelFontSytle, "radar."+radarIndex+".axisLabel.fontStyle", "string")'>
+								<el-radio-button label="normal">普通</el-radio-button>
+								<el-radio-button label="italic">斜体</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">字体风格</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="radarObj.radarLabelFontWeight" @change='radioGet(radarObj.radarLabelFontWeight, "radar."+radarIndex+".axisLabel.fontWeight", "string")'>
+								<el-radio-button label="normal">普通</el-radio-button>
+								<el-radio-button label="bold">加粗</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">背景颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarLabelBackgroundColor" show-alpha @change='colorGet(radarObj.radarLabelBackgroundColor, "radarObj.radarLabelBackgroundColor", "radar."+radarIndex+".axisLabel.backgroundColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarLabelBackgroundColor" :spellcheck="false" @focus="inputColor(radarObj.radarLabelBackgroundColor)" @blur='inputColorGet(radarObj.radarLabelBackgroundColor,"radarObj.radarLabelBackgroundColor", "radar."+radarIndex+".axisLabel.backgroundColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">边框粗细</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(radarObj.radarLabelBorderWidth, "radarObj.radarLabelBorderWidth", "radar."+radarIndex+".axisLabel.borderWidth", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelBorderWidth1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelBorderWidth1)" @blur='sliderInpGet(radarObj.radarLabelBorderWidth1, "radarObj.radarLabelBorderWidth", "radar."+radarIndex+".axisLabel.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框圆角</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarLabelBorderRadius, "radarObj.radarLabelBorderRadius", "radar."+radarIndex+".axisLabel.borderRadius", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelBorderRadius1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelBorderRadius1)" @blur='sliderInpGet(radarObj.radarLabelBorderRadius1, "radarObj.radarLabelBorderRadius", "radar."+radarIndex+".axisLabel.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">边框颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarLabelBorderColor" show-alpha @change='colorGet(radarObj.radarLabelBorderColor, "radarObj.radarLabelBorderColor", "radar."+radarIndex+".axisLabel.borderColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarLabelBorderColor" :spellcheck="false" @focus="inputColor(radarObj.radarLabelBorderColor)" @blur='inputColorGet(radarObj.radarLabelBorderColor,"radarObj.radarLabelBorderColor", "radar."+radarIndex+".axisLabel.borderColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarLabelShadowBlur, "radarObj.radarLabelShadowBlur", "radar."+radarIndex+".axisLabel.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelShadowBlur1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelShadowBlur1)" @blur='sliderInpGet(radarObj.radarLabelShadowBlur1, "radarObj.radarLabelShadowBlur", "radar."+radarIndex+".axisLabel.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarLabelShadowColor" show-alpha @change='colorGet(radarObj.radarLabelShadowColor, "radarObj.radarLabelShadowColor", "radar."+radarIndex+".axisLabel.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarLabelShadowColor" :spellcheck="false" @focus="inputColor(radarObj.radarLabelShadowColor)" @blur='inputColorGet(radarObj.radarLabelShadowColor,"radarObj.radarLabelShadowColor", "radar."+radarIndex+".axisLabel.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarLabelShadowOffsetX, "radarObj.radarLabelShadowOffsetX", "radar."+radarIndex+".axisLabel.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelShadowOffsetX1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelShadowOffsetX1)" @blur='sliderInpGet(radarObj.radarLabelShadowOffsetX1, "radarObj.radarLabelShadowOffsetX", "radar."+radarIndex+".axisLabel.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarLabelShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarLabelShadowOffsetY, "radarObj.radarLabelShadowOffsetY", "radar."+radarIndex+".axisLabel.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarLabelShadowOffsetY1" :spellcheck="false" @focus="inputColor(radarObj.radarLabelShadowOffsetY1)" @blur='sliderInpGet(radarObj.radarLabelShadowOffsetY1, "radarObj.radarLabelShadowOffsetY", "radar."+radarIndex+".axisLabel.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</el-collapse-item>
+				<el-collapse-item title="雷达轴隔线设置" name="radarSplitLine">
+					<li>
+						<div class="attributeName">隔线显示</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarSplitLineShow" on-text="yes" off-text="no" @change='switchGet(radarObj.radarSplitLineShow, "radar."+radarIndex+".splitLine.show")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">隔线颜色</div>
+						<div class="addColor" @click='colorAdd("radarObj.radarSplitLineColorList", "radarSplitLineColor", "radar."+radarIndex+".splitLine.lineStyle.color", "array", "axisSplitLine")'>
+							<el-button size="small" type="primary">添加</el-button>
+						</div>
+					</li>
+					<div v-for="(item, i) in radarObj.radarSplitLineColorList">
+						<li>
+							<div class="attributeName"></div>
+							<div class="color">
+								<el-color-picker size="small" v-model="item.color" show-alpha @change='colorGet(item.color, "radarSplitLineColor", "radar."+radarIndex+".splitLine.lineStyle.color", "array", i, "axisSplitLine")'></el-color-picker>
+							</div>
+							<div class="colorInput" id="color">
+								<el-input size="small" v-model="item.color" :spellcheck="false" @focus="inputColor(item.color)" @blur='inputColorGet(item.color,"radarSplitLineColor", "radar."+radarIndex+".splitLine.lineStyle.color", "array", i, "axisSplitLine")'></el-input>
+							</div>
+						</li>
+					</div>
+					<li>
+						<div class="attributeName">隔线粗细</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarSplitLineWidth" :min="1" :max="20" :step="0.1" @change='sliderGet(radarObj.radarSplitLineWidth, "radarObj.radarSplitLineWidth", "radar."+radarIndex+".splitLine.lineStyle.width", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarSplitLineWidth1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitLineWidth1)" @blur='sliderInpGet(radarObj.radarSplitLineWidth1, "radarObj.radarSplitLineWidth", "radar."+radarIndex+".splitLine.lineStyle.width", 1, 20, 0.1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">隔线类型</div>
+						<div class="radioButton">
+							<el-radio-group size="small" v-model="radarObj.radarSplitLineType" @change='radioGet(radarObj.radarSplitLineType, "radar."+radarIndex+".splitLine.lineStyle.type", "string")'>
+								<el-radio-button label="solid">实线</el-radio-button>
+								<el-radio-button label="dashed">虚线</el-radio-button>
+								<el-radio-button label="dotted">点状线</el-radio-button>
+							</el-radio-group>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarSplitLineShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarSplitLineShadowBlur, "radarObj.radarSplitLineShadowBlur", "radar."+radarIndex+".splitLine.lineStyle.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarSplitLineShadowBlur1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitLineShadowBlur1)" @blur='sliderInpGet(radarObj.radarSplitLineShadowBlur1, "radarObj.radarSplitLineShadowBlur", "radar."+radarIndex+".splitLine.lineStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarSplitLineShadowColor" show-alpha @change='colorGet(radarObj.radarSplitLineShadowColor, "radarObj.radarSplitLineShadowColor", "radar."+radarIndex+".splitLine.lineStyle.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarSplitLineShadowColor" :spellcheck="false" @focus="inputColor(radarObj.radarSplitLineShadowColor)" @blur='inputColorGet(radarObj.radarSplitLineShadowColor,"radarObj.radarSplitLineShadowColor", "radar."+radarIndex+".splitLine.lineStyle.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarSplitLineShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarSplitLineShadowOffsetX, "radarObj.radarSplitLineShadowOffsetX", "radar."+radarIndex+".splitLine.lineStyle.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarSplitLineShadowOffsetX1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitLineShadowOffsetX1)" @blur='sliderInpGet(radarObj.radarSplitLineShadowOffsetX1, "radarObj.radarSplitLineShadowOffsetX", "radar."+radarIndex+".splitLine.lineStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarSplitLineShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarSplitLineShadowOffsetY, "radarObj.radarSplitLineShadowOffsetY", "radar."+radarIndex+".splitLine.lineStyle.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarSplitLineShadowOffsetY1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitLineShadowOffsetY1)" @blur='sliderInpGet(radarObj.radarSplitLineShadowOffsetY1, "radarObj.radarSplitLineShadowOffsetY", "radar."+radarIndex+".splitLine.lineStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</el-collapse-item>
+				<el-collapse-item title="雷达轴隔区设置" name="radarObj.radarSplitArea">
+					<li>
+						<div class="attributeName">隔区显示</div>
+						<div class="switch">
+							<el-switch v-model="radarObj.radarSplitAreaShow" on-text="yes" off-text="no" @change='switchGet(radarObj.radarSplitAreaShow, "radar."+radarIndex+".splitArea.show")'></el-switch>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">隔区颜色</div>
+						<div class="addColor" @click='colorAdd("radarObj.radarSplitAreaColorList", "radarObj.radarSplitAreaColor", "radar."+radarIndex+".splitArea.areaStyle.color", "array", "axisSplitArea")'>
+							<el-button size="small" type="primary">添加</el-button>
+						</div>
+					</li>
+					<div v-for="(item, i) in radarObj.radarSplitAreaColorList">
+						<li>
+							<div class="attributeName"></div>
+							<div class="color">
+								<el-color-picker size="small" v-model="item.color" show-alpha @change='colorGet(item.color, "radarObj.radarSplitAreaColor", "radar."+radarIndex+".splitArea.areaStyle.color", "array", i, "axisSplitArea")'></el-color-picker>
+							</div>
+							<div class="colorInput" id="color">
+								<el-input size="small" v-model="item.color" :spellcheck="false" @focus="inputColor(item.color)" @blur='inputColorGet(item.color,"radarObj.radarSplitAreaColor", "radar."+radarIndex+".splitArea.areaStyle.color", "array", i, "axisSplitArea")'></el-input>
+							</div>
+						</li>
+					</div>
+					<li>
+						<div class="attributeName">阴影模糊大小</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarSplitAreaShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarSplitAreaShadowBlur, "radarObj.radarSplitAreaShadowBlur", "radar."+radarIndex+".splitArea.areaStyle.shadowBlur", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarSplitAreaShadowBlur1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitAreaShadowBlur1)" @blur='sliderInpGet(radarObj.radarSplitAreaShadowBlur1, "radarObj.radarSplitAreaShadowBlur", "radar."+radarIndex+".splitArea.areaStyle.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">阴影模糊颜色</div>
+						<div class="color">
+							<el-color-picker size="small" v-model="radarObj.radarSplitAreaShadowColor" show-alpha @change='colorGet(radarObj.radarSplitAreaShadowColor, "radarObj.radarSplitAreaShadowColor", "radar."+radarIndex+".splitArea.areaStyle.shadowColor", "string")'></el-color-picker>
+						</div>
+						<div class="colorInput">
+							<el-input size="small" v-model="radarObj.radarSplitAreaShadowColor" :spellcheck="false" @focus="inputColor(radarObj.radarSplitAreaShadowColor)" @blur='inputColorGet(radarObj.radarSplitAreaShadowColor,"radarObj.radarSplitAreaShadowColor", "radar."+radarIndex+".splitArea.areaStyle.shadowColor", "string")'></el-input>
+						</div>
+					</li>
+					<li>
+						<div class="attributeName">水平偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarSplitAreaShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarSplitAreaShadowOffsetX, "radarObj.radarSplitAreaShadowOffsetX", "radar."+radarIndex+".splitArea.areaStyle.shadowOffsetX", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarSplitAreaShadowOffsetX1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitAreaShadowOffsetX1)" @blur='sliderInpGet(radarObj.radarSplitAreaShadowOffsetX1, "radarObj.radarSplitAreaShadowOffsetX", "radar."+radarIndex+".splitArea.areaStyle.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+					<li>
+						<div class="attributeName">垂直偏移距离</div>
+						<div class="slider">
+							<el-slider v-model="radarObj.radarSplitAreaShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(radarObj.radarSplitAreaShadowOffsetY, "radarObj.radarSplitAreaShadowOffsetY", "radar."+radarIndex+".splitArea.areaStyle.shadowOffsetY", "rem", "number")'></el-slider>
+						</div>
+						<div class="sliderInput">
+							<el-input size="small" v-model="radarObj.radarSplitAreaShadowOffsetY1" :spellcheck="false" @focus="inputColor(radarObj.radarSplitAreaShadowOffsetY1)" @blur='sliderInpGet(radarObj.radarSplitAreaShadowOffsetY1, "radarObj.radarSplitAreaShadowOffsetY", "radar."+radarIndex+".splitArea.areaStyle.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+						</div>
+						<em>px</em>
+					</li>
+				</el-collapse-item>
+			</el-collapse>
+			<li>
+				<div class="attributeName">指示器选择</div>
+				<div class="select">
+					<el-select size="small" v-model="radarObj.indicatorIndex" placeholder="请选择" style="width:100%;" @change='selectGet(radarObj.indicatorIndex, "radarObj.indicatorIndex", "number", "", "indicator", radarIndex)'>
+						<el-option v-for="(item, a) in radarObj.indicatorList" :key="item.value" :label="item.name" :value="a"></el-option>
+					</el-select>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">阴影模糊颜色</div>
+				<div class="color">
+					<el-color-picker size="small" v-model="radarObj.indicatorColor" show-alpha @change='colorGet(radarObj.indicatorColor, "radarObj.indicatorColor", "radar."+radarIndex+".indicator."+radarObj.indicatorIndex+".color", "string")'></el-color-picker>
+				</div>
+				<div class="colorInput">
+					<el-input size="small" v-model="radarObj.indicatorColor" :spellcheck="false" @focus="inputColor(radarObj.indicatorColor)" @blur='inputColorGet(radarObj.indicatorColor,"radarObj.indicatorColor", "radar."+radarIndex+".indicator."+radarObj.indicatorIndex+".color", "string")'></el-input>
+				</div>
+			</li>
+		</div>
+	</ul>
+</body>
+</html>

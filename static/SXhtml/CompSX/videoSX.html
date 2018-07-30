@@ -1,0 +1,104 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul class="setting" id="videoattr">
+		<li>
+			<div class="attributeName">视频编辑</div>
+			<div class="switch">
+				<el-button size="small" type="primary" @click="videoSrcChange()">播放内容编辑</el-button>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="videoObj.width" @focus="inputColor(videoObj.width)" @blur='inputNumGet(videoObj.width, "videoObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="videoObj.height" @focus="inputColor(videoObj.height)" @blur='inputNumGet(videoObj.height, "videoObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="videoObj.left" @focus="inputColor(videoObj.left)" @blur='inputNumGet(videoObj.left, "videoObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="videoObj.top" @focus="inputColor(videoObj.top)" @blur='inputNumGet(videoObj.top, "videoObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">自动播放</div>
+			<div class="switch">
+				<el-switch v-model="videoObj.autostart" on-text="yes" off-text="no" @change='switchGet(videoObj.autostart, "autostart")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">循环播放</div>
+			<div class="switch">
+				<el-switch v-model="videoObj.repeat" on-text="yes" off-text="no" @change='switchGet(videoObj.repeat, "repeat")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="videoObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(videoObj.borderWidth, "videoObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="videoObj.borderWidth1" :spellcheck="false" @focus="inputColor(videoObj.borderWidth1)" @blur='sliderInpGet(videoObj.borderWidth1, "videoObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="videoObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(videoObj.borderRadius, "videoObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="videoObj.borderRadius1" :spellcheck="false" @focus="inputColor(videoObj.borderRadius1)" @blur='sliderInpGet(videoObj.borderRadius1, "videoObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="videoObj.borderColor" show-alpha @change='colorGet(videoObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="videoObj.borderColor" :spellcheck="false" @focus="inputColor(videoObj.borderColor)" @blur='inputColorGet(videoObj.borderColor, "videoObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="videoObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(videoObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="countUpattr" class="setting">
+		<li>
+			<div class="attributeName">宽度</div>
+			<div class="input">
+				<el-input size="small" v-model="countUpObj.width" @focus="inputColor(countUpObj.width)" @blur='inputNumGet(countUpObj.width, "countUpObj.width", "width")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">高度</div>
+			<div class="input">
+				<el-input size="small" v-model="countUpObj.height" @focus="inputColor(countUpObj.height)" @blur='inputNumGet(countUpObj.height, "countUpObj.height", "height")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左距离</div>
+			<div class="input">
+				<el-input size="small" v-model="countUpObj.left" @focus="inputColor(countUpObj.left)" @blur='inputNumGet(countUpObj.left, "countUpObj.left", "left")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上距离</div>
+			<div class="input">
+				<el-input size="small" v-model="countUpObj.top" @focus="inputColor(countUpObj.top)" @blur='inputNumGet(countUpObj.top, "countUpObj.top", "top")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">定时刷新</div>
+			<div class="slider">
+				<el-slider v-model="countUpObj.refreshTime" :min="0" :max="50" :step="0.1" @change='sliderGet(countUpObj.refreshTime, "countUpObj.refreshTime", "refreshTime", "refreshTime")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="countUpObj.refreshTime1" :spellcheck="false" @focus="inputColor(countUpObj.refreshTime1)" @blur='sliderInpGet(countUpObj.refreshTime1, "countUpObj.refreshTime", "refreshTime", 0, 50, 0.1, "refreshTime")'></el-input>
+			</div>
+			<em>分</em>
+		</li>
+		<li>
+			<div class="attributeName">前缀名称</div>
+			<div class="input">
+				<el-input size="small" v-model="countUpObj.prefixName" @blur='inputGet(countUpObj.prefixName, "countUpObj.prefixName", "prefixName", "string", "prefix")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">后缀名称</div>
+			<div class="input">
+				<el-input size="small" v-model="countUpObj.suffixName" @blur='inputGet(countUpObj.suffixName, "countUpObj.suffixName", "suffixName", "string", "suffix")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">小数位</div>
+			<div class="slider">
+				<el-slider v-model="countUpObj.decimals" :min="0" :max="5" :step="1" @change='sliderGet(countUpObj.decimals, "countUpObj.decimals", "decimals", "reconstruction")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="countUpObj.decimals1" :spellcheck="false" @focus="inputColor(countUpObj.decimals1)" @blur='sliderInpGet(countUpObj.decimals1, "countUpObj.decimals", "decimals", 0, 5, 1, "reconstruction")'></el-input>
+			</div>
+			<em>位</em>
+		</li>
+		<li>
+			<div class="attributeName">动画时长</div>
+			<div class="slider">
+				<el-slider v-model="countUpObj.duration" :min="1" :max="100" :step="0.1" @change='sliderGet(countUpObj.duration, "countUpObj.duration", "duration", "reconstruction")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="countUpObj.duration1" :spellcheck="false" @focus="inputColor(countUpObj.duration1)" @blur='sliderInpGet(countUpObj.duration1, "countUpObj.duration", "duration", 1, 100, 0.1, "reconstruction")'></el-input>
+			</div>
+			<em>S</em>
+		</li>
+		<el-collapse v-model="countUpObj.select" style="margin-bottom: 5px;" accordion @change='collapseGet(countUpObj.select, "select")'>
+			<el-collapse-item title="前缀样式" name="prefix">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="countUpObj.prefix.family" placeholder="请选择" style="width:100%;" @change='selectGet(countUpObj.prefix.family, "prefix.font.family")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="countUpObj.prefix.color" show-alpha @change='colorGet(countUpObj.prefix.color, "prefix.color")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="countUpObj.prefix.color" :spellcheck="false" @focus="inputColor(countUpObj.prefix.color)" @blur='inputColorGet(countUpObj.prefix.color, "countUpObj.prefix.color", "prefix.color")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="countUpObj.prefix.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(countUpObj.prefix.fontSize, "countUpObj.prefix.fontSize", "prefix.font.size")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="countUpObj.prefix.fontSize1" :spellcheck="false" @focus="inputColor(countUpObj.prefix.fontSize1)" @blur='sliderInpGet(countUpObj.prefix.fontSize1, "countUpObj.prefix.fontSize", "prefix.font.size", 12, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="countUpObj.prefix.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(countUpObj.prefix.letterSpacing, "countUpObj.prefix.letterSpacing", "prefix.letter.spacing")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="countUpObj.prefix.letterSpacing1" :spellcheck="false" @focus="inputColor(countUpObj.prefix.letterSpacing1)" @blur='sliderInpGet(countUpObj.prefix.letterSpacing1, "countUpObj.prefix.letterSpacing", "prefix.letter.spacing", 0, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">边距</div>
+					<div class="input">
+						<el-input size="small" v-model="countUpObj.prefix.padding" :spellcheck="false" @blur='inputGet(countUpObj.prefix.padding, "countUpObj.prefix.padding", "prefix.padding", "number")'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="countUpObj.prefix.fontSytle" @change='radioGet(countUpObj.prefix.fontSytle, "prefix.font.style")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="countUpObj.prefix.fontWeight" @change='radioGet(countUpObj.prefix.fontWeight, "prefix.font.weight")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="数据样式" name="content">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="countUpObj.content.family" placeholder="请选择" style="width:100%;" @change='selectGet(countUpObj.content.family, "content.font.family")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="countUpObj.content.color" show-alpha @change='colorGet(countUpObj.content.color, "content.color")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="countUpObj.content.color" :spellcheck="false" @focus="inputColor(countUpObj.content.color)" @blur='inputColorGet(countUpObj.content.color, "countUpObj.content.color", "content.color")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="countUpObj.content.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(countUpObj.content.fontSize, "countUpObj.content.fontSize", "content.font.size")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="countUpObj.content.fontSize1" :spellcheck="false" @focus="inputColor(countUpObj.content.fontSize1)" @blur='sliderInpGet(countUpObj.content.fontSize1, "countUpObj.content.fontSize", "content.font.size", 12, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="countUpObj.content.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(countUpObj.content.letterSpacing, "countUpObj.content.letterSpacing", "content.letter.spacing")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="countUpObj.content.letterSpacing1" :spellcheck="false" @focus="inputColor(countUpObj.content.letterSpacing1)" @blur='sliderInpGet(countUpObj.content.letterSpacing1, "countUpObj.content.letterSpacing", "content.letter.spacing", 0, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">边距</div>
+					<div class="input">
+						<el-input size="small" v-model="countUpObj.content.padding" :spellcheck="false" @blur='inputGet(countUpObj.content.padding, "countUpObj.content.padding", "content.padding", "number")'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="countUpObj.content.fontSytle" @change='radioGet(countUpObj.content.fontSytle, "content.font.style")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="countUpObj.content.fontWeight" @change='radioGet(countUpObj.content.fontWeight, "content.font.weight")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+			<el-collapse-item title="后缀样式" name="suffix">
+				<li>
+					<div class="attributeName">文本字体</div>
+					<div class="select">
+						<el-select size="small" v-model="countUpObj.suffix.family" placeholder="请选择" style="width:100%;" @change='selectGet(countUpObj.suffix.family, "suffix.font.family")'>
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">文本颜色</div>
+					<div class="color">
+						<el-color-picker size="small" v-model="countUpObj.suffix.color" show-alpha @change='colorGet(countUpObj.suffix.color, "suffix.color")'></el-color-picker>
+					</div>
+					<div class="colorInput">
+						<el-input size="small" v-model="countUpObj.suffix.color" :spellcheck="false" @focus="inputColor(countUpObj.suffix.color)" @blur='inputColorGet(countUpObj.suffix.color, "countUpObj.suffix.color", "suffix.color")'></el-input>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体大小</div>
+					<div class="slider">
+						<el-slider v-model="countUpObj.suffix.fontSize" :min="12" :max="100" :step="1" @change='sliderGet(countUpObj.suffix.fontSize, "countUpObj.suffix.fontSize", "suffix.font.size")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="countUpObj.suffix.fontSize1" :spellcheck="false" @focus="inputColor(countUpObj.suffix.fontSize1)" @blur='sliderInpGet(countUpObj.suffix.fontSize1, "countUpObj.suffix.fontSize", "suffix.font.size", 12, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字距</div>
+					<div class="slider">
+						<el-slider v-model="countUpObj.suffix.letterSpacing" :min="0" :max="100" :step="1" @change='sliderGet(countUpObj.suffix.letterSpacing, "countUpObj.suffix.letterSpacing", "suffix.letter.spacing")'></el-slider>
+					</div>
+					<div class="sliderInput">
+						<el-input size="small" v-model="countUpObj.suffix.letterSpacing1" :spellcheck="false" @focus="inputColor(countUpObj.suffix.letterSpacing1)" @blur='sliderInpGet(countUpObj.suffix.letterSpacing1, "countUpObj.suffix.letterSpacing", "suffix.letter.spacing", 0, 100, 1)'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">边距</div>
+					<div class="input">
+						<el-input size="small" v-model="countUpObj.suffix.padding" :spellcheck="false" @blur='inputGet(countUpObj.suffix.padding, "countUpObj.suffix.padding", "suffix.padding", "number")'></el-input>
+					</div>
+					<em>rem</em>
+				</li>
+				<li>
+					<div class="attributeName">字体风格</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="countUpObj.suffix.fontSytle" @change='radioGet(countUpObj.suffix.fontSytle, "suffix.font.style")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="italic">斜体</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+				<li>
+					<div class="attributeName">字体粗细</div>
+					<div class="radioButton">
+						<el-radio-group size="small" v-model="countUpObj.suffix.fontWeight" @change='radioGet(countUpObj.suffix.fontWeight, "suffix.font.weight")'>
+							<el-radio-button label="normal">普通</el-radio-button>
+							<el-radio-button label="bold">加粗</el-radio-button>
+						</el-radio-group>
+					</div>
+				</li>
+			</el-collapse-item>
+		</el-collapse>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="countUpObj.backgroundColor" show-alpha @change='colorGet(countUpObj.backgroundColor, "background.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="countUpObj.backgroundColor" :spellcheck="false" @focus="inputColor(countUpObj.backgroundColor)" @blur='inputColorGet(countUpObj.backgroundColor, "countUpObj.backgroundColor", "background.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="countUpObj.borderWidth" :min="0" :max="20" :step="1" @change='sliderGet(countUpObj.borderWidth, "countUpObj.borderWidth", "border.width")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="countUpObj.borderWidth1" :spellcheck="false" @focus="inputColor(countUpObj.borderWidth1)" @blur='sliderInpGet(countUpObj.borderWidth1, "countUpObj.borderWidth", "border.width", 0, 20, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="countUpObj.borderRadius" :min="0" :max="100" :step="1" @change='sliderGet(countUpObj.borderRadius, "countUpObj.borderRadius", "border.radius")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="countUpObj.borderRadius1" :spellcheck="false" @focus="inputColor(countUpObj.borderRadius1)" @blur='sliderInpGet(countUpObj.borderRadius1, "countUpObj.borderRadius", "border.radius", 0, 100, 1)'></el-input>
+			</div>
+			<em>rem</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="countUpObj.borderColor" show-alpha @change='colorGet(countUpObj.borderColor, "border.color")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="countUpObj.borderColor" :spellcheck="false" @focus="inputColor(countUpObj.borderColor)" @blur='inputColorGet(countUpObj.borderColor, "countUpObj.borderColor", "border.color")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框样式</div>
+			<div class="select">
+				<el-select size="small" v-model="countUpObj.borderStyle" placeholder="请选择" style="width:100%;" @change='selectGet(countUpObj.borderStyle, "border.style")'>
+					<el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">元素位置选择</div>
+			<div class="cascader">
+				<el-select size="small" v-model="boxId" placeholder="请选择" style="width:100%;" @change='cascaderGet(boxId)'>
+					<el-option v-for="item in allTabList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="button">
+				<el-button size="small" type="primary" @click='eleCreatFun()'>确认选择</el-button>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

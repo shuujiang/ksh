@@ -1,0 +1,151 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<ul id="TTGrid">
+		<li>
+			<div class="attributeName">视区宽度</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridWidth" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridWidth, "gridObj.gridWidth", "grid.width", "%", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridWidth1" :spellcheck="false" @focus="inputColor(gridObj.gridWidth1)" @blur='sliderInpGet(gridObj.gridWidth1, "gridObj.gridWidth", "grid.width", 0, 100, 1, "%", "number")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">视区高度</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridHeight" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridHeight, "gridObj.gridHeight", "grid.height", "%", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridHeight1" :spellcheck="false" @focus="inputColor(gridObj.gridHeight1)" @blur='sliderInpGet(gridObj.gridHeight1, "gridObj.gridHeight", "grid.height", 0, 100, 1, "%", "number")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">左侧距离</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridLeft" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridLeft, "gridObj.gridLeft", "grid.left", "%", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridLeft1" :spellcheck="false" @focus="inputColor(gridObj.gridLeft1)" @blur='sliderInpGet(gridObj.gridLeft1, "gridObj.gridLeft", "grid.left", 0, 100, 1, "%", "number")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<li>
+			<div class="attributeName">上侧距离</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridTop" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridTop, "gridObj.gridTop", "grid.top", "%", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridTop1" :spellcheck="false" @focus="inputColor(gridObj.gridTop1)" @blur='sliderInpGet(gridObj.gridTop1, "gridObj.gridTop", "grid.top", 0, 100, 1, "%", "number")'></el-input>
+			</div>
+			<em>%</em>
+		</li>
+		<div class="shufflingBtn">
+			<li>
+				<div class="attributeName">按钮大小</div>
+				<div class="input">
+					<el-input size="small" v-model="gridObj.shufflingBtnWd" @blur='inputGet(gridObj.shufflingBtnWd, "shufflingBtnWd", "number",  null,  null, "shufflingBtn")'></el-input>
+				</div>
+			</li>
+			<li>
+				<div class="attributeName">按钮位置</div>
+				<div class="radioButton">
+					<el-radio-group size="small" v-model="gridObj.shufflingBtn" @change='radioGet(gridObj.shufflingBtn, "shufflingBtn", "string", "shufflingBtn")'>
+						<el-radio-button label="left">居左</el-radio-button>
+						<el-radio-button label="right">居右</el-radio-button>
+						<el-radio-button label="bottom">居下</el-radio-button>
+					</el-radio-group>
+				</div>
+			</li>
+		</div>
+		<li>
+			<div class="attributeName">背景颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="gridObj.gridBackgroundColor" show-alpha @change='colorGet(gridObj.gridBackgroundColor, "gridObj.gridBackgroundColor", "grid.backgroundColor", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="gridObj.gridBackgroundColor" :spellcheck="false" @focus="inputColor(gridObj.gridBackgroundColor)" @blur='inputColorGet(gridObj.gridBackgroundColor,"gridObj.gridBackgroundColor", "grid.backgroundColor", "string")'></el-input>
+			</div>
+		</li>
+		<li class="showHidden">
+			<div class="attributeName">视区边框显示</div>
+			<div class="switch">
+				<el-switch v-model="gridObj.gridShow" on-text="yes" off-text="no" @change='switchGet(gridObj.gridShow, "grid.show")'></el-switch>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">边框粗细</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridBorderWidth" :min="0" :max="20" :step="1" @change='sliderGet(gridObj.gridBorderWidth, "gridObj.gridBorderWidth", "grid.borderWidth", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridBorderWidth1" :spellcheck="false" @focus="inputColor(gridObj.gridBorderWidth1)" @blur='sliderInpGet(gridObj.gridBorderWidth1, "gridObj.gridBorderWidth", "grid.borderWidth", 0, 20, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">边框圆角</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridBorderRadius" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridBorderRadius, "gridObj.gridBorderRadius", "grid.borderRadius", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridBorderRadius1" :spellcheck="false" @focus="inputColor(gridObj.gridBorderRadius1)" @blur='sliderInpGet(gridObj.gridBorderRadius1, "gridObj.gridBorderRadius", "grid.borderRadius", 0, 100, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">边框颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="gridObj.gridBorderColor" show-alpha @change='colorGet(gridObj.gridBorderColor, "gridObj.gridBorderColor", "grid.borderColor", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="gridObj.gridBorderColor" :spellcheck="false" @focus="inputColor(gridObj.gridBorderColor)" @blur='inputColorGet(gridObj.gridBorderColor,"gridObj.gridBorderColor", "grid.borderColor", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">阴影模糊大小</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridShadowBlur" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridShadowBlur, "gridObj.gridShadowBlur", "grid.shadowBlur", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridShadowBlur1" :spellcheck="false" @focus="inputColor(gridObj.gridShadowBlur1)" @blur='sliderInpGet(gridObj.gridShadowBlur1, "gridObj.gridShadowBlur", "grid.shadowBlur", 0, 100, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">阴影模糊颜色</div>
+			<div class="color">
+				<el-color-picker size="small" v-model="gridObj.gridShadowColor" show-alpha @change='colorGet(gridObj.gridShadowColor, "gridObj.gridShadowColor", "grid.shadowColor", "string")'></el-color-picker>
+			</div>
+			<div class="colorInput">
+				<el-input size="small" v-model="gridObj.gridShadowColor" :spellcheck="false" @focus="inputColor(gridObj.gridShadowColor)" @blur='inputColorGet(gridObj.gridShadowColor,"gridObj.gridShadowColor", "grid.shadowColor", "string")'></el-input>
+			</div>
+		</li>
+		<li>
+			<div class="attributeName">水平偏移距离</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridShadowOffsetX" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridShadowOffsetX, "gridObj.gridShadowOffsetX", "grid.shadowOffsetX", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridShadowOffsetX1" :spellcheck="false" @focus="inputColor(gridObj.gridShadowOffsetX1)" @blur='sliderInpGet(gridObj.gridShadowOffsetX1, "gridObj.gridShadowOffsetX", "grid.shadowOffsetX", 0, 100, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+		<li>
+			<div class="attributeName">垂直偏移距离</div>
+			<div class="slider">
+				<el-slider v-model="gridObj.gridShadowOffsetY" :min="0" :max="100" :step="1" @change='sliderGet(gridObj.gridShadowOffsetY, "gridObj.gridShadowOffsetY", "grid.shadowOffsetY", "rem", "number")'></el-slider>
+			</div>
+			<div class="sliderInput">
+				<el-input size="small" v-model="gridObj.gridShadowOffsetY1" :spellcheck="false" @focus="inputColor(gridObj.gridShadowOffsetY1)" @blur='sliderInpGet(gridObj.gridShadowOffsetY1, "gridObj.gridShadowOffsetY", "grid.shadowOffsetY", 0, 100, 1, "rem", "number")'></el-input>
+			</div>
+			<em>px</em>
+		</li>
+	</ul>
+</body>
+</html>
